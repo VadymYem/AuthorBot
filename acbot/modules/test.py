@@ -64,7 +64,7 @@ class TestMod(loader.Module):
         "ping_hint": (
             "<emoji document_id=5472146462362048818>💡</emoji> <i>Telegram ping mostly"
             " depends on Telegram servers latency and other external factors and has"
-            " nothing to do with the parameters of server on which userbot is"
+            " nothing to do with the parameters of server on which AuthorChe's is"
             " installed</i>"
         ),
         "confidential": (
@@ -123,7 +123,7 @@ class TestMod(loader.Module):
             "<emoji document_id=5472146462362048818>💡</emoji> <i>Скорость отклика"
             " Telegram в большей степени зависит от загруженности серверов Telegram и"
             " других внешних факторов и никак не связана с параметрами сервера, на"
-            " который установлен юзербот</i>"
+            " который установлен бот</i>"
         ),
         "confidential": (
             "⚠️ <b>Уровень логов </b><code>{}</code><b> может содержать личную"
