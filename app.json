@@ -1,0 +1,36 @@
+{
+    "name": "AuthorBot",
+    "description": "Telegram userbot",
+    "logo": "https://i.imgur.com/pmnfXBl.jpeg",
+    "keywords": [
+        "telegram",
+        "userbot"
+    ],
+    "env": {
+        "heroku_api_token": {
+            "description": "Heroku API Token. You can get one at https://dashboard.heroku.com/account"
+        }
+    },
+    "addons": [
+        {
+            "plan": "heroku-postgresql"
+        }
+    ],
+    "buildpacks": [
+        {
+            "url": "https://github.com/heroku/heroku-buildpack-python"
+        },
+        {
+            "url": "https://github.com/hikariatama/heroku-buildpack"
+        },
+        {
+            "url": "https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest"
+        },
+        {
+            "url": "https://github.com/jontewks/puppeteer-heroku-buildpack"
+        },
+        {
+            "url": "https://github.com/heroku/heroku-buildpack-apt"
+        }
+    ]
+}
