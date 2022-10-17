@@ -164,7 +164,7 @@ class InlineStuffMod(loader.Module):
             return
 
         await message.answer_photo(
-            "https://github.com/VadymYem/AuthorBot/assets/raw/master/acbot_pfp.png",
+            "https://t.me/authorche/166",
             caption=self.strings("this_is_acbot"),
         )
 
