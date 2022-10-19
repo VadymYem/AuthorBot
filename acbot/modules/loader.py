@@ -142,10 +142,10 @@ class LoaderMod(loader.Module):
         "save_for_all": "💽 Always save to fs",
         "never_save": "🚫 Never save to fs",
         "will_save_fs": (
-            "💽 Now all modules, loaded with .loadmod will be saved to filesystem"
+            "💽 Now all modules, loaded with .ld will be saved to filesystem"
         ),
         "add_repo_config_doc": "Additional repos to load from",
-        "share_link_doc": "Share module link in result message of .dlmod",
+        "share_link_doc": "Share module link in result message of .dl",
         "modlink": (
             "\n\n<emoji document_id=6037284117505116849>🌐</emoji> <b>Link:"
             " </b><code>{}</code>"
@@ -302,13 +302,13 @@ class LoaderMod(loader.Module):
             " acbotInline, а инициализация менеджера инлайна неудачна</b>\n<i>Попробуй"
             " удалить одного из старых ботов в @BotFather и перезагрузить юзербота</i>"
         ),
-        "_cmd_doc_dlmod": "Скачивает и устаналвивает модуль из репозитория",
+        "_cmd_doc_dl": "Скачивает и устаналвивает модуль из репозитория",
         "_cmd_doc_dlpreset": "Скачивает и устанавливает определенный набор модулей",
-        "_cmd_doc_loadmod": "Скачивает и устанавливает модуль из файла",
-        "_cmd_doc_unloadmod": "Выгружает (удаляет) модуль",
+        "_cmd_doc_ld": "Скачивает и устанавливает модуль из файла",
+        "_cmd_doc_un": "Выгружает (удаляет) модуль",
         "_cmd_doc_clearmodules": "Выгружает все установленные модули",
         "_cls_doc": "Загружает модули",
-        "share_link_doc": "Указывать ссылку на модуль после загрузки через .dlmod",
+        "share_link_doc": "Указывать ссылку на модуль после загрузки через .dl",
         "modlink": (
             "\n\n<emoji document_id=6037284117505116849>🌐</emoji> <b>Ссылка:"
             " </b><code>{}</code>"
@@ -479,7 +479,7 @@ class LoaderMod(loader.Module):
 
     @loader.owner
     @loader.command(ru_doc="Загрузить модуль из официального репозитория")
-    async def dlmod(self, message: Message):
+    async def dl(self, message: Message):
         """Install a module from the official module repo"""
         if args := utils.get_args(message):
             args = args[0]
@@ -686,7 +686,7 @@ class LoaderMod(loader.Module):
 
     @loader.owner
     @loader.command(ru_doc="Загрузить модуль из файла")
-    async def loadmod(self, message: Message):
+    async def ld(self, message: Message):
         """Loads the module file"""
         msg = message if message.file else (await message.get_reply_message())
 
@@ -1039,7 +1039,7 @@ class LoaderMod(loader.Module):
                 await self.allmodules.send_ready_one(
                     instance,
                     no_self_unload=True,
-                    from_dlmod=bool(message),
+                    from_dl=bool(message),
                 )
                 task.cancel()
             except CoreOverwriteError as e:
@@ -1292,7 +1292,7 @@ class LoaderMod(loader.Module):
 
     @loader.owner
     @loader.command(ru_doc="Выгрузить модуль")
-    async def unloadmod(self, message: Message):
+    async def un(self, message: Message):
         """Unload module by class name"""
         args = utils.get_args_raw(message)
 
@@ -1408,7 +1408,7 @@ class LoaderMod(loader.Module):
             await self.allmodules.send_ready_one(
                 instance,
                 no_self_unload=False,
-                from_dlmod=False,
+                from_dl=False,
             )
 
         self._fully_loaded = True
