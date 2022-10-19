@@ -1,4 +1,4 @@
-"""Represents current AuthorChe's version"""
+"""Represents current AuthоrChe's version"""
 __version__ = (1, 7, 3)
 
 import git
