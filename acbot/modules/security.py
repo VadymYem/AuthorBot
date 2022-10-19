@@ -1,7 +1,6 @@
-#             █ █ ▀ █▄▀ ▄▀█ █▀█ ▀
-#             █▀█ █ █ █ █▀█ █▀▄ █
+
 #              © Copyright 2022
-#           https://t.me/hikariatama
+#           https://t.me/authorche 
 #
 # 🔒      Licensed under the GNU AGPLv3
 # 🌐 https://www.gnu.org/licenses/agpl-3.0.html
@@ -34,7 +33,7 @@ from ..security import (
 
 
 @loader.tds
-class HikkaSecurityMod(loader.Module):
+class AcbotSecurityMod(loader.Module):
     """Control security settings"""
 
     service_strings = {
@@ -72,7 +71,7 @@ class HikkaSecurityMod(loader.Module):
     }
 
     strings = {
-        "name": "HikkaSecurity",
+        "name": "Security",
         "no_command": "🚫 <b>Command </b><code>{}</code><b> not found!</b>",
         "permissions": (
             "🔐 <b>Here you can configure permissions for </b><code>{}{}</code>"
