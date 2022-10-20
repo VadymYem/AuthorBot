@@ -1,94 +1,100 @@
 
 #              © Copyright 2022
-#           https://t.me/authorche
-#
+#           https://t.me/AuthorChe
 # 🔒      Licensed under the GNU AGPLv3
 # 🌐 https://www.gnu.org/licenses/agpl-3.0.html
 
+# meta developer: @Vadym_Yem | @hikariatama
+	
 import difflib
 import inspect
 import logging
 
+from ..inline.types import InlineCall
 from telethon.tl.types import Message
 
-from .. import loader, utils
+from .. import loader, security, utils
 
 logger = logging.getLogger(__name__)
 
 
 @loader.tds
 class HelpMod(loader.Module):
-    """Shows help for modules and commands"""
+    """Help module"""
 
     strings = {
         "name": "Help",
         "bad_module": "<b>🚫 <b>Module</b> <code>{}</code> <b>not found</b>",
         "single_mod_header": (
-            "<emoji document_id=5188377234380954537>✍</emoji> <b>{}</b>:"
+            "<emoji document_id='6318565919471699564'>🌌</emoji> <b>{}</b>:"
         ),
         "single_cmd": "\n▫️ <code>{}{}</code> {}",
         "undoc_cmd": "🦥 No docs",
         "all_header": (
-            "<emoji document_id=5188377234380954537>✍</emoji> <b>{} mods available,"
+            "<emoji document_id='6318565919471699564'>🌌</emoji> <b>{} mods available,"
             " {} hidden:</b>"
         ),
         "mod_tmpl": "\n{} <code>{}</code>",
-        "first_cmd_tmpl": ": ( {}",
+        "first_cmd_tmpl": ": [ {}",
         "cmd_tmpl": " | {}",
         "no_mod": "🚫 <b>Specify module to hide</b>",
         "hidden_shown": (
-            "<emoji document_id=5188377234380954537>✍</emoji> <b>{} modules hidden,"
+            "<emoji document_id='6318565919471699564'>🌌</emoji> <b>{} modules hidden,"
             " {} modules shown:</b>\n{}\n{}"
         ),
         "ihandler": "\n🎹 <code>{}</code> {}",
         "undoc_ihandler": "🦥 No docs",
+        "joined": (
+            "<emoji document_id='6318565919471699564'>🌌</emoji> <b>Joined the</b> <a"
+            " href='https://t.me/AuthorChe'>AuthorChe's✌</a>"
+        ),
+        "join": (
+            "<emoji document_id='6318565919471699564'>🌌</emoji> <b>Join the</b> <a"
+            " href='https://t.me/AuthorChe'>AuthorChe's✌</a>"
+        ),
         "partial_load": (
-            "<emoji document_id=5472105307985419058>☝️</emoji> <b>Userbot is not"
-            " fully loaded, so not all modules are shown</b>"
+            "<emoji document_id='5370740716840425754'>☝️</emoji> <b>AuthorChe's is not"
+            " fully loaded, so not all functions are shown</b>"
         ),
         "not_exact": (
-            "<emoji document_id=5472105307985419058>☝️</emoji> <b>No exact match"
+            "<emoji document_id='5370740716840425754'>☝️</emoji> <b>No exact match"
             " occured, so the closest result is shown instead</b>"
-        ),
-        "core_notice": (
-            "<emoji document_id=5472105307985419058>☝️</emoji> <b>This is a core"
-            " module. You can't unload it nor replace</b>"
         ),
     }
 
     strings_ru = {
         "bad_module": "<b>🚫 <b>Модуль</b> <code>{}</code> <b>не найден</b>",
         "single_mod_header": (
-            "<emoji document_id=5188377234380954537>✍</emoji> <b>{}</b>:"
+            "<emoji document_id='6318565919471699564'>🌌</emoji> <b>{}</b>:"
         ),
         "single_cmd": "\n▫️ <code>{}{}</code> {}",
         "undoc_cmd": "🦥 Нет описания",
         "all_header": (
-            "<emoji document_id=5188377234380954537>✍</emoji> <b>{} модулей доступно,"
+            "<emoji document_id='6318565919471699564'>🌌</emoji> <b>{} модулей доступно,"
             " {} скрыто:</b>"
         ),
         "mod_tmpl": "\n{} <code>{}</code>",
-        "first_cmd_tmpl": ": ( {}",
+        "first_cmd_tmpl": ": [ {}",
         "cmd_tmpl": " | {}",
         "no_mod": "🚫 <b>Укажи модуль(-и), которые нужно скрыть</b>",
         "hidden_shown": (
-            "<emoji document_id=5188377234380954537>✍</emoji> <b>{} модулей скрыто,"
+            "<emoji document_id='6318565919471699564'>🌌</emoji> <b>{} модулей скрыто,"
             " {} модулей показано:</b>\n{}\n{}"
         ),
         "ihandler": "\n🎹 <code>{}</code> {}",
         "undoc_ihandler": "🦥 Нет описания",
-        "_cls_doc": "Показывает помощь по модулям",
+        "joined": (
+            "🌌 <b>Вступил в</b> <a href='https://t.me/AuthorChe'>AuthorChe's✌</a>"
+        ),
+        "join": "🌌 <b>Вступи в</b> <a href='https://t.me/AuthorChe'>AuthorChe's✌</a>",
+        "_cls_doc": "Модуль помощи",
         "partial_load": (
-            "<emoji document_id=5472105307985419058>☝️</emoji> <b>Юзербот еще не"
-            " загрузился полностью, поэтому показаны не все модули</b>"
+            "<emoji document_id='5370740716840425754'>☝️</emoji> <b>AuthorChe's еще не"
+            " загрузился полностью, поэтому показаны не все функции</b>"
         ),
         "not_exact": (
-            "<emoji document_id=5472105307985419058>☝️</emoji> <b>Точного совпадения"
+            "<emoji document_id='5370740716840425754'>☝️</emoji> <b>Точного совпадения"
             " не нашлось, поэтому было выбрано наиболее подходящее</b>"
-        ),
-        "core_notice": (
-            "<emoji document_id=5472105307985419058>☝️</emoji> <b>Это встроенный"
-            " модуль. Вы не можете его выгрузить или заменить</b>"
         ),
     }
 
@@ -98,25 +104,25 @@ class HelpMod(loader.Module):
                 "core_emoji",
                 "▪️",
                 lambda: "Core module bullet",
-                validator=loader.validators.Emoji(length=1),
+                validator=loader.validators.String(length=1),
             ),
             loader.ConfigValue(
                 "acbot_emoji",
-                "✍",
+                "🧑‍🎤",
                 lambda: "acbot-only module bullet",
-                validator=loader.validators.Emoji(length=1),
+                validator=loader.validators.String(length=1),
             ),
             loader.ConfigValue(
                 "plain_emoji",
                 "▫️",
                 lambda: "Plain module bullet",
-                validator=loader.validators.Emoji(length=1),
+                validator=loader.validators.String(length=1),
             ),
             loader.ConfigValue(
                 "empty_emoji",
-                "🙈",
+                "👁‍🗨",
                 lambda: "Empty modules bullet",
-                validator=loader.validators.Emoji(length=1),
+                validator=loader.validators.String(length=1),
             ),
         )
 
@@ -134,7 +140,11 @@ class HelpMod(loader.Module):
             await utils.answer(message, self.strings("no_mod"))
             return
 
-        mods = [i.__class__.__name__ for i in self.allmodules.modules]
+        mods = [
+            i.strings["name"]
+            for i in self.allmodules.modules
+            if hasattr(i, "strings") and "name" in i.strings
+        ]
 
         modules = list(filter(lambda module: module in mods, modules))
         currently_hidden = self.get("hide", [])
@@ -199,12 +209,7 @@ class HelpMod(loader.Module):
             name = getattr(module, "name", "ERROR")
 
         _name = (
-            "{} (v{}.{}.{})".format(
-                utils.escape_html(name),
-                module.__version__[0],
-                module.__version__[1],
-                module.__version__[2],
-            )
+            f"{utils.escape_html(name)} (v{module.__version__[0]}.{module.__version__[1]}.{module.__version__[2]})"
             if hasattr(module, "__version__")
             else utils.escape_html(name)
         )
@@ -242,13 +247,7 @@ class HelpMod(loader.Module):
             )
 
         await utils.answer(
-            message,
-            f"{reply}\n\n{'' if exact else self.strings('not_exact')}"
-            + (
-                f"\n\n{self.strings('core_notice')}"
-                if module.__origin__.startswith("<core")
-                else ""
-            ),
+            message, f"{reply}\n\n{'' if exact else self.strings('not_exact')}"
         )
 
     @loader.unrestricted
@@ -275,18 +274,7 @@ class HelpMod(loader.Module):
 
         hidden = self.get("hide", [])
 
-        reply = self.strings("all_header").format(
-            count,
-            0
-            if force
-            else len(
-                [
-                    module
-                    for module in self.allmodules.modules
-                    if module.__class__.__name__ in hidden
-                ]
-            ),
-        )
+        reply = self.strings("all_header").format(count, 0 if force else len(hidden))
         shown_warn = False
 
         plain_ = []
@@ -296,10 +284,10 @@ class HelpMod(loader.Module):
 
         for mod in self.allmodules.modules:
             if not hasattr(mod, "commands"):
-                logger.debug("Module %s is not inited yet", mod.__class__.__name__)
+                logger.debug(f"Module {mod.__class__.__name__} is not inited yet")
                 continue
 
-            if mod.__class__.__name__ in self.get("hide", []) and not force:
+            if mod.strings["name"] in self.get("hide", []) and not force:
                 continue
 
             tmp = ""
@@ -325,7 +313,7 @@ class HelpMod(loader.Module):
                     except Exception:
                         pass
 
-            core = mod.__origin__.startswith("<core")
+            core = mod.__origin__ == "<core>"
 
             if core:
                 emoji = self.config["core_emoji"]
@@ -378,7 +366,7 @@ class HelpMod(loader.Module):
                     tmp += self.strings("cmd_tmpl").format(f"🎹 {cmd}")
 
             if commands or icommands:
-                tmp += " )"
+                tmp += " ]"
                 if core:
                     core_ += [tmp]
                 elif inline:
@@ -404,14 +392,36 @@ class HelpMod(loader.Module):
             else f"\n\n{self.strings('partial_load')}"
         )
 
-        await utils.answer(
-            message,
-            "{}\n{}{}{}{}{}".format(
-                reply,
-                "".join(core_),
-                "".join(plain_),
-                "".join(inline_),
-                no_commands_,
-                partial_load,
-            ),
+        await self.inline.form(
+            text=f"{reply}\n{''.join(core_)}{''.join(plain_)}{''.join(inline_)}{no_commands_}{partial_load}\n\n<i>AuthorChe's🖋 fresh and cute Telegram bot </i>",
+            reply_markup=[
+                [
+                    {
+                        "text": "🧑‍🔧 Support",
+                        "callback": self.amore,
+                    },
+                ],
+                [{"text": "🔻 Close", "action": "close"}],
+            ],
+            message=message,
         )
+
+    async def amore(self, call: InlineCall) -> None:
+        await call.edit(
+            text=f"<b>🌳 Need help? Feel free to join our support chat. We help everyone.</b>",
+            reply_markup=[
+                [
+                    {
+                        "text": "AuthorChe's",
+                        "url": "https://t.me/AuthorChe",
+                    },
+                    {
+                        "text": "#offtop",
+                        "url": "https://t.me/cherkassy_offtop",
+                     },
+                ],
+                [{"text": "закрыть", "action": "close"}],
+            ],
+        )
+
+    
