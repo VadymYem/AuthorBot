@@ -108,7 +108,7 @@ class HelpMod(loader.Module):
             ),
             loader.ConfigValue(
                 "acbot_emoji",
-                "🧑‍🎤",
+                "✍",
                 lambda: "acbot-only module bullet",
                 validator=loader.validators.String(length=1),
             ),
