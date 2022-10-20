@@ -397,7 +397,7 @@ class HelpMod(loader.Module):
             reply_markup=[
                 [
                     {
-                        "text": "🧑‍🔧 Support",
+                        "text": "Channels",
                         "callback": self.amore,
                     },
                 ],
@@ -408,11 +408,11 @@ class HelpMod(loader.Module):
 
     async def amore(self, call: InlineCall) -> None:
         await call.edit(
-            text=f"<b>🌳 Need help? Feel free to join our support chat. We help everyone.</b>",
+            text=f"<b>🌳 Need talk? Feel free to join our Author's chat's.</b>",
             reply_markup=[
                 [
                     {
-                        "text": "AuthorChe's",
+                        "text": "AuthorChe's✍",
                         "url": "https://t.me/AuthorChe",
                     },
                     {
