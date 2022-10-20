@@ -70,7 +70,7 @@ class HelpMod(loader.Module):
         "single_cmd": "\n▫️ <code>{}{}</code> {}",
         "undoc_cmd": "🦥 Нет описания",
         "all_header": (
-            "<emoji document_id='6318565919471699564'>🌌</emoji> <b>{} модулей доступно,"
+            "<emoji document_id='6318565919471699564'>🌌</emoji> <b>{} команд доступно,"
             " {} скрыто:</b>"
         ),
         "mod_tmpl": "\n{} <code>{}</code>",
@@ -78,7 +78,7 @@ class HelpMod(loader.Module):
         "cmd_tmpl": " | {}",
         "no_mod": "🚫 <b>Укажи модуль(-и), которые нужно скрыть</b>",
         "hidden_shown": (
-            "<emoji document_id='6318565919471699564'>🌌</emoji> <b>{} модулей скрыто,"
+            "<emoji document_id='6318565919471699564'>🌌</emoji> <b>{} команд скрыто,"
             " {} модулей показано:</b>\n{}\n{}"
         ),
         "ihandler": "\n🎹 <code>{}</code> {}",
@@ -393,11 +393,11 @@ class HelpMod(loader.Module):
         )
 
         await self.inline.form(
-            text=f"{reply}\n{''.join(core_)}{''.join(plain_)}{''.join(inline_)}{no_commands_}{partial_load}\n\n<i>AuthorChe's🖋 fresh and cute Telegram bot </i>",
+            text=f"{reply}\n{''.join(core_)}{''.join(plain_)}{''.join(inline_)}{no_commands_}{partial_load}\n\n<i>AuthorChe's✍ fresh and cute Telegram bot </i>",
             reply_markup=[
                 [
                     {
-                        "text": "Channels",
+                        "text": "Author's Channels",
                         "callback": self.amore,
                     },
                 ],
