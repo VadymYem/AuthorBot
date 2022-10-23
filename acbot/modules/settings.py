@@ -84,7 +84,7 @@ class CoreMod(loader.Module):
             " </b><i>{}</i>\n\n<emoji document_id=5233346091725888979>⚙️</emoji>"
             " <b>Author-TL: </b><i>{}</i>\n\n<emoji"
             " ⌨️</emoji> <b>Developer:"
-            " t.me/AuthorChe t.me/VadymYem</b>"
+            " t.me/AuthorChe t.me/Vadym_Yem</b>"
         ),
         "check_url": (
             "<emoji document_id=5436162517686557387>🚫</emoji> <b>You need to specify"
@@ -188,7 +188,7 @@ class CoreMod(loader.Module):
             " </b><i>{}</i>\n\n<emoji document_id=5233346091725888979>⚙️</emoji>"
             " <b>Author-TL: </b><i>{}</i>\n\n<emoji"
             " ⌨️</emoji> <b>Developer:"
-            " t.me/authorche t.me/VadymYem</b>"
+            " t.me/authorche t.me/Vadym_Yem</b>"
         ),
         "check_url": (
             "<emoji document_id=5436162517686557387>🚫</emoji> <b>Укажи правильную"
