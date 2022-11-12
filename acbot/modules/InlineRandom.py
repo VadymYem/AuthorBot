@@ -1,18 +1,4 @@
-#             █ █ ▀ █▄▀ ▄▀█ █▀█ ▀
-#             █▀█ █ █ █ █▀█ █▀▄ █
-#              © Copyright 2022
-#           https://t.me/hikariatama
-#
-# 🔒      Licensed under the GNU AGPLv3
-# 🌐 https://www.gnu.org/licenses/agpl-3.0.html
 
-# scope: hikka_min 1.2.10
-
-# meta pic: https://img.icons8.com/fluency/240/000000/shuffle.png
-# meta banner: https://mods.hikariatama.ru/badges/inline_random.jpg
-# meta developer: @hikarimods
-# scope: inline
-# scope: hikka_only
 
 from random import choice, randint
 
@@ -71,7 +57,7 @@ class InlineRandomMod(loader.Module):
             "title": "Choose one item from list",
             "description": "Trust in the God of luck, and he will be by your side!",
             "message": (
-                "<i>The God of luck whispers...</i>"
+                "<i>Бог удачі шепоче...</i>"
                 f" <b>{choice(a.split(',')).strip()}</b>"
             ),
             "thumb": "https://img.icons8.com/external-filled-outline-geotatah/64/000000/external-choice-customer-satisfaction-filled-outline-filled-outline-geotatah.png",
