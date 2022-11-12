@@ -83,8 +83,8 @@ class CoreMod(loader.Module):
             " {}.{}.{}</b>\n<emoji document_id=6318902906900711458>🧱</emoji> <b>Build:"
             " </b><i>{}</i>\n\n<emoji document_id=5233346091725888979>⚙️</emoji>"
             " <b>Author-TL: </b><i>{}</i>\n\n<emoji"
-            "💻 <b>Developer: <\b>"
-            " t.me/AuthorChe t.me/Vadym_Yem</b>"
+            "<b>💻 Developer:"
+            "t.me/AuthorChe or t.me/Vadym_Yem</b>"
         ),
         "check_url": (
             "<emoji document_id=5436162517686557387>🚫</emoji> <b>You need to specify"
@@ -183,12 +183,12 @@ class CoreMod(loader.Module):
             '<emoji document_id="5368324170671202286">👍</emoji><b> База очищена</b>'
         ),
         "acbot": (
-            "{}\n\n<emoji document_id=5406931726184225260>🧐</emoji> <b>Версия:"
-            " {}.{}.{}</b>\n<emoji document_id=6318902906900711458>🧱</emoji> <b>Сборка:"
+            "{}\n\n<emoji document_id=5406931726184225260>🧐</emoji> <b>Version:"
+            " {}.{}.{}</b>\n<emoji document_id=6318902906900711458>🧱</emoji> <b>Build:"
             " </b><i>{}</i>\n\n<emoji document_id=5233346091725888979>⚙️</emoji>"
             " <b>Author-TL: </b><i>{}</i>\n\n<emoji"
-            "💻 <b>Developer: <\b>"
-            " t.me/authorche t.me/Vadym_Yem</b>"
+            "<b>💻 Developer: "
+            " t.me/AuthorChe або t.me/Vadym_Yem</b>"
         ),
         "check_url": (
             "<emoji document_id=5436162517686557387>🚫</emoji> <b>Укажи правильную"
