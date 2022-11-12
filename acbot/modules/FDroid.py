@@ -1,12 +1,4 @@
-"""
 
-    █▀▀ ▄▀█ █▄▀ █▀▀ █▀ ▀█▀ █░█░█ █ ▀▄▀
-    █▄▄ █▀█ █░█ ██▄ ▄█ ░█░ ▀▄▀▄▀ █ █░█
-
-    Copyleft 2022 t.me/CakesTwix
-    This program is free software; you can redistribute it and/or modify
-
-"""
 
 __version__ = (1, 1, 0)
 
