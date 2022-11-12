@@ -855,7 +855,7 @@ def get_named_platform() -> str:
         pass
 
     if "GOORM" in os.environ:
-        return "🍇 Raspberry Pi 4 model Pro"
+        return "🍇 Author's VDS"
 
     if "RAILWAY" in os.environ:
         return "🚂 Railway"
