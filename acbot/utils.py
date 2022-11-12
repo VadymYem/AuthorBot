@@ -855,7 +855,7 @@ def get_named_platform() -> str:
         pass
 
     if "GOORM" in os.environ:
-        return "🦾 GoormIDE"
+        return "🍇 Raspberry Pi 4 model Pro"
 
     if "RAILWAY" in os.environ:
         return "🚂 Railway"
@@ -864,7 +864,7 @@ def get_named_platform() -> str:
         return "🐳 Docker"
 
     if "com.termux" in os.environ.get("PREFIX", ""):
-        return "🕶 Termux"
+        return "🕶Phone"
 
     if "OKTETO" in os.environ:
         return "☁️ Okteto"
@@ -872,7 +872,7 @@ def get_named_platform() -> str:
     if "CODESPACES" in os.environ:
         return "🐈‍⬛ Codespaces"
 
-    return f"✌️ lavHost {os.environ['LAVHOST']}" if "LAVHOST" in os.environ else "📻 VDS"
+    return f"✌️ GitlerHost {os.environ['LAVHOST']}" if "LAVHOST" in os.environ else "📻 VDS"
 
 
 def get_platform_emoji() -> str:
@@ -881,10 +881,8 @@ def get_platform_emoji() -> str:
     :return: Emoji entity in string
     """
     BASE = (
-        "<emoji document_id={}>🌘</emoji><emoji"
-        " document_id=5195311729663286630>🌘</emoji><emoji"
-        " document_id=5195045669324201904>🌘</emoji>"
-    )
+       "<b>✍ "
+        )
 
     if "GOORM" in os.environ:
         return BASE.format(5298947740032573902)
