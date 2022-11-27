@@ -6,8 +6,8 @@ __version__ = (1, 0, 2)
 
 # meta developer: @vadym_yem
 # scope: inline
-# scope: hikka_only
-# scope: hikka_min 1.2.10
+# scope: acbot_only
+# scope: acbot_min 1.2.10
 
 from .. import loader, utils
 from ..inline.types import InlineCall, InlineQuery
@@ -27,7 +27,7 @@ class LongReadMod(loader.Module):
         ),
     }
 
-    strings_ru = {
+    strings_ua = {
         "no_text": "🚫 <b>Please, specify text to hide</b>",
         "longread": (
             "🔥 <b>Для вас цікаве повідомлення</b>\n<i>Натисніть на кнопку, щоб прочитати його :) \nКнопка"
