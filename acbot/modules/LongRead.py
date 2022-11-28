@@ -22,9 +22,11 @@ class LongReadMod(loader.Module):
         "name": "LongRead",
         "no_text": "🚫 <b>Please, specify text to hide</b>",
         "longread": (
-            "🗄 <b>This is long read</b>\n<i>Click button to show text!\nThis button is"
-            " active within 6 hours</i>"
+            "🔥 <b>Для вас цікаве повідомлення</b>\n<i>Натисніть на кнопку, щоб прочитати його :) \nКнопка"
+            " активна протягом 6 годин</i>"
         ),
+        "_cmd_doc_lr": "<text> - Створити лонгрід",
+        "_cls_doc": "Ховає ваш текст",
     }
 
     strings_ua = {
