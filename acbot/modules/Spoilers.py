@@ -23,19 +23,23 @@ class SpoilersMod(loader.Module):
 
     strings = {
         "name": "Spoilers",
-        "only_he_can_open": "ℹ Only (s)he will be able to open it",
+        "only_he_can_open": "ℹ Тільки отримувач зможе переглянути його",
         "message": (
-            '🫦 <b>Hidden message for <a href="tg://user?id={}">{}</a></b>\n<i>You can'
-            " open this message only once!</i>"
+            '🔥 <b>Цікаве повідомлення для <a href="tg://user?id={}">{}</a></b>\n<i>Повідомлення читається'
+            " лише один раз!</i>"
         ),
         "user_not_specified": (
-            "🫦 <b>Hidden message for you!</b>\n<i>You can"
-            " open this message only once!</i>"
+            "🫦 <b>Шепіт для </b>\n<i> Невдався!!! Вказуйте айді або юзернейм (@authorche_bot hide @username or id text-message)"
+            "</i>"
         ),
-        "not4u": "🫦 I won't whisper you",
-        "open": "👀 Open",
-        "in_the_end": "Send spoiler to user in reply",
-        "broken": "🫦 Cats have eaten this whisper. Do not whisper in pm anymore.",
+        "not4u": "🫦 Я не буду тобі шепотіти",
+        "open": "👀 Переглянути",
+        "in_the_end": "Вкажіть @username or id перед текстом повідомлення",
+        "_ihandle_doc_hide": "Створити спойлер",
+        "_cls_doc": (
+            "Створює спойлери, які доступні тільки окремим користувачам"
+        ),
+        "broken": "🫦 Коти з'їли цей шепіт. Вказуйте аргументи",
     }
 
     strings_ua = {
