@@ -1,4 +1,4 @@
-__version__ = (1, 0, 4)
+__version__ = (1, 0, 5)
 # meta developer: @Vadym_Yem
 # scope: inline
 # scope: acbot_only
@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 
 @loader.tds
-class SpoilersMod(loader.Module):
+class HideMessagesMod(loader.Module):
     """Create spoilers, that can be accessed only by certain users"""
 
     _cache = {}
