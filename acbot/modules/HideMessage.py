@@ -43,7 +43,7 @@ class HideMessagesMod(loader.Module):
     }
 
     async def hide_inline_handler(self, query: InlineQuery):
-        """Create new hidden message"""
+        """Створює спойлери, які доступні тільки окремим користувачам"""
         text = query.args
         for_user = self.strings("in_the_end")
         for_user_id = None
