@@ -42,26 +42,6 @@ class HideMessagesMod(loader.Module):
         "broken": "🫦 Коти з'їли цей шепіт. Вказуйте аргументи",
     }
 
-    strings_ua = {
-        "only_he_can_open": "ℹ Тільки отримувач зможе переглянути його",
-        "message": (
-            '🔥 <b>Цікаве повідомлення для <a href="tg://user?id={}">{}</a></b>\n<i>Повідомлення читається'
-            " лише один раз!</i>"
-        ),
-        "user_not_specified": (
-            "🫦 <b>Шепіт для </b>\n<i> Невдався!!! Вказуйте айді або юзернейм (@authorche_bot hide @username or id text-message)"
-            "</i>"
-        ),
-        "not4u": "🫦 Я не буду тобі шепотіти",
-        "open": "👀 Переглянути",
-        "in_the_end": "Вкажіть @username or id перед текстом повідомлення",
-        "_ihandle_doc_hide": "Створити спойлер",
-        "_cls_doc": (
-            "Створює спойлери, які доступні тільки окремим користувачам"
-        ),
-        "broken": "🫦 Коти з'їли цей шепіт. Вказуйте аргументи",
-    }
-
     async def hide_inline_handler(self, query: InlineQuery):
         """Create new hidden message"""
         text = query.args
@@ -79,7 +59,7 @@ class HideMessagesMod(loader.Module):
             except Exception:
                 pass
             else:
-                for_user = "Hidden message for " + get_display_name(user)
+                for_user = "Цікаве повідомлення для " + get_display_name(user)
                 for_user_id = user.id
                 text = " ".join(text.split(" ")[1:])
 
