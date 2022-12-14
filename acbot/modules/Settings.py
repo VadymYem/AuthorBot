@@ -123,109 +123,109 @@ class CoreMod(loader.Module):
         ),
     }
 
-    strings_ru = {
+    strings_ua = {
         "too_many_args": (
-            "<emoji document_id=5436162517686557387>🚫</emoji> <b>Слишком много"
-            " аргументов</b>"
+            "<emoji document_id=5436162517686557387>🚫</emoji> <b>Надто багато"
+            " аргументів</b>"
         ),
         "blacklisted": (
-            '<emoji document_id="5368324170671202286">👍</emoji> <b>Чат {} добавлен в'
-            " черный список юзербота</b>"
+            '<emoji document_id="5368324170671202286">👍</emoji> <b>Чат {} додано до'
+            " чорного списку AuthorChe's</b>"
         ),
         "unblacklisted": (
-            '<emoji document_id="5368324170671202286">👍</emoji> <b>Чат {} удален из'
-            " черного списка юзербота</b>"
+            '<emoji document_id="5368324170671202286">👍</emoji> <b>Чат {} видалено з'
+            " чорного списку AuthorChe's</b>"
         ),
         "user_blacklisted": (
-            '<emoji document_id="5368324170671202286">👍</emoji> <b>Пользователь {}'
-            " добавлен в черный список юзербота</b>"
+            '<emoji document_id="5368324170671202286">👍</emoji> <b>Користувача {}'
+            " додано до чорного списку AuthorChe's</b>"
         ),
         "user_unblacklisted": (
-            '<emoji document_id="5368324170671202286">👍</emoji> <b>Пользователь {}'
-            " удален из черного списка юзербота</b>"
+            '<emoji document_id="5368324170671202286">👍</emoji> <b>Користувача {}'
+            " видалено з чорного списку AuthorChe's</b>"
         ),
-        "what_prefix": "❓ <b>А какой префикс ставить то?</b>",
+        "what_prefix": "❓ <b>А який префікс мені ставити?</b>",
         "prefix_incorrect": (
-            "<emoji document_id=5436162517686557387>🚫</emoji> <b>Префикс должен"
-            " состоять только из одного символа</b>"
+            "<emoji document_id=5436162517686557387>🚫</emoji> <b>Префікс має"
+            " складатися тільки з одного символу</b>"
         ),
         "prefix_set": (
-            '<emoji document_id="5368324170671202286">👍</emoji> <b>Префикс обновлен.'
-            " Чтобы вернуть его, используй</b> <code>{newprefix}setprefix"
+            '<emoji document_id="5368324170671202286">👍</emoji> <b>Префікс змінено.'
+            " Щоб повернути його, використовуй</b> <code>{newprefix}setprefix"
             " {oldprefix}</code>"
         ),
         "alias_created": (
-            '<emoji document_id="5368324170671202286">👍</emoji> <b>Алиас создан.'
-            " Используй его через</b> <code>{}</code>"
+            '<emoji document_id="5368324170671202286">👍</emoji> <b>Аліас створено.'
+            " Використовуй його через</b> <code>{}</code>"
         ),
-        "aliases": "<b>🔗 Алиасы:</b>\n",
+        "aliases": "<b>🔗 Аліаси:</b>\n",
         "no_command": (
-            "<emoji document_id=5436162517686557387>🚫</emoji> <b>Команда</b>"
-            " <code>{}</code> <b>не существует</b>"
+            "<emoji document_id=5436162517686557387>🚫</emoji> <b>Команди</b>"
+            " <code>{}</code> <b>немає в моїй системі</b>"
         ),
         "alias_args": (
-            "<emoji document_id=5436162517686557387>🚫</emoji> <b>Требуется ввести"
-            " команду и алиас для нее</b>"
+            "<emoji document_id=5436162517686557387>🚫</emoji> <b>Потрібно ввести"
+            " команду й аліас для неї</b>"
         ),
         "delalias_args": (
-            "<emoji document_id=5436162517686557387>🚫</emoji> <b>Требуется имя"
-            " алиаса</b>"
+            "<emoji document_id=5436162517686557387>🚫</emoji> <b>Потрібне ім`я"
+            " аліасу</b>"
         ),
         "alias_removed": (
-            '<emoji document_id="5368324170671202286">👍</emoji> <b>Алиас</b>'
-            " <code>{}</code> <b>удален</b>."
+            '<emoji document_id="5368324170671202286">👍</emoji> <b>Аліас</b>'
+            " <code>{}</code> <b>видалено</b>."
         ),
         "no_alias": (
-            "<emoji document_id=5436162517686557387>🚫</emoji><b> Алиас</b>"
-            " <code>{}</code> <b>не существует</b>"
+            "<emoji document_id=5436162517686557387>🚫</emoji><b> Аліасу</b>"
+            " <code>{}</code> <b>немає в моїй системі</b>"
         ),
         "db_cleared": (
             '<emoji document_id="5368324170671202286">👍</emoji><b> База очищена</b>'
         ),
         "acbot": (
-            "{}\n\n<emoji document_id=5406931726184225260>🧐</emoji> <b>Version:"
+            "{}\n\n<emoji document_id=5406931726184225260>🧐</emoji> <b>Версія:"
             " {}.{}.{}</b>\n<emoji document_id=6318902906900711458>🧱</emoji> <b>Build:"
             " </b><i>{}</i>\n\n<emoji document_id=5233346091725888979>⚙️</emoji>"
-            " <b>Author-TL: </b><i>{}</i>\n\n<emoji"
-            "<b>💻 Developer: \n"
+            " <b>Author's Bot: </b><i>{}</i>\n\n<emoji"
+            "<b>💻 Розробник: \n"
             " t.me/AuthorChe або t.me/Vadym_Yem</b>"
         ),
         "check_url": (
-            "<emoji document_id=5436162517686557387>🚫</emoji> <b>Укажи правильную"
-            " ссылку, ведущую на пак с переводом</b>"
+            "<emoji document_id=5436162517686557387>🚫</emoji> <b>Вкажи правильне"
+            " посилання, на пак с перекладом</b>"
         ),
-        "lang_saved": "{} <b>Язык сохранен!</b>",
+        "lang_saved": "{} <b>Мову збережено!</b>",
         "pack_saved": (
-            '<emoji document_id="5368324170671202286">👍</emoji> <b>Пак перевода'
-            " сохранен!</b>"
+            '<emoji document_id="5368324170671202286">👍</emoji> <b>Пак перекладу'
+            " збережено!</b>"
         ),
         "incorrect_language": (
-            "<emoji document_id=5436162517686557387>🚫</emoji> <b>Указан неверный"
-            " язык</b>"
+            "<emoji document_id=5436162517686557387>🚫</emoji> <b>Вказано неправильну"
+            " мову</b>"
         ),
         "lang_removed": (
-            '<emoji document_id="5368324170671202286">👍</emoji> <b>Переводы'
-            " сброшены</b>"
+            '<emoji document_id="5368324170671202286">👍</emoji> <b>Переклади'
+            " скинуті</b>"
         ),
         "check_pack": (
-            "<emoji document_id=5436162517686557387>🚫</emoji> <b>По ссылке находится"
-            " неправильный пак</b>"
+            "<emoji document_id=5436162517686557387>🚫</emoji> <b>За посиланням знаходиться"
+            " неправильний пак</b>"
         ),
-        "_cls_doc": "Управление базовыми настройками юзербота",
-        "confirm_cleardb": "⚠️ <b>Вы уверены, что хотите сбросить базу данных?</b>",
-        "cleardb_confirm": "🗑 Очистить базу",
-        "cancel": "🚫 Отмена",
+        "_cls_doc": "Керування базовими нплаштуваннями AuthorChe's",
+        "confirm_cleardb": "⚠️ <b>Ви впевнені, що хочете скинути базу даних?</b>",
+        "cleardb_confirm": "🗑 Очистити базу",
+        "cancel": "🚫 Відміна",
         "who_to_blacklist": (
-            "<emoji document_id=5384612769716774600>❓</emoji> <b>Кого заблокировать"
-            " то?</b>"
+            "<emoji document_id=5384612769716774600>❓</emoji> <b>Кого заблокувати"
+            " ?</b>"
         ),
         "who_to_unblacklist": (
-            "<emoji document_id=5384612769716774600>❓</emoji> <b>Кого разблокировать"
-            " то?</b>"
+            "<emoji document_id=5384612769716774600>❓</emoji> <b>Кого розблокувати"
+            " ?</b>"
         ),
         "unstable": (
-            "\n\n<emoji document_id=5467370583282950466>🙈</emoji> <b>Ты используешь"
-            " нестабильную ветку </b><code>{}</code><b>!</b>"
+            "\n\n<emoji document_id=5467370583282950466>🙈</emoji> <b>Ти використовуєш"
+            " нестабільну гілку </b><code>{}</code><b>!</b>"
         ),
     }
 
@@ -282,7 +282,7 @@ class CoreMod(loader.Module):
             ),
         )
 
-    @loader.command(ru_doc="[чат] [модуль] - Отключить бота где-либо")
+    @loader.command(ua_doc="[чат] [модуль] - Вимнути бота будь де")
     async def blacklist(self, message: Message):
         """[chat_id] [module] - Blacklist the bot from operating somewhere"""
         chatid = await self.blacklistcommon(message)
@@ -295,7 +295,7 @@ class CoreMod(loader.Module):
 
         await utils.answer(message, self.strings("blacklisted").format(chatid))
 
-    @loader.command(ru_doc="[чат] - Включить бота где-либо")
+    @loader.command(ua_doc="[чат] - Ввімкнути бота будь де")
     async def unblacklist(self, message: Message):
         """<chat_id> - Unblacklist the bot from operating somewhere"""
         chatid = await self.blacklistcommon(message)
@@ -319,7 +319,7 @@ class CoreMod(loader.Module):
 
             return message.to_id.user_id if message.is_private else False
 
-    @loader.command(ru_doc="[пользователь] - Запретить пользователю выполнять команды")
+    @loader.command(ua_doc="[користувач] - Заборонити користувачу виконувати команди")
     async def blacklistuser(self, message: Message):
         """[user_id] - Prevent this user from running any commands"""
         user = await self.getuser(message)
@@ -336,7 +336,7 @@ class CoreMod(loader.Module):
 
         await utils.answer(message, self.strings("user_blacklisted").format(user))
 
-    @loader.command(ru_doc="[пользователь] - Разрешить пользователю выполнять команды")
+    @loader.command(ua_doc="[користувач] - Дозволити користувачу виконувати команди")
     async def unblacklistuser(self, message: Message):
         """[user_id] - Allow this user to run permitted commands"""
         user = await self.getuser(message)
@@ -357,7 +357,7 @@ class CoreMod(loader.Module):
         )
 
     @loader.owner
-    @loader.command(ru_doc="<префикс> - Установить префикс команд")
+    @loader.command(ua_doc="<префікс> - Встановити префікс команд")
     async def setprefix(self, message: Message):
         """<prefix> - Sets command prefix"""
         args = utils.get_args_raw(message)
@@ -381,7 +381,7 @@ class CoreMod(loader.Module):
         )
 
     @loader.owner
-    @loader.command(ru_doc="Показать список алиасов")
+    @loader.command(ua_doc="Показати список алиасів")
     async def aliases(self, message: Message):
         """Print all your aliases"""
         aliases = self.allmodules.aliases
@@ -394,7 +394,7 @@ class CoreMod(loader.Module):
         await utils.answer(message, string)
 
     @loader.owner
-    @loader.command(ru_doc="Установить алиас для команды")
+    @loader.command(ua_doc="Встановити аліас для команди")
     async def addalias(self, message: Message):
         """Set an alias for a command"""
         args = utils.get_args(message)
@@ -423,7 +423,7 @@ class CoreMod(loader.Module):
             )
 
     @loader.owner
-    @loader.command(ru_doc="Удалить алиас для команды")
+    @loader.command(ua_doc="Видалити аліас для команди")
     async def delalias(self, message: Message):
         """Remove an alias for a command"""
         args = utils.get_args(message)
@@ -450,7 +450,7 @@ class CoreMod(loader.Module):
             self.strings("alias_removed").format(utils.escape_html(alias)),
         )
 
-    @loader.command(ru_doc="[ссылка на пак] - Изменить внешний пак перевода")
+    @loader.command(ua_doc="[посилання на пак] - Змінити зовнішній пак перекладу")
     async def dllangpackcmd(self, message: Message):
         """[link to a langpack | empty to remove] - Change acbot translate pack (external)
         """
@@ -472,7 +472,7 @@ class CoreMod(loader.Module):
             message, self.strings("pack_saved" if success else "check_pack")
         )
 
-    @loader.command(ru_doc="[языки] - Изменить стандартный язык")
+    @loader.command(ua_doc="[мови] - Змінити стандартну мову")
     async def setlang(self, message: Message):
         """[languages in the order of priority] - Change default language"""
         args = utils.get_args_raw(message)
@@ -498,7 +498,7 @@ class CoreMod(loader.Module):
         )
 
     @loader.owner
-    @loader.command(ru_doc="Очистить базу данных")
+    @loader.command(ua_doc="Очистити базу даних")
     async def cleardb(self, message: Message):
         """Clear the entire database, effectively performing a factory reset"""
         await self.inline.form(
