@@ -950,29 +950,29 @@ class Modules:
             f" Reason: </b><i>{utils.escape_html(reason)}</i>"
         )
 
-        if not hasattr(_module, "strings_ru"):
-            _module.strings_ru = {}
+        if not hasattr(_module, "strings_ua"):
+            _module.strings_ua = {}
 
-        _module.strings_ru["_acbot_internal_request_join"] = (
-            f"💫 <b>Модуль </b><code>{_module.__class__.__name__}</code><b> запросил"
-            " разрешение на вступление в канал <a"
+        _module.strings_ua["_acbot_internal_request_join"] = (
+            f"💫 <b>Модуль </b><code>{_module.__class__.__name__}</code><b> запросив"
+            " дозвіл на додавання в канал <a"
             f" href='https://t.me/{channel.username}'>{utils.escape_html(channel.title)}</a></b>\n\n<b>❓"
             f" Причина: </b><i>{utils.escape_html(reason)}</i>"
         )
 
         await self.inline.bot.send_animation(
             self.client.tg_id,
-            "https://static.hikari.gay/ab3adf144c94a0883bfe489f4eebc520.gif",
+            "https://i.gifer.com/e2H.gif",
             caption=_module.strings("_acbot_internal_request_join"),
             reply_markup=self.inline.generate_markup(
                 [
                     {
-                        "text": "💫 Approve",
+                        "text": "✅ Дозволити",
                         "callback": self._approve,
                         "args": (channel, event),
                     },
                     {
-                        "text": "✖️ Decline",
+                        "text": "✖️ Заборонити",
                         "callback": self._decline,
                         "args": (channel, event),
                     },
