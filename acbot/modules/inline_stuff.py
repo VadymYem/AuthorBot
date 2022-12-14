@@ -43,23 +43,23 @@ class InlineStuffMod(loader.Module):
         ),
     }
 
-    strings_ru = {
+    strings_ua = {
         "bot_username_invalid": (
-            "<emoji document_id=5415905755406539934>🚫</emoji> <b>Неправильный ник"
-            " бота. Он должен заканчиваться на </b><code>bot</code><b> и быть не короче"
-            " чем 5 символов</b>"
+            "<emoji document_id=5415905755406539934>🚫</emoji> <b>Неправильний нік"
+            " бота. Він має закінчуватись на </b><code>bot</code><b> и бути не коротше"
+            " ніж 5 символів</b>"
         ),
         "bot_username_occupied": (
-            "<emoji document_id=5415905755406539934>🚫</emoji> <b>Такой ник бота уже"
-            " занят</b>"
+            "<emoji document_id=5415905755406539934>🚫</emoji> <b>Такий нік бота вже"
+            " зайнято</b>"
         ),
         "bot_updated": (
             "<emoji document_id=6318792204118656433>🎉</emoji> <b>Настройки сохранены."
-            " Для их применения нужно перезагрузить юзербот</b>"
+            " Для їх застосування потрібно перезавантаження AuthorChe`s</b>"
         ),
         "this_is_acbot": (
              "✌️ <b>Привіт! Це 𝙰𝚞𝚝𝚑𝚘𝚛𝙲𝚑𝚎'𝚜✍️— Гарний чат-модератор та бот зворотнього звязку. Ви можете"
-            " Використовувати інлайн команди (@authorche_bot команда) та за допомогою /feedback звязатись з Автором</b>\n\n<b>🌍 <a"
+            " Використовувати інлайн команди (@authorche_bot команда) та за допомогою /feedback звязатись з Автором\n\n Наразі на ремонтних роботах</b>\n\n<b>🌍 <a"
             ' href="t.me/AuthorChe">𝙰𝚞𝚝𝚑𝚘𝚛𝙲𝚑𝚎✍️</a></b>\n<b>👥 <a'
             ' href="https://t.me/cherkassy_offtop">#offtop</a></b>'
         ),
@@ -88,7 +88,7 @@ class InlineStuffMod(loader.Module):
 
         await message.delete()
 
-        m = await message.respond("🌘 <b>Opening gallery...</b>")
+        m = await message.respond("✍ <b>Opening gallery...</b>")
 
         await self.inline.gallery(
             message=m,
