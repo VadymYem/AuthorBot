@@ -127,9 +127,9 @@ class HelpMod(loader.Module):
         )
 
     @loader.command(
-        ru_doc=(
-            "<модуль или модули> - Спрятать модуль(-и) из помощи\n*Разделяй модули"
-            " пробелами"
+        ua_doc=(
+            "<модуль чи модулі> - Сховати модуль(-і) з меню допомоги\n*Розділяй модулі"
+            " пробілами"
         )
     )
     async def helphide(self, message: Message):
@@ -251,7 +251,7 @@ class HelpMod(loader.Module):
         )
 
     @loader.unrestricted
-    @loader.command(ru_doc="[модуль] [-f] - Показать помощь")
+    @loader.command(ua_doc="[модуль] [-f] - Показати меню допомоги")
     async def help(self, message: Message):
         """[module] [-f] - Show help"""
         args = utils.get_args_raw(message)
@@ -420,7 +420,7 @@ class HelpMod(loader.Module):
                         "url": "https://t.me/cherkassy_offtop",
                      },
                 ],
-                [{"text": "закрыть", "action": "close"}],
+                [{"text": "Закрити меню", "action": "close"}],
             ],
         )
 
