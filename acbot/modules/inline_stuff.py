@@ -36,10 +36,8 @@ class InlineStuffMod(loader.Module):
             " saved. Restart userbot to apply changes</b>"
         ),
         "this_is_acbot": (
-             "✌️ <b>Привіт! Це 𝙰𝚞𝚝𝚑𝚘𝚛𝙲𝚑𝚎'𝚜✍️— Гарний чат-модератор та бот зворотнього звязку. Ви можете"
-            " Використовувати інлайн команди (@authorche_bot команда) та за допомогою /feedback звязатись з Автором</b>\n\n<b>🌍 <a"
+             "✌️ <b>Hello! This is 𝙰𝚞𝚝𝚑𝚘𝚛𝙲𝚑𝚎'𝚜✍️. Glad to see you to :)</b>\n\n<b>🌍 <a"
             ' href="t.me/AuthorChe">𝙰𝚞𝚝𝚑𝚘𝚛𝙲𝚑𝚎✍️</a></b>\n<b>👥 <a'
-            ' href="https://t.me/cherkassy_offtop">#offtop</a></b>'
         ),
     }
 
@@ -58,10 +56,8 @@ class InlineStuffMod(loader.Module):
             " Для їх застосування потрібно перезавантаження AuthorChe`s</b>"
         ),
         "this_is_acbot": (
-             "✌️ <b>Привіт! Це 𝙰𝚞𝚝𝚑𝚘𝚛𝙲𝚑𝚎'𝚜✍️— Гарний чат-модератор та бот зворотнього звязку. Ви можете"
-            " Використовувати інлайн команди (@authorche_bot команда) та за допомогою /feedback звязатись з Автором\n\n Наразі на ремонтних роботах</b>\n\n<b>🌍 <a"
+             "✌️ <b>Привіт! Це 𝙰𝚞𝚝𝚑𝚘𝚛𝙲𝚑𝚎'𝚜✍️. Радий тебе тут бачити)</b>\n\n<b>🌍 <a"
             ' href="t.me/AuthorChe">𝙰𝚞𝚝𝚑𝚘𝚛𝙲𝚑𝚎✍️</a></b>\n<b>👥 <a'
-            ' href="https://t.me/cherkassy_offtop">#offtop</a></b>'
         ),
     }
 
@@ -130,7 +126,7 @@ class InlineStuffMod(loader.Module):
 
                     return True
 
-    @loader.command(ru_doc="<юзернейм> - Изменить юзернейм инлайн бота")
+    @loader.command(ua_doc="<юзернейм> - Змінити юзернейм інлайн бота")
     async def ch_acbot_bot(self, message: Message):
         """<username> - Change your acbot inline bot username"""
         args = utils.get_args_raw(message).strip("@")
