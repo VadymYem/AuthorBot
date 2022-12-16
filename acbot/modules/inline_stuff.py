@@ -36,9 +36,11 @@ class InlineStuffMod(loader.Module):
             " saved. Restart userbot to apply changes</b>"
         ),
         "this_is_acbot": (
-             "✌️ <b>Hello! This is 𝙰𝚞𝚝𝚑𝚘𝚛𝙲𝚑𝚎'𝚜✍️. Glad to see you to :)</b>"
-            ' href="t.me/AuthorChe">𝙰𝚞𝚝𝚑𝚘𝚛𝙲𝚑𝚎✍️</a></b>'
-        ),
+            "✌️ <b>Hello! This is 𝙰𝚞𝚝𝚑𝚘𝚛𝙲𝚑𝚎'𝚜✍️. You can"
+            " contact with bot owner via /feedback</b>\n\n<b>🌍 <a"
+            ' href="t.me/AuthorChe">𝙰𝚞𝚝𝚑𝚘𝚛𝙲𝚑𝚎✍️</a></b>\n<b>👥 <a'
+            ' href="https://t.me/authorchefeedbackbot">Author✍️</a></b>'
+         ),
     }
 
     strings_ua = {
@@ -57,7 +59,7 @@ class InlineStuffMod(loader.Module):
         ),
         "this_is_acbot": (
              "✌️ <b>Привіт! Це 𝙰𝚞𝚝𝚑𝚘𝚛𝙲𝚑𝚎'𝚜✍️. Ви можете"
-            " Зв'язатися з власником боту використавши /feedback</b>\n\n<b>🌍 <a"
+            " зв'язатися з власником боту використавши /feedback</b>\n\n<b>🌍 <a"
             ' href="t.me/AuthorChe">𝙰𝚞𝚝𝚑𝚘𝚛𝙲𝚑𝚎✍️</a></b>\n<b>👥 <a'
             ' href="https://t.me/authorchefeedbackbot">Author✍️</a></b>'
         ),
