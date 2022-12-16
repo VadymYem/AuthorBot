@@ -354,7 +354,7 @@ class AcbotSecurityMod(loader.Module):
             "<emoji document_id=5472308992514464048>🔐</emoji> <b>Правила"
             ' таргетованої безпеки для <a href="{}">{}</a> видалено</b>'
         ),
-        **service_strings_ru,
+        **service_strings_ua,
     }
 
     async def inline__switch_perm(
