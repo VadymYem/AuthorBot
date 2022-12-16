@@ -56,8 +56,10 @@ class InlineStuffMod(loader.Module):
             " Для їх застосування потрібно перезавантаження AuthorChe`s</b>"
         ),
         "this_is_acbot": (
-             "✌️ <b>Привіт! Це 𝙰𝚞𝚝𝚑𝚘𝚛𝙲𝚑𝚎'𝚜✍️. Радий тебе тут бачити)</b>"
-            ' href="t.me/AuthorChe">𝙰𝚞𝚝𝚑𝚘𝚛𝙲𝚑𝚎✍️</a></b>'
+             "✌️ <b>Привіт! Це 𝙰𝚞𝚝𝚑𝚘𝚛𝙲𝚑𝚎'𝚜✍️. Ви можете"
+            " Зв'язатися з власником боту використавши /feedback</b>\n\n<b>🌍 <a"
+            ' href="t.me/AuthorChe">𝙰𝚞𝚝𝚑𝚘𝚛𝙲𝚑𝚎✍️</a></b>\n<b>👥 <a'
+            ' href="https://t.me/authorchefeedbackbot">Author✍️</a></b>'
         ),
     }
 
