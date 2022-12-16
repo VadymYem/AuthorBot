@@ -101,7 +101,7 @@ class UpdaterMod(loader.Module):
     }
 
     @loader.owner
-    @loader.command(ru_doc="Перезавантажує бот")
+    @loader.command(ua_doc="Перезавантажує бот")
     async def restart(self, message: Message):
         """Restarts the userbot"""
         secure_boot = "--secure-boot" in utils.get_args_raw(message)
