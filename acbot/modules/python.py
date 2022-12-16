@@ -40,7 +40,7 @@ class PythonMod(loader.Module):
         ),
     }
 
-    strings_ru = {
+    strings_ua = {
         "eval": (
             "<emoji document_id=5431376038628171216>🎬</emoji><b>"
             " Код:</b>\n<code>{}</code>\n<emoji"
@@ -50,19 +50,19 @@ class PythonMod(loader.Module):
         "err": (
             "<emoji document_id=5431376038628171216>🎬</emoji><b>"
             " Код:</b>\n<code>{}</code>\n\n<emoji"
-            " document_id=6323575131239089635>🚫</emoji><b> Ошибка:</b>\n{}"
+            " document_id=6323575131239089635>🚫</emoji><b> Помилка:</b>\n{}"
         ),
-        "_cls_doc": "Выполняет Python код",
+        "_cls_doc": "Виконує Python код",
     }
 
     @loader.owner
-    @loader.command(ru_doc="Алиас для команды .e")
+    @loader.command(ua_doc="Алiас для команди .e")
     async def eval(self, message: Message):
         """Alias for .e command"""
         await self.e(message)
 
     @loader.owner
-    @loader.command(ru_doc="Выполняет Python код")
+    @loader.command(ua_doc="Виконує Python код")
     async def e(self, message: Message):
         """Evaluates python code"""
         ret = self.strings("eval")
