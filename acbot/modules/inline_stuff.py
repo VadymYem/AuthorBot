@@ -36,8 +36,8 @@ class InlineStuffMod(loader.Module):
             " saved. Restart userbot to apply changes</b>"
         ),
         "this_is_acbot": (
-             "✌️ <b>Hello! This is 𝙰𝚞𝚝𝚑𝚘𝚛𝙲𝚑𝚎'𝚜✍️. Glad to see you to :)</b>\n\n<b>🌍 <a"
-            ' href="t.me/AuthorChe">𝙰𝚞𝚝𝚑𝚘𝚛𝙲𝚑𝚎✍️</a></b>\n<b>👥 <a'
+             "✌️ <b>Hello! This is 𝙰𝚞𝚝𝚑𝚘𝚛𝙲𝚑𝚎'𝚜✍️. Glad to see you to :)</b>"
+            ' href="t.me/AuthorChe">𝙰𝚞𝚝𝚑𝚘𝚛𝙲𝚑𝚎✍️</a></b>'
         ),
     }
 
@@ -56,8 +56,8 @@ class InlineStuffMod(loader.Module):
             " Для їх застосування потрібно перезавантаження AuthorChe`s</b>"
         ),
         "this_is_acbot": (
-             "✌️ <b>Привіт! Це 𝙰𝚞𝚝𝚑𝚘𝚛𝙲𝚑𝚎'𝚜✍️. Радий тебе тут бачити)</b>\n\n<b>🌍 <a"
-            ' href="t.me/AuthorChe">𝙰𝚞𝚝𝚑𝚘𝚛𝙲𝚑𝚎✍️</a></b>\n<b>👥 <a'
+             "✌️ <b>Привіт! Це 𝙰𝚞𝚝𝚑𝚘𝚛𝙲𝚑𝚎'𝚜✍️. Радий тебе тут бачити)</b>"
+            ' href="t.me/AuthorChe">𝙰𝚞𝚝𝚑𝚘𝚛𝙲𝚑𝚎✍️</a></b>'
         ),
     }
 
