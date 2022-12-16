@@ -27,12 +27,12 @@ class UpdateNotifierMod(loader.Module):
         "more": "\n<i><b>🎥 And {} more...</b></i>",
     }
 
-    strings_ru = {
+    strings_ua = {
         "update_required": (
-            "✍ <b>Доступно обновление AuthorChe's!</b>\n\nОпубликована новая версия AuthorChe's.\n🔮"
+            "✍ <b>Додано оновлення AuthorChe's!</b>\n\nОпублікована нова версія AuthorChe's.\n🔮"
             " <b>AuthorChe's <s>{}</s> -> {}</b>\n\n{}"
         ),
-        "more": "\n<i><b>🎥 И еще {}...</b></i>",
+        "more": "\n<i><b>🎥 І ще {}...</b></i>",
     }
 
     _notified = None
