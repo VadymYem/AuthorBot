@@ -1,8 +1,8 @@
 __version__ = (1, 0, 4)
 # meta developer: @Vadym_Yem
 # scope: inline
-# scope: hikka_only
-# scope: hikka_min 1.3.3
+# scope: acbot_only
+# scope: acbot_min 1.3.3
 
 from telethon.utils import get_display_name
 from telethon.utils import resolve_inline_message_id
