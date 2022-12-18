@@ -387,6 +387,7 @@ class LoaderMod(loader.Module):
                     "https://github.com/hikariatama/host/raw/master",
                     "https://github.com/MoriSummerz/ftg-mods/raw/main",
                     "https://gitlab.com/CakesTwix/friendly-userbot-modules/-/raw/master",
+                    "https://github.com/VadymYem/CheModules/raw/main",
                 ],
                 lambda: self.strings("add_repo_config_doc"),
                 validator=loader.validators.Series(validator=loader.validators.Link()),
@@ -478,7 +479,7 @@ class LoaderMod(loader.Module):
         )
 
     @loader.owner
-    @loader.command(ru_doc="Загрузить модуль из официального репозитория")
+    @loader.command(ua_doc="Завантажити модуль з офіційних репо")
     async def dlmod(self, message: Message):
         """Install a module from the official module repo"""
         if args := utils.get_args(message):
@@ -517,7 +518,7 @@ class LoaderMod(loader.Module):
             )
 
     @loader.owner
-    @loader.command(ru_doc="Установить пресет модулей")
+    @loader.command(ua_doc="Встановити пресет модулів")
     async def dlpreset(self, message: Message):
         """Set modules preset"""
         args = utils.get_args(message)
@@ -685,7 +686,7 @@ class LoaderMod(loader.Module):
         await self.load_module(doc, call, origin=path_ or "<string>", save_fs=save)
 
     @loader.owner
-    @loader.command(ru_doc="Загрузить модуль из файла")
+    @loader.command(ua_doc="Завантажити модуль з файла")
     async def loadmod(self, message: Message):
         """Loads the module file"""
         msg = message if message.file else (await message.get_reply_message())
@@ -1291,7 +1292,7 @@ class LoaderMod(loader.Module):
         await call.answer(self.strings("subscribed"))
 
     @loader.owner
-    @loader.command(ru_doc="Выгрузить модуль")
+    @loader.command(ua_doc="Видалити модуль")
     async def unloadmod(self, message: Message):
         """Unload module by class name"""
         args = utils.get_args_raw(message)
@@ -1335,7 +1336,7 @@ class LoaderMod(loader.Module):
         await utils.answer(message, msg)
 
     @loader.owner
-    @loader.command(ru_doc="Удалить все модули")
+    @loader.command(ua_doc="Видалити всі модулі")
     async def clearmodules(self, message: Message):
         """Delete all installed modules"""
         await self.inline.form(
