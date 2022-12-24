@@ -27,4 +27,3 @@
 </ul>
 
 
-<img src="https://t.me/acubot_screen/8">
