@@ -1,5 +1,5 @@
 <hr>
-<h2><img src="https://github.com/VadymYem/AuthorBot/blob/main/assets/1326-command-window-line-flat.webp" height="54" align="middle"> Installation</h2>
+<h2><img src="https://github.com/VadymYem/AuthorBot/blob/main/assets/1326-command-window-line-flat.webp" height="54" align="middle"> Installation(<b>Linux system</b>)</h2>
 <img src="https://github.com/VadymYem/AuthorBot/blob/main/assets/logo_1.jpg">
 
 <b>Manual installation(root):</b>
