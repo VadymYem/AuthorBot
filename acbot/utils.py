@@ -866,8 +866,8 @@ def get_named_platform() -> str:
     if "com.termux" in os.environ.get("PREFIX", ""):
         return "🕶Phone"
 
-    if "OKTETO" in os.environ:
-        return "☁️ Okteto"
+    if "LUMIHOST" in os.environ:
+        return "LumiHost❄️"
 
     if "CODESPACES" in os.environ:
         return "🐈‍⬛ Codespaces"
@@ -882,27 +882,31 @@ def get_platform_emoji() -> str:
     """
     BASE = "".join(
         (
-            "<emoji document_id=5314287035341610625>✍</emoji>",
+            "<emoji document_id={}>✍</emoji>",
             "<emoji document_id=5314563004170249387>✍</emoji>",
             "<emoji document_id=5314693966313038245>✍</emoji>",
         )
 
     if "GOORM" in os.environ:
-        return BASE.format(5298947740032573902)
+        return BASE.format(5314287035341610625)
 
     if "OKTETO" in os.environ:
-        return BASE.format(5192767786174128165)
+        return BASE.format(5314287035341610625)
 
     if "CODESPACES" in os.environ:
-        return BASE.format(5194976881127989720)
+        return BASE.format(5314287035341610625)
 
     if "com.termux" in os.environ.get("PREFIX", ""):
-        return BASE.format(5193051778001673828)
+        return BASE.format(5314287035341610625)
 
     if "RAILWAY" in os.environ:
-        return BASE.format(5199607521593007466)
+        return BASE.format(5314287035341610625)
 
-    return BASE.format(5192765204898783881)
+    if "LUMIHOST" in os.environ:
+        return BASE.format(5314287035341610625)
+
+
+    return BASE.format(5314287035341610625)
 
 
 def uptime() -> int:
