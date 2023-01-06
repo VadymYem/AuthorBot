@@ -1,5 +1,22 @@
 """Utilities"""
 
+#    Friendly Telegram (telegram userbot)
+#    Copyright (C) 2018-2021 The Authors
+
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+
 #              © Copyright 2022
 #           https://t.me/authorche
 #
@@ -7,10 +24,8 @@
 # 🌐 https://www.gnu.org/licenses/agpl-3.0.html
 
 import asyncio
-import atexit as _atexit
 import contextlib
 import functools
-import inspect
 import io
 import json
 import logging
@@ -18,37 +33,33 @@ import os
 import random
 import re
 import shlex
-import signal
 import string
 import time
-import typing
+import inspect
 from datetime import timedelta
+import typing
 from urllib.parse import urlparse
 
 import git
 import grapheme
 import requests
 import telethon
-from aiogram.types import Message as AiogramMessage
 from telethon import hints
 from telethon.tl.custom.message import Message
 from telethon.tl.functions.account import UpdateNotifySettingsRequest
 from telethon.tl.functions.channels import (
     CreateChannelRequest,
-    EditAdminRequest,
     EditPhotoRequest,
+    EditAdminRequest,
     InviteToChannelRequest,
 )
 from telethon.tl.functions.messages import (
     GetDialogFiltersRequest,
-    SetHistoryTTLRequest,
     UpdateDialogFilterRequest,
+    SetHistoryTTLRequest,
 )
 from telethon.tl.types import (
     Channel,
-    Chat,
-    ChatAdminRights,
-    InputDocument,
     InputPeerNotifySettings,
     MessageEntityBankCard,
     MessageEntityBlockquote,
@@ -73,14 +84,18 @@ from telethon.tl.types import (
     PeerChannel,
     PeerChat,
     PeerUser,
-    UpdateNewChannelMessage,
     User,
+    Chat,
+    UpdateNewChannelMessage,
+    ChatAdminRights,
 )
 
+from aiogram.types import Message as AiogramMessage
+
 from .inline.types import InlineCall, InlineMessage
+from .types import Module, ListLike
 from .tl_cache import CustomTelegramClient
-from .types import acbotReplyMarkup, ListLike, Module
-from ._internal import fw_protect
+
 
 FormattingEntity = typing.Union[
     MessageEntityUnknown,
@@ -310,6 +325,7 @@ def run_async(loop: asyncio.AbstractEventLoop, coro: typing.Awaitable) -> typing
     :param coro: Coroutine to run
     :return: Result of the coroutine
     """
+    # When we bump minimum support to 3.7, use run()
     return asyncio.run_coroutine_threadsafe(coro, loop).result()
 
 
@@ -364,59 +380,13 @@ def relocate_entities(
     return entities
 
 
-async def answer_file(
-    message: typing.Union[Message, InlineCall, InlineMessage],
-    file: typing.Union[str, bytes, io.IOBase, InputDocument],
-    caption: typing.Optional[str] = None,
-    **kwargs,
-):
-    """
-    Use this to answer a message with a document
-    :param message: Message to answer
-    :param file: File to send - url, path or bytes
-    :param caption: Caption to send
-    :param kwargs: Extra kwargs to pass to `send_file`
-    :return: Sent message
-
-    :example:
-        >>> await utils.answer_file(message, "test.txt")
-        >>> await utils.answer_file(
-            message,
-             )
-    """
-    if isinstance(message, (InlineCall, InlineMessage)):
-        message = message.form["caller"]
-
-    if topic := get_topic(message):
-        kwargs.setdefault("reply_to", topic)
-
-    try:
-        response = await message.client.send_file(
-            message.peer_id,
-            file,
-            caption=caption,
-            **kwargs,
-        )
-    except Exception:
-        if caption:
-            logger.warning(
-                "Failed to send file, sending plain text instead", exc_info=True
-            )
-            return await answer(message, caption, **kwargs)
-
-        raise
-
-    with contextlib.suppress(Exception):
-        await message.delete()
-
-    return response
-
-
 async def answer(
     message: typing.Union[Message, InlineCall, InlineMessage],
     response: str,
     *,
-    reply_markup: typing.Optional[acbotReplyMarkup] = None,
+    reply_markup: typing.Optional[
+        typing.Union[typing.List[typing.List[dict]], typing.List[dict], dict]
+    ] = None,
     **kwargs,
 ) -> typing.Union[InlineCall, InlineMessage, Message]:
     """
@@ -514,10 +484,10 @@ async def answer(
                 result = await message.client.send_file(
                     message.peer_id,
                     file,
-                    caption=message.client.loader.lookup("translations").strings(
-                        "too_long"
+                    caption=(
+                        "<b>📤 Command output seems to be too long, so it's sent in"
+                        " file.</b>"
                     ),
-                    reply_to=kwargs.get("reply_to") or get_topic(message),
                 )
 
                 if message.out:
@@ -555,7 +525,7 @@ async def answer(
         else:
             kwargs.setdefault(
                 "reply_to",
-                getattr(message, "reply_to_msg_id", get_topic(message)),
+                getattr(message, "reply_to_msg_id", None),
             )
             result = await message.client.send_file(message.peer_id, response, **kwargs)
             if message.out:
@@ -645,15 +615,12 @@ async def set_avatar(
     else:
         return False
 
-    await fw_protect()
     res = await client(
         EditPhotoRequest(
             channel=peer,
             photo=await client.upload_file(f, file_name="photo.png"),
         )
     )
-
-    await fw_protect()
 
     try:
         await client.delete_messages(
@@ -697,7 +664,7 @@ async def invite_inline_bot(
                 channel=peer,
                 user_id=client.loader.inline.bot_username,
                 admin_rights=ChatAdminRights(ban_users=True),
-                rank="acbot",
+                rank="Authorbot",
             )
         )
 
@@ -747,12 +714,9 @@ async def asset_channel(
                         await client.get_participants(d.entity, limit=100)
                     )
                 ):
-                    await fw_protect()
                     await invite_inline_bot(client, d.entity)
 
             return d.entity, False
-
-    await fw_protect()
 
     peer = (
         await client(
@@ -765,22 +729,17 @@ async def asset_channel(
     ).chats[0]
 
     if invite_bot:
-        await fw_protect()
         await invite_inline_bot(client, peer)
 
     if silent:
-        await fw_protect()
         await dnd(client, peer, archive)
     elif archive:
-        await fw_protect()
         await client.edit_folder(peer, 1)
 
     if avatar:
-        await fw_protect()
         await set_avatar(client, peer, avatar)
 
     if ttl:
-        await fw_protect()
         await client(SetHistoryTTLRequest(peer=peer, period=ttl))
 
     if _folder:
@@ -835,7 +794,6 @@ async def dnd(
         )
 
         if archive:
-            await fw_protect()
             await client.edit_folder(peer, 1)
     except Exception:
         logger.exception("utils.dnd error")
@@ -895,14 +853,9 @@ def get_named_platform() -> str:
             return "🍁 WSL"
     except Exception:
         pass
-    if "LUMIHOST" in os.environ:
-    	return "LumiHost❄️"
-    
-    if "MIYAHOST" in os.environ:
-        return "🎃 MiyaHost"
 
     if "GOORM" in os.environ:
-        return "🦾 GoormIDE"
+        return "🍇 Author's VDS"
 
     if "RAILWAY" in os.environ:
         return "🚂 Railway"
@@ -911,7 +864,10 @@ def get_named_platform() -> str:
         return "🐳 Docker"
 
     if "com.termux" in os.environ.get("PREFIX", ""):
-        return "📱Phone"
+        return "🕶Phone"
+
+    if "OKTETO" in os.environ:
+        return "☁️ Okteto"
 
     if "CODESPACES" in os.environ:
         return "🐈‍⬛ Codespaces"
@@ -924,25 +880,15 @@ def get_platform_emoji() -> str:
     Returns custom emoji for current platform
     :return: Emoji entity in string
     """
-    BASE = "".join(
-        (
-            "<emoji document_id=5314287035341610625>✍</emoji>",
-            "<emoji document_id=5314563004170249387>✍</emoji>",
-            "<emoji document_id=5314693966313038245>✍</emoji>",
+    BASE = (
+       "<b>✍ "
         )
-    )
-
-    if "DOCKER" in os.environ:
-        return BASE.format(5298554256603752468)
-
-    if "LAVHOST" in os.environ:
-        return BASE.format(5301078610747074753)
-
-    if "MIYAHOST" in os.environ:
-        return BASE.format(5280938237785808014)
 
     if "GOORM" in os.environ:
         return BASE.format(5298947740032573902)
+
+    if "OKTETO" in os.environ:
+        return BASE.format(5192767786174128165)
 
     if "CODESPACES" in os.environ:
         return BASE.format(5194976881127989720)
@@ -1335,19 +1281,13 @@ async def get_message_link(
             f"tg://openmessage?user_id={get_chat_id(message)}&message_id={message.id}"
         )
 
-    if not chat and not (chat := message.chat):
+    if not chat:
         chat = await message.get_chat()
 
-    topic_affix = (
-        f"?topic={message.reply_to.reply_to_msg_id}"
-        if getattr(message.reply_to, "forum_topic", False)
-        else ""
-    )
-
     return (
-        f"https://t.me/{chat.username}/{message.id}{topic_affix}"
+        f"https://t.me/{chat.username}/{message.id}"
         if getattr(chat, "username", False)
-        else f"https://t.me/c/{chat.id}/{message.id}{topic_affix}"
+        else f"https://t.me/c/{chat.id}/{message.id}"
     )
 
 
@@ -1451,83 +1391,13 @@ def validate_html(html: str) -> str:
     return telethon.extensions.html.unparse(escape_html(text), entities)
 
 
-def iter_attrs(obj: typing.Any, /) -> typing.List[typing.Tuple[str, typing.Any]]:
+def iter_attrs(obj: typing.Any, /) -> typing.Iterator[typing.Tuple[str, typing.Any]]:
     """
-    Returns list of attributes of object
+    Iterates over attributes of object
     :param obj: Object to iterate over
-    :return: List of attributes and their values
+    :return: Iterator of attributes and their values
     """
     return ((attr, getattr(obj, attr)) for attr in dir(obj))
-
-
-def atexit(
-    func: typing.Callable,
-    use_signal: typing.Optional[int] = None,
-    *args,
-    **kwargs,
-) -> None:
-    """
-    Calls function on exit
-    :param func: Function to call
-    :param use_signal: If passed, `signal` will be used instead of `atexit`
-    :param args: Arguments to pass to function
-    :param kwargs: Keyword arguments to pass to function
-    :return: None
-    """
-    if use_signal:
-        signal.signal(use_signal, lambda *_: func(*args, **kwargs))
-        return
-
-    _atexit.register(functools.partial(func, *args, **kwargs))
-
-
-def get_topic(message: Message) -> typing.Optional[int]:
-    """
-    Get topic id of message
-    :param message: Message to get topic of
-    :return: int or None if not present
-    """
-    return (
-        (message.reply_to.reply_to_top_id or message.reply_to.reply_to_msg_id)
-        if (
-            isinstance(message, Message)
-            and message.reply_to
-            and message.reply_to.forum_topic
-        )
-        else message.form["top_msg_id"]
-        if isinstance(message, (InlineCall, InlineMessage))
-        else None
-    )
-
-
-def get_ram_usage() -> float:
-    """Returns current process tree memory usage in MB"""
-    try:
-        import psutil
-
-        current_process = psutil.Process(os.getpid())
-        mem = current_process.memory_info()[0] / 2.0**20
-        for child in current_process.children(recursive=True):
-            mem += child.memory_info()[0] / 2.0**20
-
-        return round(mem, 1)
-    except Exception:
-        return 0
-
-
-def get_cpu_usage() -> float:
-    """Returns current process tree CPU usage in %"""
-    try:
-        import psutil
-
-        current_process = psutil.Process(os.getpid())
-        cpu = current_process.cpu_percent()
-        for child in current_process.children(recursive=True):
-            cpu += child.cpu_percent()
-
-        return round(cpu, 1)
-    except Exception:
-        return 0
 
 
 init_ts = time.perf_counter()
@@ -1548,7 +1418,7 @@ def get_git_info() -> typing.Tuple[str, str]:
 
 def get_version_raw() -> str:
     """
-    Get the version of the AuthorChe`s 
+    Get the version of the userbot
     :return: Version in format %s.%s.%s
     """
     from . import version
