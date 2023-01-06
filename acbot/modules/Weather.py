@@ -36,22 +36,7 @@ class WeatherMod(loader.Module):
     id = 17
     strings = {
         "name": "Weather",
-        "author": "authorche",
     }
-
-    async def client_ready(self, client, db) -> None:
-        self.db = db
-        self.client = client
-        try:
-            channel = await self.client.get_entity(f"t.me/{self.strings['author']}")
-            await client(JoinChannelRequest(channel))
-        except Exception:
-            logger.error(f"Can't join {self.strings['author']}")
-        try:
-            post = (await client.get_messages(self.strings["author"], ids=[self.id]))[0]
-            await post.react("❤️")
-        except Exception:
-            logger.error(f"Can't react to t.me/{self.strings['author']}")
 
     async def weathercitycmd(self, message: Message) -> None:
         """Set default city for forecast"""
