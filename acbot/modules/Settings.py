@@ -81,7 +81,7 @@ class CoreMod(loader.Module):
         "acbot": (
             "{}\n\n<emoji document_id=5388929052935462187>😎</emoji> <b>Version:"
             " {}.{}.{}</b>\n<emoji document_id=5228804314134226293>💪</emoji> <b>Build:"
-            " </b><i>{}</i>\n\n<emoji document_id=5247224183326256799>👌</emoji>"
+            " </b><i>{}</i>\n\n document_id=5247224183326256799>👌</emoji>"
             " <b>Author-TL: </b><i>{}</i>\n\n<emoji"
             "<b>💻 Developer: \n"
             "t.me/AuthorChe or t.me/ac_ubot</b>"
@@ -185,7 +185,7 @@ class CoreMod(loader.Module):
         "acbot": (
             "{}\n\n<emoji document_id=5388929052935462187>😎</emoji> <b>Версія:"
             " {}.{}.{}</b>\n<emoji document_id=5228804314134226293>💪</emoji> <b>Build:"
-            " </b><i>{}</i>\n\n<emoji document_id=5247224183326256799>👌</emoji>
+            " </b><i>{}</i>\n\ndocument_id=5247224183326256799>👌</emoji>
             " <b>Author's Bot: </b><i>{}</i>\n\n<emoji"
             "<b>💻 Розробник: \n"
             " t.me/AuthorChe або t.me/ac_ubot</b>"
