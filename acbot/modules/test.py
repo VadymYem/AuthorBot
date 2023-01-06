@@ -41,7 +41,7 @@ class TestMod(loader.Module):
         "no_logs": "ℹ️ <b>You don't have any logs at verbosity {}.</b>",
         "logs_filename": "acbot-logs.txt",
         "logs_caption": (
-            "<emoji document_id=5188377234380954537>✍</emoji> <b>AuthorChe's logs with"
+            "<emoji document_id=6318988690282514363>🤔</emoji> <b>AuthorChe's logs with"
             " verbosity </b><code>{}</code>\n\n<emoji"
             " document_id=5454390891466726015>👋</emoji> <b>AuthorChe's version:"
             " {}.{}.{}</b>{}\n<emoji document_id=6321050180095313397>⏱</emoji>"
@@ -57,9 +57,9 @@ class TestMod(loader.Module):
             " for</b> <code>{}</code> <b>seconds</b>"
         ),
         "results_ping": (
-            "<emoji document_id=6321050180095313397>⏱</emoji> <b>Telegram ping:</b>"
+            "<emoji document_id=6318879142846662542>🩰</emoji> <b>Telegram ping:</b>"
             " <code>{}</code> <b>ms</b>\n<emoji"
-            " document_id=5377371691078916778>😎</emoji> <b>Uptime: {}</b>"
+            " <emoji document_id=6318564094110598919>🥳</emoji> <b>Uptime: {}</b>"
         ),
         "ping_hint": (
             "<emoji document_id=5472146462362048818>💡</emoji> <i>Telegram ping mostly"
@@ -91,10 +91,10 @@ class TestMod(loader.Module):
         "no_logs": "ℹ️ <b>В тебе немає логів рівня {}.</b>",
         "logs_filename": "AuthorChe's-logs.txt",
         "logs_caption": (
-            "<emoji document_id=5188377234380954537>✍</emoji> <b>Логи AuthorChe's рівня"
+            "<emoji document_id=6318988690282514363>🤔</emoji> <b>Логи AuthorChe's рівня"
             " </b><code>{}</code>\n\n<emoji document_id=5454390891466726015>👋</emoji>"
             " <b>Версія AuthorChe's: {}.{}.{}</b>{}\n<emoji"
-            " document_id=6321050180095313397>⏱</emoji> <b>Uptime:"
+            " <emoji document_id=6318564094110598919>🥳</emoji> <b>Uptime:"
             " {}</b>\n<b>{}</b>\n\n<b>{} NoNick</b>\n<b>{} Grep</b>\n<b>{}"
             " InlineLogs</b>"
         ),
@@ -116,7 +116,7 @@ class TestMod(loader.Module):
         "results_ping": (
             "<emoji document_id=6321050180095313397>⏱</emoji> <b>Ping"
             " AuthorChe's:</b> <code>{}</code> <b>ms</b>\n<emoji"
-            " document_id=5377371691078916778>😎</emoji> <b>Пройшло з моменту останнього"
+            " <emoji document_id=6318564094110598919>🥳</emoji> <b>Пройшло з моменту останнього"
             " перезавантаження: {}</b>"
         ),
         "confidential": (
