@@ -872,6 +872,9 @@ def get_named_platform() -> str:
     if "CODESPACES" in os.environ:
         return "🐈‍⬛ Codespaces"
 
+    if "LUMIHOST" in os.environ:
+        return "LumiHost❄️"
+
     return f"✌️ GitlerHost {os.environ['LAVHOST']}" if "LAVHOST" in os.environ else "📻 VDS"
 
 
@@ -880,8 +883,11 @@ def get_platform_emoji() -> str:
     Returns custom emoji for current platform
     :return: Emoji entity in string
     """
-    BASE = (
-       "<b>✍ "
+    BASE = "".join(
+        (
+            "<emoji document_id=5314287035341610625>✍</emoji>",
+            "<emoji document_id=5314563004170249387>✍</emoji>",
+            "<emoji document_id=5314693966313038245>✍</emoji>",
         )
 
     if "GOORM" in os.environ:
