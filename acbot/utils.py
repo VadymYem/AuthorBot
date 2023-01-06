@@ -855,7 +855,7 @@ def get_named_platform() -> str:
         pass
 
     if "GOORM" in os.environ:
-        return "🍇 Author's VDS"
+        return "🍇 GOORM VDS"
 
     if "RAILWAY" in os.environ:
         return "🚂 Railway"
@@ -865,9 +865,6 @@ def get_named_platform() -> str:
 
     if "com.termux" in os.environ.get("PREFIX", ""):
         return "🕶Phone"
-
-    if "LUMIHOST" in os.environ:
-        return "LumiHost❄️"
 
     if "CODESPACES" in os.environ:
         return "🐈‍⬛ Codespaces"
