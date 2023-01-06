@@ -79,9 +79,9 @@ class CoreMod(loader.Module):
             '<emoji document_id="5368324170671202286">👍</emoji><b> Database cleared</b>'
         ),
         "acbot": (
-            "{}\n\n<emoji document_id=5406931726184225260>🧐</emoji> <b>Version:"
-            " {}.{}.{}</b>\n<emoji document_id=6318902906900711458>🧱</emoji> <b>Build:"
-            " </b><i>{}</i>\n\n<emoji document_id=5233346091725888979>⚙️</emoji>"
+            "{}\n\n<emoji document_id=5388929052935462187>😎</emoji> <b>Version:"
+            " {}.{}.{}</b>\n<emoji document_id=5228804314134226293>💪</emoji> <b>Build:"
+            " </b><i>{}</i>\n\n<emoji document_id=5247224183326256799>👌</emoji>"
             " <b>Author-TL: </b><i>{}</i>\n\n<emoji"
             "<b>💻 Developer: \n"
             "t.me/AuthorChe or t.me/ac_ubot</b>"
@@ -183,9 +183,9 @@ class CoreMod(loader.Module):
             '<emoji document_id="5368324170671202286">👍</emoji><b> База очищена</b>'
         ),
         "acbot": (
-            "{}\n\n<emoji document_id=5406931726184225260>🧐</emoji> <b>Версія:"
-            " {}.{}.{}</b>\n<emoji document_id=6318902906900711458>🧱</emoji> <b>Build:"
-            " </b><i>{}</i>\n\n<emoji document_id=5233346091725888979>⚙️</emoji>"
+            "{}\n\n<emoji document_id=5388929052935462187>😎</emoji> <b>Версія:"
+            " {}.{}.{}</b>\n<emoji document_id=5228804314134226293>💪</emoji> <b>Build:"
+            " </b><i>{}</i>\n\n<emoji document_id=5247224183326256799>👌</emoji>
             " <b>Author's Bot: </b><i>{}</i>\n\n<emoji"
             "<b>💻 Розробник: \n"
             " t.me/AuthorChe або t.me/ac_ubot</b>"
