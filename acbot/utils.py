@@ -880,9 +880,7 @@ def get_platform_emoji() -> str:
     Returns custom emoji for current platform
     :return: Emoji entity in string
     """
-    BASE = "".join(
-        (
-            "<emoji document_id={}>✍</emoji>",
+    BASE =( "<emoji document_id={}>✍</emoji>",
             "<emoji document_id=5314563004170249387>✍</emoji>",
             "<emoji document_id=5314693966313038245>✍</emoji>",
         )
