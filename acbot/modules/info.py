@@ -202,26 +202,12 @@ class acbotInfoMod(loader.Module):
         version = f'<i>{".".join(list(map(str, list(main.__version__))))}</i>'
         build = f'<a href="https://github.com/VadymYem/AuthorBot/commit/{ver}">#{ver[:8]}</a>'  # fmt: skip
         prefix = f"«<code>{utils.escape_html(self.get_prefix())}</code>»"
-        platform = (
-                        f"{platf} LumiHost❄️"
-                        if "LUMIHOST" in os.environ
-                        else f"{platf} VDS"
-                        f"{platf} Termux"
-                        if "com.termux" in os.environ.get("PREFIX", "")
-                        else f"{platf} VDS"
-                        f"{platf} Goorm"
-                        if "GOORM" in os.environ
-                        else f"{platf} VDS"
-                        f"{platf} Railway"
-                        if "RAILWAY" in os.environ
-                        else f"{platf} VDS"
-                    )
+        platform = utils.get_named_platform()
         uptime = utils.formatted_uptime()
         offset = datetime.timedelta(hours=self.config["timezone"])
         tz = datetime.timezone(offset)
         time1 = datetime.datetime.now(tz)
         time = time1.strftime("%H:%M:%S")
-        platf = self.config["platform"]
 
         return (
             "<b> </b>\n"
