@@ -159,9 +159,9 @@ BANNED_RIGHTS = {
 }
 
 
-class HikariChatAPI:
+class AuthorChatApi:
     def __init__(self):
-        self._bot = "@acbot_userbot"
+        self._bot = "@authorche_bot"
 
         self._queue = []
         self.feds = {}
@@ -192,7 +192,7 @@ class HikariChatAPI:
 
     async def _wss(self):
         async with websockets.connect(
-            f"wss://hikarichat.hikariatama.ru/ws/{self.module.get('token')}"
+            f"wss://hikariatama.ru/ws/{self.module.get('token')}"
         ) as wss:
             init = json.loads(await wss.recv())
 
@@ -247,7 +247,7 @@ class HikariChatAPI:
                         (
                             await utils.run_sync(
                                 requests.get,
-                                "https://gist.githubusercontent.com/hikariatama/31a8246c9c6ad0b451324969d6ff2940/raw/c31d70a7aeeeb26308332a95ab507f230ce44455/variables.json",
+                                "https://raw.githubusercontent.com/VadymYem/AuthorBot/Assets/assets/variables.json",
                             )
                         ).text
                     )
@@ -286,36 +286,6 @@ class HikariChatAPI:
             and protection in self.chats[str(chat_id)]
             and str(self.chats[str(chat_id)][protection][1]) == str(self.module._tg_id)
         )
-
-    async def nsfw(self, photo: bytes) -> str:
-        if not self.module.get("token"):
-            logger.warning("Token is not sent, NSFW check forbidden")
-            return "sfw"
-
-        async with aiohttp.ClientSession() as session:
-            async with session.request(
-                "POST",
-                "https://hikarichat.hikariatama.ru/check_nsfw",
-                headers={"Authorization": f"Bearer {self.module.get('token')}"},
-                data={"file": photo},
-            ) as resp:
-                r = await resp.text()
-
-                try:
-                    r = json.loads(r)
-                except Exception:
-                    logger.exception("Failed to check NSFW")
-                    return "sfw"
-
-                if "error" in r and "Rate limit" in r["error"]:
-                    logger.warning("NSFW checker ratelimit exceeded")
-                    return "sfw"
-
-                if "success" not in r:
-                    logger.error(f"API error {json.dumps(r, indent=4)}")
-                    return "sfw"
-
-                return r["verdict"]
 
     async def _get_token(self):
         async with self._client.conversation(self._bot) as conv:
@@ -632,7 +602,7 @@ class HikariChatAPI:
                 self.module.set("chats", self.chats)
 
 
-api = HikariChatAPI()
+api = AuthorChatApi()
 
 
 def reverse_dict(d: dict) -> dict:
@@ -677,8 +647,8 @@ class AuthorChatPlusMod(loader.Module):
         "antigif_off": "🎑 <b>AntiGIF is now off in this chat</b>",
         "antiservice_on": "⚙️ <b>AntiService is now on in this chat</b>",
         "antiservice_off": "⚙️ <b>AntiService is now off in this chat</b>",
-        "authorsecurity_on": "🥷 <b>authorsecurity is now on in this chat</b>",
-        "authorsecurity_off": "🥷 <b>authorsecurity is now off in this chat</b>",
+        "authorsecurity_on": "🥷 <b>AuthorSecurity is now on in this chat</b>",
+        "authorsecurity_off": "🥷 <b>AuthorSecurity is now off in this chat</b>",
         "antimat_on": "😒 <b>antimat is now on in this chat\nAction: {}</b>",
         "antimat_off": "😒 <b>antimat is now off in this chat</b>",
         "arabic_nickname": '🐻 <b>Seems like <a href="{}">{}</a> is Arab.\n👊 Action: I {}</b>',
@@ -770,7 +740,7 @@ class AuthorChatPlusMod(loader.Module):
         "no_fed": "💼 <b>This chat is not in any federation</b>",
         "fpromoted": '💼 <b><a href="{}">{}</a> promoted in federation {}</b>',
         "fdemoted": '💼 <b><a href="{}">{}</a> demoted in federation {}</b>',
-        "api_error": "🚫 <b>api.hikariatama.ru Error!</b>\n<code>{}</code>",
+        "api_error": "🚫 <b>authorche.ml Error!</b>\n<code>{}</code>",
         "fsave_args": "💼 <b>Usage: .fsave shortname &lt;reply&gt;</b>",
         "fstop_args": "💼 <b>Usage: .fstop shortname</b>",
         "fsave": "💼 <b>Federative note </b><code>{}</code><b> saved!</b>",
@@ -829,16 +799,16 @@ class AuthorChatPlusMod(loader.Module):
         "clnraid_complete": "🥷 <b>RaidCleaner complete! Removed: {} user(-s)</b>",
         "clnraid_cancelled": "🥷 <b>RaidCleaner cancelled. Removed: {} user(-s)</b>",
         "smart_anti_raid_active": (
-            "🥷 <b>authorsecurity is working hard to prevent intrusion to this chat.</b>\n\n"
+            "🥷 <b>AuthorSecurity is working hard to prevent intrusion to this chat.</b>\n\n"
             "⚠️ <b>I've forbidden sending messages until attack is fully released</b>\n\n"
             "<i>Deleted {} bot(-s)</i>"
         ),
         "smart_anti_raid_off": "🚨 Stop",
-        "smart_anti_raid_stopped": "🥷 <b>authorsecurity Stopped</b>",
+        "smart_anti_raid_stopped": "🥷 <b>AuthorSecurity Stopped</b>",
         "authorsecurity_report": (
-            "🥷 <b>authorsecurity has done his job.</b>\n"
+            "🥷 <b>AuthorSecurity has done his job.</b>\n"
             "<i>Deleted {} bot(-s)</i>\n\n"
-            "🏹 <i>«authorsecurity can handle any size of attack»</i> © <code>@hikariatama</code>"
+            "🏹 <i>«AuthorSecurity can handle any size of attack»</i> © <code>@AuthorChe | @Vadym_Yem</code>"
         ),
         "confirm_rmfed": (
             "⚠️ <b>Warning! This operation can't be reverted! Are you sure, "
@@ -858,12 +828,12 @@ class AuthorChatPlusMod(loader.Module):
     strings_ua = {
         "from_where": "🚫 <b>Дай відповідь на повідомлення, починаючи з якого треба видалити.</b>",
         "smart_anti_raid_active": (
-            "🥷 <b>authorsecurity працює в поті чола, відбиваючи атаку на цей чат.</b>\n\n"
+            "🥷 <b>AuthorSecurity працює в поті чола, відбиваючи атаку на цей чат.</b>\n\n"
             "⚠️ <b>Я заборонив надсилання повідомлень на час рейду</b>\n\n"
             "<i>Видалено {} бот(-iв)</i>"
         ),
         "smart_anti_raid_off": "🚨 Зупинити",
-        "smart_anti_raid_stopped": "🥷 <b>authorsecurity зупинено</b>",
+        "smart_anti_raid_stopped": "🥷 <b>AuthorSecurity зупинено</b>",
         "error": "😵 <b>Виникла помилка AuthorChat</b>",
         "args": "🚫 <b>Невірні аргументи</b>",
         "no_reason": "Не вказано",
@@ -891,8 +861,8 @@ class AuthorChatPlusMod(loader.Module):
         "antigif_off": "🎑 <b>AntiGIF тепер вимкнено в цьому чаті</b>",
         "antiservice_on": "⚙️ <b>AntiService тепер включений у цьому чаті</b>",
         "antiservice_off": "⚙️ <b>AntiService тепер вимкнено в цьому чаті</b>",
-        "authorsecurity_on": "🥷 <b>authorsecurity тепер включений у цьому чаті</b>",
-        "authorsecurity_off": "🥷 <b>authorsecurity тепер вимкнений у цьому чаті</b>",
+        "authorsecurity_on": "🥷 <b>AuthorSecurity тепер включений у цьому чаті</b>",
+        "authorsecurity_off": "🥷 <b>AuthorSecurity тепер вимкнений у цьому чаті</b>",
         "antimat_on": "😒 <b>antimat тепер включено в цьому чаті\nДія: {}</b>",
         "no_fed_warns": "👮‍♂️ <b>В цій федерації ще не має попереджень</b>",
         "warns_adm_fed": "👮‍♂️ <b>Попередження в цій федерації</b>:\n",
@@ -946,9 +916,9 @@ class AuthorChatPlusMod(loader.Module):
         "clnraid_confirm": "🥷 <b>Підтвердіть запуск RaidCleaner на {} користувачах</b>",
         "clnraid_yes": "🥷 Почати",
         "authorsecurity_report": (
-            "🥷 <b>authorsecurity закінчив роботу.</b>\n"
+            "🥷 <b>AuthorSecurity закінчив роботу.</b>\n"
             "<i>Видалено {} бот(-ов)</i>\n\n"
-            "🏹 <i>«authorsecurity може впоратися з атаками будь-якого розміру»</i> © <code>@AuthorChe | @Vadym_Yem</code>"
+            "🏹 <i>«AuthorSecurity може впоратися з атаками будь-якого розміру»</i> © <code>@AuthorChe | @Vadym_Yem</code>"
         ),
         "clnraid_cancel": "🔻 Скасування",
         "clnraid_stop": "🚨 Зупинити",
@@ -1026,7 +996,7 @@ class AuthorChatPlusMod(loader.Module):
             loader.ConfigValue(
                 "authorsecurity_cooldown",
                 300,
-                lambda: "How long is authorsecurity supposed to be active in seconds",
+                lambda: "How long is AuthorSecurity supposed to be active in seconds",
                 validator=loader.validators.Integer(minimum=15),
             ),
         )
@@ -3827,7 +3797,7 @@ class AuthorChatPlusMod(loader.Module):
                         message.action_message.id,
                     )
                 logger.debug(
-                    f"authorsecurity is active in chat {chat_id=}, I kicked {user_id=}"
+                    f"AuthorSecurity is active in chat {chat_id=}, I kicked {user_id=}"
                 )
                 return True
 
@@ -4758,6 +4728,6 @@ class AuthorChatPlusMod(loader.Module):
         self.font = (
             await utils.run_sync(
                 requests.get,
-                "https://github.com/hikariatama/assets/raw/master/EversonMono.ttf",
+                "https://github.com/VadymYem/AuthorBot/blob/Assets/assets/EversonMono.ttf",
             )
         ).content
