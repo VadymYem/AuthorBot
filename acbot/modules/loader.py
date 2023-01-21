@@ -702,7 +702,7 @@ class LoaderMod(loader.Module):
         ) and not self._db.get(main.__name__, "permanent_modules_fs", False):
             if message.file:
                 await message.edit("")
-                message = await message.respond("🌘")
+                message = await message.respond("✍️")
 
             if await self.inline.form(
                 self.strings("module_fs"),
@@ -1114,12 +1114,6 @@ class LoaderMod(loader.Module):
 
         if not isinstance(developer_entity, Channel):
             developer_entity = None
-
-        if (
-            developer_entity is not None
-            and f"{developer_entity.id}/{modname}" not in self.get("reacted", [])
-        ):
-            self._react_queue += [(developer_entity, modname)]
 
         if message is None:
             return
