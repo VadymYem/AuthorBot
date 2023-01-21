@@ -406,26 +406,6 @@ class LoaderMod(loader.Module):
 
         asyncio.ensure_future(self._update_modules())
         asyncio.ensure_future(self.get_repo_list("full"))
-        self._react_queue = []
-
-    @loader.loop(interval=120, autostart=True)
-    async def _react_processor(self):
-        if not self._react_queue:
-            return
-
-        developer_entity, modname = self._react_queue.pop(0)
-        try:
-            await (
-                await self._client.get_messages(
-                    developer_entity, limit=1, search=modname
-                )
-            )[0].react("❤️")
-            self.set(
-                "reacted",
-                self.get("reacted", []) + [f"{developer_entity.id}/{modname}"],
-            )
-        except Exception:
-            logger.debug("Unable to react to %s about %s", developer_entity.id, modname)
 
     @loader.loop(interval=3, wait_before=True, autostart=True)
     async def _config_autosaver(self):
