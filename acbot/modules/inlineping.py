@@ -6,7 +6,7 @@
 # 🔒 Licensed under the GNU GPLv3
 # 🌐 https://www.gnu.org/licenses/agpl-3.0.html
 
-# meta developer: @authorche
+# meta developer: @authorche | @amorescam
 import logging
 import time
 
