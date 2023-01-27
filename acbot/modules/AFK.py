@@ -26,7 +26,7 @@ logger = logging.getLogger(__name__)
 
 @loader.tds
 class TxAFKMod(loader.Module):
-	"""Афк модуль от AstroModules с изменением био и имени"""
+	"""Афк модуль від AstroModules зі зміною біологічного та імені """
 
 	async def client_ready(self, client, db):
 		self._db = db
@@ -311,7 +311,7 @@ class TxAFKMod(loader.Module):
 		self._db.set(__name__, "afk", True)
 		self._db.set(__name__, "gone", time.time())
 		self._db.set(__name__, "ratelimit", [])
-		a_afk_bio_nofb = "В афк."
+		a_afk_bio_nofb = "Я зараз в offline."
 		lastname = self.strings("lname")
 		if self.config['feedback_bot'] == None:
 			await self._client(UpdateProfileRequest(about=a_afk_bio_nofb, last_name=lastname))
