@@ -127,19 +127,19 @@ class acbotInfoMod(loader.Module):
             ),
             loader.ConfigValue(
                 "custom_button4",
-                ["AuthorChe✍️", "https://t.me/AuthorChe"],
+                [],
                 lambda: self.strings("_cfg_cst_btn"),
                 validator=loader.validators.Series(min_len=0, max_len=2),
             ),
             loader.ConfigValue(
                 "custom_button5",
-                ["AuthorChe✍️", "https://t.me/AuthorChe"],
+                [],
                 lambda: self.strings("_cfg_cst_btn"),
                 validator=loader.validators.Series(min_len=0, max_len=2),
             ),
             loader.ConfigValue(
                 "custom_button6",
-                ["AuthorChe✍️", "https://t.me/AuthorChe"],
+                [],
                 lambda: self.strings("_cfg_cst_btn"),
                 validator=loader.validators.Series(min_len=0, max_len=2),
             ),
@@ -247,7 +247,7 @@ class acbotInfoMod(loader.Module):
 
     @loader.inline_everyone
     async def info_inline_handler(self, query: InlineQuery) -> dict:
-        """Send 𝙰𝚞𝚝𝚑𝚘𝚛𝙲𝚑𝚎'𝚜  info"""
+        """Подивитися інформацію про бота"""
         m = {x: self._get_mark(x) for x in range(13)}
         btns = [
             [
@@ -277,7 +277,7 @@ class acbotInfoMod(loader.Module):
             "description": self.strings("description"),
             msg_type: self._render_info(),
             self.config["custom_format"]: self.config["custom_banner"],
-            "thumb": "https://imgur.com/Ze2TtW3",
+            "thumb": "https://te.legra.ph/file/c80f00c0fa6844d60a79c.jpg",
             "reply_markup": btns,
         }
 
