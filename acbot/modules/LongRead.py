@@ -36,7 +36,7 @@ class LongReadMod(loader.Module):
             " активна протягом 6 годин</i>"
         ),
         "_cmd_doc_lr": "<text> - Створити лонгрід",
-        "_cls_doc": "Ховає ваш текст",
+        "_cls_doc": "Ховає ваш текст під гарну кнопочку",
     }
 
     async def lrcmd(self, message: Message):
@@ -64,7 +64,7 @@ class LongReadMod(loader.Module):
             return await query.e400()
 
         return {
-            "title": "Create new longread",
+            "title": "Сховати текст під гарну кнопочку",
             "description": "ℹ This will create button-spoiler",
             "thumb": "https://img.icons8.com/external-wanicon-flat-wanicon/64/000000/external-read-free-time-wanicon-flat-wanicon.png",
             "message": self.strings("longread"),
