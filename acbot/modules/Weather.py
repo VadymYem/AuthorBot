@@ -56,7 +56,7 @@ class WeatherMod(loader.Module):
         await utils.answer(message, f'<code>{n.join(req.text.splitlines()[:7])}</code>')
 
     async def weather_inline_handler(self, query: InlineQuery) -> None:
-        """Search city"""
+        """Переглянути прогноз погоди"""
         args = query.args
         if not args:
             args = self.db.get(self.strings['name'], 'city', "")
