@@ -63,7 +63,7 @@ class MyAfkMod(loader.Module):
 			f'🎆 <b>myAfk</b>\n'
 			f'├<b>{a_active}</b>\n'
 			f'<b>├Зміна біографії:</b> <code>{a_change_bio}</code> 📖\n'
-			f'<b>├Смена Префікса:</b> <code>{a_change_name}</code> 📝\n'
+			f'<b>├Заміна Префікса:</b> <code>{a_change_name}</code> 📝\n'
 			f'<b>└Бот для зв`язку:</b> <code>@{fb}</code> 🤖'
 		)
 		return text
