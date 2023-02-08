@@ -1,4 +1,4 @@
-__version__ = (12, 3, 3) 
+__version__ = (12, 3, 4) 
 # 🔒 Licensed under the GNU GPLv3
 #              https://t.me/AuthorChe
 # 🌐 https://www.gnu.org/licenses/agpl-3.0.html
@@ -161,7 +161,7 @@ BANNED_RIGHTS = {
 
 class AuthorChatApi:
     def __init__(self):
-        self._bot = "@authorche_bot"
+        self._bot = "@token_acbot"
 
         self._queue = []
         self.feds = {}
