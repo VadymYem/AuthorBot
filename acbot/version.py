@@ -1,5 +1,5 @@
 """Represents current AuthоrChe's version"""
-__version__ = (1, 8, 7)
+__version__ = (1, 8, 8)
 
 import git
 import os
