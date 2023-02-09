@@ -68,8 +68,8 @@ class UpdaterMod(loader.Module):
         "update_confirm": (
             "❓ <b>Are you sure you"
             " want to update?\n\n<a"
-            ' href="https://github.com/hikariatama/Hikka/commit/{}">{}</a> ⤑ <a'
-            ' href="https://github.com/hikariatama/Hikka/commit/{}">{}</a></b>'
+            ' href="https://github.com/VadymYem/AuthorBot/commit/{}">{}</a> ⤑ <a'
+            ' href="https://github.com/VadymYem/AuthorBot/commit/{}">{}</a></b>'
         ),
         "no_update": "🚸 <b>You are on the latest version, pull updates anyway?</b>",
         "cancel": "🚫 Cancel",
