@@ -3,14 +3,14 @@
 <img src="https://github.com/VadymYem/AuthorBot/blob/main/assets/logo_1.jpg">
 
 <b>Manual installation(root):</b>
-<code>sudo apt update && sudo apt upgrade -y && sudo install git -y && apt install python -y && pip install websockets && git clone https://github.com/VadymYem/AuthorBot && cd AuthorBot && pip install -r requirements.txt && python3 -m acbot</code>
+<code>sudo apt update && sudo apt upgrade -y && sudo apt install git -y && apt install python -y && git clone https://github.com/VadymYem/AuthorBot && cd AuthorBot && pip install -r requirements.txt && python3 -m acbot</code>
 
 
 <b>Manual installation(no root):</b>
 <code>apt update && apt upgrade -y && apt install git -y && apt install python -y && pip install websockets && git clone https://github.com/VadymYem/AuthorBot && cd AuthorBot && pip install -r requirements.txt && python3 -m acbot</code>
 
 <b>Manual installation(Termux):</b>
-<code>apt update && apt upgrade -y && pkg update && pkg upgrade && pkg install git -y && apt install python -y && pip install websockets && git clone https://github.com/VadymYem/AuthorBot && cd AuthorBot && pip install -r requirements.txt && python3 -m acbot</code>
+<code>apt update && apt upgrade -y && pkg update && pkg upgrade && apt install git -y && apt install python -y && git clone https://github.com/VadymYem/AuthorBot && cd AuthorBot && pip install -r requirements.txt && python3 -m acbot</code>
 
 
 <hr>
