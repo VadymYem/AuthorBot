@@ -164,8 +164,8 @@ class Web(root.Web):
     async def get_url(self, proxy_pass: bool) -> str:
         url = None
 
-        if all(option in os.environ for option in {"LAVHOST", "USER", "SERVER"}):
-            return f"https://{os.environ['USER']}.{os.environ['SERVER']}.lavhost.ml"
+        if all(option in os.environ for option in {"LUMIHOST"}):
+            return f"https://t.me/lumihost_bot"
 
         if proxy_pass:
             with contextlib.suppress(Exception):
