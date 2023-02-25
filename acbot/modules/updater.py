@@ -73,11 +73,11 @@ class UpdaterMod(loader.Module):
         ),
         "no_update": "🚸 <b>You are on the latest version, pull updates anyway?</b>",
         "cancel": "🚫 Cancel",
-        "lavhost_restart": (
+        "lumihost_restart": (
             "<emoji document_id=5469986291380657759>✌️</emoji> <b>Your {} is"
             " restarting...</b>"
         ),
-        "lavhost_update": (
+        "lumihost_update": (
             "<emoji document_id=5469986291380657759>✌️</emoji> <b>Your {} is"
             " updating...</b>"
         ),
@@ -137,12 +137,12 @@ class UpdaterMod(loader.Module):
         "no_update": "🚸 <b>В тебе остання версія. Оновити примусово?</b>",
         "cancel": "🚫 Відмінити",
         "_cls_doc": "Оновлює бот",
-        "lavhost_restart": (
-            "<emoji document_id=5469986291380657759>✌️</emoji> <b>Твій AuthorChe`s"
+        "lumihost_restart": (
+            "<emoji document_id=5469986291380657759>✌️</emoji> <b>Твій {}"
             " перезавантажується...</b>"
         ),
-        "lavhost_update": (
-            "<emoji document_id=5469986291380657759>✌️</emoji> <b>Твой AuthorChe`s"
+        "lumihost_update": (
+            "<emoji document_id=5469986291380657759>✌️</emoji> <b>Твiй {}"
             " оновлюється...</b>"
         ),
         "heroku_update": (
@@ -221,16 +221,14 @@ class UpdaterMod(loader.Module):
                 and isinstance(msg_obj, Message)
                 else "Acbot"
             )
-            if "LAVHOST" not in os.environ
-            else self.strings("lavhost_restart").format(
-                '</b><emoji document_id="5192756799647785066">✌️</emoji><emoji'
-                ' document_id="5193117564015747203">✌️</emoji><emoji'
-                ' document_id="5195050806105087456">✌️</emoji><emoji'
-                ' document_id="5195457642587233944">✌️</emoji><b>'
+            if "LUMIHOST" not in os.environ
+            else self.strings("lumihost_restart").format(
+                '</b>LumiHost'
+                ' ❄️<b>'
                 if self._client.acbot_me.premium
                 and CUSTOM_EMOJIS
                 and isinstance(msg_obj, Message)
-                else "lavHost"
+                else "lumihost"
             ),
         )
 
@@ -240,8 +238,8 @@ class UpdaterMod(loader.Module):
 
         await self._db.remote_force_save()
 
-        if "LAVHOST" in os.environ:
-            os.system("lavhost restart")
+        if "LUMIHOST" in os.environ:
+            os.system("lumihost restart")
             return
 
         with contextlib.suppress(Exception):
