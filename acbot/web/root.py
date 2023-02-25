@@ -67,7 +67,7 @@ class Web:
             "skip_creds": self.api_token is not None,
             "tg_done": bool(self.client_data),
             "okteto": "OKTETO" in os.environ,
-            "lavhost": "LAVHOST" in os.environ,
+            "lumihost": "LUMIHOST" in os.environ,
         }
 
     async def check_session(self, request: web.Request) -> web.Response:
