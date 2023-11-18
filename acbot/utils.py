@@ -869,7 +869,7 @@ def get_named_platform() -> str:
     if "CODESPACES" in os.environ:
         return "🐈‍⬛ Codespaces"
 
-    return f"LumiHost❄️ {os.environ['LUMIHOST']}" if "LUMIHOST" in os.environ else "💻 VDS"
+    return f"AuthorHost✍️ {os.environ['AUTHORHOST']}" if "AUTHORHOST" in os.environ else "💻 VDS"
 
 
 def get_platform_emoji() -> str:
@@ -897,7 +897,7 @@ def get_platform_emoji() -> str:
     if "RAILWAY" in os.environ:
         return BASE.format(5314287035341610625)
 
-    if "LUMIHOST" in os.environ:
+    if "AUTHORHOST" in os.environ:
         return BASE.format(5314287035341610625)
 
 
