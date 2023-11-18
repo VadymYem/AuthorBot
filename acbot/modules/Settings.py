@@ -263,9 +263,9 @@ class CoreMod(loader.Module):
                 (
                     utils.get_platform_emoji()
                     + (
-                        "<b>LumiHost❄️<\b>"
+                        "<b>AuthorHost✍️<\b>"
 
-                        if "LUMIHOST" in os.environ
+                        if "AUTHORHOST" in os.environ
                         else ""
                     )
                 )
