@@ -191,8 +191,8 @@ class AcbotSettingsMod(loader.Module):
         "web_btn": "🌍 Web interface",
         "btn_yes": "🚸 Open anyway",
         "btn_no": "🔻 Cancel",
-        "lumihost_web": (
-            "✌️ <b>This link leads to your acbot web interface on lumiHost</b>"
+        "authorhost_web": (
+            "✌️ <b>This link leads to WebSite of Author. You can read information about Author and donate him</b>"
         ),
         "disable_stats": "✅ Anonymous stats allowed",
         "enable_stats": "🚫 Anonymous stats disabled",
@@ -313,9 +313,9 @@ class AcbotSettingsMod(loader.Module):
         "web_btn": "🌍 Веб-інтерфейс",
         "btn_yes": "🚸 Все одно відкрити",
         "btn_no": "🔻 Закрити",
-        "lumihost_web": (
-            "✌️ <b>По цьому посиланню ти потрапиш в веб-інтерфейс acbot на"
-            " LumiHost</b>"
+        "Authorhost_web": (
+            "✌️ <b>По цьому посиланню ти потрапиш на"
+            " вебсайт власника боту. Там ти можеш прочитати інформацію про Автора та зробити пожертвування на розвиток проекту</b>"
         ),
         "disable_stats": "✅ Просто кнопочка :)",
         "enable_stats": "🚫 Просто кнопочка :)",
@@ -390,8 +390,8 @@ class AcbotSettingsMod(loader.Module):
 
         await call.edit(self.strings("uninstalled"))
 
-        if "LUMIHOST" in os.environ:
-            os.system("lumihost restart")
+        if "AUTHORHOST" in os.environ:
+            os.system("authorhost restart")
             return
 
         atexit.register(restart, *sys.argv[1:])
@@ -1032,9 +1032,9 @@ class AcbotSettingsMod(loader.Module):
     @loader.command(ua_doc="Відкрити тонель до веб-інтерфейсу acbot")
     async def weburl(self, message: Message, force: bool = False):
         """Opens web tunnel to your acbot web interface"""
-        if "LUMIHOST" in os.environ:
+        if "AUTHORHOST" in os.environ:
             form = await self.inline.form(
-                self.strings("lumihost_web"),
+                self.strings("authorhost_web"),
                 message=message,
                 reply_markup={
                     "text": self.strings("web_btn"),
