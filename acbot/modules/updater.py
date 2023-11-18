@@ -73,11 +73,11 @@ class UpdaterMod(loader.Module):
         ),
         "no_update": "🚸 <b>You are on the latest version, pull updates anyway?</b>",
         "cancel": "🚫 Cancel",
-        "lumihost_restart": (
+        "authorhost_restart": (
             "<emoji document_id=5469986291380657759>✌️</emoji> <b>Your {} is"
             " restarting...</b>"
         ),
-        "lumihost_update": (
+        "authorhost_update": (
             "<emoji document_id=5469986291380657759>✌️</emoji> <b>Your {} is"
             " updating...</b>"
         ),
@@ -137,11 +137,11 @@ class UpdaterMod(loader.Module):
         "no_update": "🚸 <b>В тебе остання версія. Оновити примусово?</b>",
         "cancel": "🚫 Відмінити",
         "_cls_doc": "Оновлює бот",
-        "lumihost_restart": (
+        "authorhost_restart": (
             "<emoji document_id=5469986291380657759>✌️</emoji> <b>Твій {}"
             " перезавантажується...</b>"
         ),
-        "lumihost_update": (
+        "authorhost_update": (
             "<emoji document_id=5469986291380657759>✌️</emoji> <b>Твiй {}"
             " оновлюється...</b>"
         ),
@@ -221,14 +221,14 @@ class UpdaterMod(loader.Module):
                 and isinstance(msg_obj, Message)
                 else "Acbot"
             )
-            if "LUMIHOST" not in os.environ
-            else self.strings("lumihost_restart").format(
-                '</b>LumiHost'
-                ' ❄️<b>'
+            if "AUTHORHOST" not in os.environ
+            else self.strings("authorhost_restart").format(
+                '</b>AuthorHost'
+                ' ✍️<b>'
                 if self._client.acbot_me.premium
                 and CUSTOM_EMOJIS
                 and isinstance(msg_obj, Message)
-                else "lumihost"
+                else "authorhost"
             ),
         )
 
@@ -238,8 +238,8 @@ class UpdaterMod(loader.Module):
 
         await self._db.remote_force_save()
 
-        if "LUMIHOST" in os.environ:
-            os.system("lumihost restart")
+        if "AUTHORHOST" in os.environ:
+            os.system("authorhost restart")
             return
 
         with contextlib.suppress(Exception):
