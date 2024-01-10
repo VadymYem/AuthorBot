@@ -3,7 +3,7 @@
 <img src="https://github.com/VadymYem/AuthorBot/blob/main/assets/logo_1.jpg">
 
 <b>Manual installation(root):</b>
-<code>sudo apt update && sudo apt upgrade -y && sudo apt install git -y && apt install python -y && git clone https://github.com/VadymYem/AuthorBot && cd AuthorBot && pip install -r requirements.txt && python3 -m acbot</code>
+<code>sudo apt update && sudo apt upgrade -y && sudo apt install git -y && sudo apt install python -y && git clone https://github.com/VadymYem/AuthorBot && cd AuthorBot && pip install -r requirements.txt && python3 -m acbot</code>
 
 
 <b>Manual installation(no root):</b>
