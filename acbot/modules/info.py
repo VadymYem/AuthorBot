@@ -209,9 +209,7 @@ class acbotInfoMod(loader.Module):
         time1 = datetime.datetime.now(tz)
         time = time1.strftime("%H:%M:%S")
 
-        return (
-            "<b> </b>\n"
-            + self.config["custom_message"].format(
+        return (self.config["custom_message"].format(
                 me=me,
                 version=version,
                 build=build,
