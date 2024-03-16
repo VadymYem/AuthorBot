@@ -15,9 +15,9 @@
 	<li>🔁 Full <b>backward compatibility</b> with popular telethon userbots</li>
         <li>🇺🇦 Ukraine language support</li>
         <li>Unique modules specially by Author</li><br><br>
-	<li><b>Donate❤️:</b> authorche.pp.ua/donate.html</li>
+	<li><b>Donate❤️:</b></li>
 	
 		
 </ul>
-
+authorche.pp.ua/donate.html 
 
