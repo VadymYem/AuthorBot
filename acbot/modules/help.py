@@ -46,11 +46,11 @@ class HelpMod(loader.Module):
         "undoc_ihandler": "🦥 No docs",
         "joined": (
             "<emoji document_id='6318565919471699564'>🌌</emoji> <b>Joined the</b> <a"
-            " href='https://t.me/AuthorChe'>AuthorChe's✌</a>"
+            " href='https://t.me/wsinfo'>AuthorChe's✌</a>"
         ),
         "join": (
             "<emoji document_id='6318565919471699564'>🌌</emoji> <b>Join the</b> <a"
-            " href='https://t.me/AuthorChe'>AuthorChe's✌</a>"
+            " href='https://t.me/wsinfo'>AuthorChe's✌</a>"
         ),
         "partial_load": (
             "<emoji document_id='5370740716840425754'>☝️</emoji> <b>AuthorChe's is not"
@@ -397,7 +397,7 @@ class HelpMod(loader.Module):
             reply_markup=[
                 [
                     {
-                        "text": "Author's Channels",
+                        "text": "Author's links",
                         "callback": self.amore,
                     },
                 ],
@@ -408,16 +408,16 @@ class HelpMod(loader.Module):
 
     async def amore(self, call: InlineCall) -> None:
         await call.edit(
-            text=f"<b>🌳 Need talk? Feel free to join our Author's chat's.</b>",
+            text=f"<b>🌳 Need more info? Feel free to visit our Author's links.</b>",
             reply_markup=[
                 [
                     {
-                        "text": "AuthorChe's✍",
-                        "url": "https://t.me/AuthorChe",
+                        "text": "Info Channel✍",
+                        "url": "https://t.me/wsinfo",
                     },
                     {
-                        "text": "#offtop",
-                        "url": "https://t.me/cherkassy_offtop",
+                        "text": "WebSite",
+                        "url": "https://authorche.pp.ua",
                      },
                 ],
                 [{"text": "Закрити меню", "action": "close"}],
