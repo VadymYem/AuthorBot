@@ -38,7 +38,7 @@ class InlineStuffMod(loader.Module):
         "this_is_acbot": (
             "✌️ <b>Hello! This is 𝙰𝚞𝚝𝚑𝚘𝚛𝙲𝚑𝚎'𝚜✍️. You can"
             " contact with bot owner via /feedback</b>\n\n<b>🌍 <a"
-            ' href="t.me/AuthorChe">𝙰𝚞𝚝𝚑𝚘𝚛𝙲𝚑𝚎✍️</a></b>\n<b>👥 <a'
+            ' href="https://authorche.pp.ua">𝙰𝚞𝚝𝚑𝚘𝚛𝙲𝚑𝚎✍️</a></b>\n<b>👥 <a'
             ' href="www.instagram.com/Vadym_Yem">Instagram😎</a></b>'
          ),
     }
@@ -60,7 +60,7 @@ class InlineStuffMod(loader.Module):
         "this_is_acbot": (
              "✌️ <b>Привіт! Це 𝙰𝚞𝚝𝚑𝚘𝚛𝙲𝚑𝚎'𝚜✍️. Ви можете"
             " зв'язатися з власником боту використавши /feedback</b>\n\n<b>🌍 <a"
-            ' href="t.me/AuthorChe">𝙰𝚞𝚝𝚑𝚘𝚛𝙲𝚑𝚎✍️</a></b>\n<b>👥 <a'
+            ' href="https://authorche.pp.ua">𝙰𝚞𝚝𝚑𝚘𝚛𝙲𝚑𝚎✍️</a></b>\n<b>👥 <a'
             ' href="www.instagram.com/Vadym_Yem">Instagram😎</a></b>'
         ),
     }
