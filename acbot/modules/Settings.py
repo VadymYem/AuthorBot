@@ -84,7 +84,7 @@ class CoreMod(loader.Module):
             " </b><i>{}</i>\n\n <emoji document_id=5247224183326256799>👌</emoji>"
             " <b>Author-TL: </b><i>{}</i>\n\n"
             "<b>💻 Developer: \n"
-            "t.me/AuthorChe or t.me/ac_ubot</b>"
+            "t.me/wsinfo</b>"
         ),
         "check_url": (
             "<emoji document_id=5436162517686557387>🚫</emoji> <b>You need to specify"
@@ -188,7 +188,7 @@ class CoreMod(loader.Module):
             " </b><i>{}</i>\n\n<emoji document_id=5247224183326256799>👌</emoji> "
             " <b>Author's Bot: </b><i>{}</i>\n\n<emoji"
             "<b>💻 Розробник: \n"
-            " t.me/AuthorChe або t.me/ac_ubot</b>"
+            " t.me/wsinfo</b>"
         ),
         "check_url": (
             "<emoji document_id=5436162517686557387>🚫</emoji> <b>Вкажи правильне"
