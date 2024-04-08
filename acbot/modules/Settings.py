@@ -79,9 +79,9 @@ class CoreMod(loader.Module):
             '<emoji document_id="5368324170671202286">👍</emoji><b> Database cleared</b>'
         ),
         "acbot": (
-            "{}\n\n<emoji document_id=5388929052935462187>😎</emoji> <b>Version:"
-            " {}.{}.{}</b>\n<emoji document_id=5228804314134226293>💪</emoji> <b>Build:"
-            " </b><i>{}</i>\n\n <emoji document_id=5247224183326256799>👌</emoji>"
+            "{}\n\n😎 <b>Version:"
+            " {}.{}.{}</b>\n💪 <b>Build:"
+            " </b><i>{}</i>\n\n👌"
             " <b>Author-TL: </b><i>{}</i>\n\n"
             "<b>💻 Developer: "
             "t.me/wsinfo</b>"
@@ -183,11 +183,11 @@ class CoreMod(loader.Module):
             '<emoji document_id="5368324170671202286">👍</emoji><b> База очищена</b>'
         ),
         "acbot": (
-            "{}\n\n<emoji document_id=5388929052935462187>😎</emoji> <b>Версія:"
-            " {}.{}.{}</b>\n<emoji document_id=5228804314134226293>💪</emoji> <b>Build:"
-            " </b><i>{}</i>\n\n<emoji document_id=5247224183326256799>👌</emoji> "
-            " <b>Author's Bot: </b><i>{}</i>\n\n<emoji"
-            "<b>💻 Розробник: "
+            "{}\n\n😎 <b>Version:"
+            " {}.{}.{}</b>\n💪 <b>Build:"
+            " </b><i>{}</i>\n\n👌"
+            " <b>Author-TL: </b><i>{}</i>\n\n"
+            "<b>💻 Developer: "
             "t.me/wsinfo</b>"
         ),
         "check_url": (
