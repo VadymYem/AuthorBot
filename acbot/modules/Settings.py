@@ -83,7 +83,7 @@ class CoreMod(loader.Module):
             " {}.{}.{}</b>\n<emoji document_id=5228804314134226293>💪</emoji> <b>Build:"
             " </b><i>{}</i>\n\n <emoji document_id=5247224183326256799>👌</emoji>"
             " <b>Author-TL: </b><i>{}</i>\n\n"
-            "<b>💻 Developer: \n"
+            "<b>💻 Developer: "
             "t.me/wsinfo</b>"
         ),
         "check_url": (
@@ -187,8 +187,8 @@ class CoreMod(loader.Module):
             " {}.{}.{}</b>\n<emoji document_id=5228804314134226293>💪</emoji> <b>Build:"
             " </b><i>{}</i>\n\n<emoji document_id=5247224183326256799>👌</emoji> "
             " <b>Author's Bot: </b><i>{}</i>\n\n<emoji"
-            "<b>💻 Розробник: \n"
-            " t.me/wsinfo</b>"
+            "<b>💻 Розробник: "
+            "t.me/wsinfo</b>"
         ),
         "check_url": (
             "<emoji document_id=5436162517686557387>🚫</emoji> <b>Вкажи правильне"
