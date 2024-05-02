@@ -50,7 +50,7 @@ class MyCryptoManagerMod(loader.Module):
         api = requests.get(
             f"https://min-api.cryptocompare.com/data/price?fsym={coin}&tsyms=USD,RUB,UAH,EUR,BTC,ETH,TONCOIN"
         ).json()
-        smile = "💷 💶 💴 💵".split(" ")
+        smile = "💷 💴 💵".split(" ")
         smiles = r.choice(smile)
 
         try:
@@ -61,10 +61,10 @@ class MyCryptoManagerMod(loader.Module):
                     "{} <b>{} {}</b>\n"
                     "🇺🇸 <code>{}$</code>\n"
                     "🇺🇦 <code>{}₴</code>\n"
-                    "€ <code>{}€</code>\n"
-                    "🟡 <code>{}BTC</code>\n"
-                    "🟣 <code>{}ETH</code>\n"
-                    "💎 <code>{}TON</code>\n"
+                    "💶 <code>{}€</code>\n"
+                    "🟡 <code>{} BTC</code>\n"
+                    "🟣 <code>{} ETH</code>\n"
+                    "💎 <code>{} TON</code>\n"
                     "🏴‍☠️ <code>{}₽</code>" 
                    
                 ).format(
