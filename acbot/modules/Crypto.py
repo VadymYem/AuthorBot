@@ -48,7 +48,7 @@ class MyCryptoManagerMod(loader.Module):
             args_list = ["1", args_list[0]]
         coin = args_list[1].upper()
         api = requests.get(
-            f"https://min-api.cryptocompare.com/data/price?fsym={coin}&tsyms=USD,RUB,UAH,KZT"
+            f"https://min-api.cryptocompare.com/data/price?fsym={coin}&tsyms=USD,RUB,UAH,TONCOIN"
         ).json()
         smile = "💷 💶 💴 💵".split(" ")
         smiles = r.choice(smile)
@@ -60,18 +60,18 @@ class MyCryptoManagerMod(loader.Module):
                     "AuthorCrypto💻\n"
                     "{} <b>{} {}</b>\n"
                     "🇺🇸 <code>{}$</code>\n"
-                    "🇷🇺 <code>{}₽</code>\n"
                     "🇺🇦 <code>{}₴</code>\n"
-                    "🇰🇿 <code>{}₸</code>"
+                    "💎 <code>{}TON</code>\n"
+                    "🏴‍☠️ <code>{}₽</code>" 
                    
                 ).format(
                     smiles,
                     count,
                     coin,
                     round(api["USD"] * count, 2),
-                    round(api["RUB"] * count, 2),
                     round(api["UAH"] * count, 2),
-                    round(api["KZT"] * count, 2),
+                    round(api["TONCOIN"] * count, 2),
+                    round(api["RUB"] * count, 2), 
                 )
 
          
