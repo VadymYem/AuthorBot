@@ -69,7 +69,7 @@ class MenuBotMod(loader.Module):
     }
 
     async def client_ready(self):
-        self._name = utils.escape_html(get_display_name(self._client.hikka_me))
+        self._name = utils.escape_html(get_display_name(self._client.acbot_me))
 
         self.doc = (
             "Menu for bot\n"
