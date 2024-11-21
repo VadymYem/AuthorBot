@@ -22,7 +22,7 @@ class MenuBotMod(loader.Module):
             "<i>Or my crypto wallets👛</i>:\n\n"
             "<b>•🪙 BTC</b>:\n<code>123MgBkkpu6XwrU53SvrBxiW9useRSt6qR\n</code>\n"
             "<b>•💎 TON</b>:\n<code>UQDicYt03peG8l0CBCKW2YQJ914YoKkzObWFbbIIdUlqnpNJ\n</code>\n"
-            "<b>•💲USDT(TON): \n</b><code>UQApiOwJ7zya-RYC2N4I3LR3a5Vrej-nYen-UVgMiuUcMHnQ</code> \n"
+            "<b>•💲USDT(TON): \n</b><code>UQBqKU8fvbZVZJvyAw85wQP88O0sTzFkBxW1lfbht9hGayBK</code> \n"
             "or\n<b>•💲USDT(TRX): \n</b><code>TXkiayvYBwyuX7r9dj5NvEfdF5FCJbu5kb</code>\n\n"
             "<b>❤️Donate via xRocket🚀 - /xrocket\n\n"
             "<i>🙃It's a trifle for you, but I'm pleased, so I thank you for your support!</i></b>"
