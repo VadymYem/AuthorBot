@@ -16,5 +16,7 @@
         <li>🇺🇦 Ukraine language support</li>
         <li>Unique modules specially by Author</li><br><br>
 	<h1>Tutorial for install:</h1><a href="https://t.me/ac_ubot"> Click here</a><br>
- 
-
+ <h3>Other links:</h3><br>
+ <li><a href="https://authorche.pp.ua/donate.html" class="button">Donate💌</a></li><br>
+ <li><a href="https://authorche.pp.ua" class="button">WebSite of Author</a>
+ </li>
