@@ -15,9 +15,6 @@
 	<li>🔁 Full <b>backward compatibility</b> with popular telethon userbots</li>
         <li>🇺🇦 Ukraine language support</li>
         <li>Unique modules specially by Author</li><br><br>
-	<li><b>Donate❤️:</b></li>
-	
-		
-</ul>
-authorche.pp.ua/donate.html 
+	<h1>Tutorial for install:</h1><a href="https://t.me/ac_ubot"> Click here</a><br>
+ 
 
