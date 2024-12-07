@@ -82,7 +82,7 @@ class SettingsMod(loader.Module):
                 and (
                     dialog.entity.participants_count == 1
                     or dialog.entity.participants_count == 2
-                    and dialog.name in {"hikka-logs", "silent-tags"}
+                    and dialog.name in {"acbot-logs", "silent-tags"}
                 )
                 or (
                     self._client.loader.inline.init_complete
@@ -148,7 +148,7 @@ class SettingsMod(loader.Module):
         )
 
     @loader.command()
-    async def uninstall_hikka(self, message: Message):
+    async def uninstall(self, message: Message):
         await self.inline.form(
             self.strings("deauth_confirm"),
             message,
