@@ -29,9 +29,6 @@ def api_config(tty: typing.Optional[bool] = None):
         print("\033[0;91mThe quick brown fox jumps over the lazy dog\033[0m")
         tty = input("Is the text above colored? [y/N]").lower() == "y"
 
-    if tty:
-        print_banner("banner.txt")
-
     tty_print("\033[0;95mWelcome to AuthorBot Userbot!\033[0m", tty)
     tty_print("\033[0;96m1. Go to https://my.telegram.org and login\033[0m", tty)
     tty_print("\033[0;96m2. Click on \033[1;96mAPI development tools\033[0m", tty)
