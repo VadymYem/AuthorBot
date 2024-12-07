@@ -18,7 +18,7 @@
 	### Installation page
 
 <b>Manual installation (no script):</b><br>
-<code>apt update && apt install git libcairo2 -y && git clone https://github.com/VadymYem/AuthorBot && cd AuthorBot && pip install -r requirements.txt && python3 -m hikka</code><br.>
+<code>sudo apt update && sudo apt upgrade -y && sudo apt install git python3 -y && git clone https://github.com/VadymYem/AuthorBot && cd AuthorBot && pip install -r requirements.txt && python3 -m hikka</code><br.>
 <i>If you are on VPS\VDS, type <code>--proxy-pass</code> in the end of command to open SSH tunnel to your AuthorBot web interface, or use <code>--no-web</code> to complete setup in console</i><br>
 More info for install:<a href="https://t.me/author_ubot"> Telegram Channel</a>
 <br>
