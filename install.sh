@@ -34,11 +34,8 @@ fi
 clear
 clear
 
-printf "\n\e[1;35;47m                   \e[0m"
-printf "\n\e[1;35;47m █ █ █  \e[0m"
-printf "\n\e[1;35;47m █▀█ █  \e[0m"
-printf "\n\e[1;35;47m                   \e[0m"
-printf "\n\n\e[3;34;40m Installing...\e[0m\n\n"
+printf "AuthorBot\n"
+printf "\nVisit Website of Author: authorche.pp.ua"
 
 ##############################################################################
 
@@ -49,7 +46,7 @@ if [ ! x"$SUDO_USER" = x"" ]; then
 	chown "$SUDO_USER:" acbot-install.log
 fi
 
-if [ -d "AuthorBot/acbot" ]; then
+if [ -d "AuthorBot/hikka" ]; then
 	cd AuthorBot || {
 		printf "\rError: Install git package and re-run installer"
 		exit 6
@@ -64,7 +61,7 @@ if [ -f ".setup_complete" ]; then
 	fi
 	printf "\rExisting installation detected"
 	clear
-	"python$PYVER" -m acbot "$@"
+	"python$PYVER" -m hikka "$@"
 	exit $?
 elif [ "$DIR_CHANGED" = "yes" ]; then
 	cd ..
@@ -93,7 +90,7 @@ elif echo "$OSTYPE" | grep -qE '^darwin.*'; then
 	PKGMGR="brew install"
 	PYVER="3"
 else
-	printf "\r\033[1;31mUnrecognised OS.\e[0m Please follow at \033[0;94mhttps://github.com/VadymYem/AuthorBot/#-installation\e[0m"
+	printf "\r\033[1;31mUnrecognised OS.\e[0m Please follow 'Manual installation' from Github repo."
 	exit 1
 fi
 
@@ -120,8 +117,6 @@ elif echo "$OSTYPE" | grep -qE '^darwin.*'; then
 	runout "$SUDO_CMD$ $PKGMGR jpeg webp"
 fi
 
-runout "$SUDO_CMD $PKGMGR neofetch dialog"
-
 printf "\r\033[K\033[0;32mPackages installed!\e[0m"
 printf "\n\r\033[0;34mCloning repo...\e[0m"
 
@@ -129,7 +124,7 @@ printf "\n\r\033[0;34mCloning repo...\e[0m"
 ##############################################################################
 
 # shellcheck disable=SC2086
-${SUDO_CMD}rm -rf AuthorBot
+${SUDO_CMD}rm -rf AuthorBor
 # shellcheck disable=SC2086
 runout ${SUDO_CMD}git clone https://github.com/VadymYem/AuthorBot/ || {
 	errorout "Clone failed."
@@ -156,7 +151,7 @@ touch .setup_complete
 printf "\r\033[K\033[0;32mDependencies installed!\e[0m"
 printf "\n\033[0;32mStarting...\e[0m\n\n"
 
-${SUDO_CMD}"python$PYVER" -m acbot "$@" || {
+${SUDO_CMD}"python$PYVER" -m hikka "$@" || {
 	printf "\033[1;31mPython scripts failed\e[0m"
 	exit 5
 }
