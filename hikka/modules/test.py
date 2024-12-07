@@ -382,7 +382,7 @@ class TestMod(loader.Module):
             "Your logs will appear in this chat",
             silent=True,
             invite_bot=True,
-            avatar="https://github.com/coddrago/assets/raw/master/hikka-logs.png",
+            avatar="https://github.com/VadymYem/AuthorBot/raw/master/assets/acbot_pfp.png",
         )
 
         self.logchat = int(f"-100{chat.id}")
