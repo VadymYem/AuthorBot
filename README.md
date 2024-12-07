@@ -1,6 +1,5 @@
 <hr>
-<h2><img src="https://github.com/VadymYem/AuthorBot/blob/main/assets/1326-command-window-line-flat.webp" height="54" align="middle"></h2>
-<img src="https://github.com/VadymYem/AuthorBot/blob/main/assets/logo_1.jpg">
+<img src="https://authorche.pp.ua/poems/logo.jpg">
 <hr>
 <h2><img src = "https://github.com/VadymYem/AuthorBot/blob/main/assets/35-edit-flat.webp" height="54" align="middle"> Changes</h2>
 
