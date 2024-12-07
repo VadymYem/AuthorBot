@@ -1,9 +1,3 @@
-# ©️ Dan Gazizullin, 2021-2023
-# This file is a part of Hikka Userbot
-# 🌐 https://github.com/hikariatama/Hikka
-# You can redistribute it and/or modify it under the terms of the GNU AGPLv3
-# 🔑 https://www.gnu.org/licenses/agpl-3.0.html
-
 import logging
 import os
 import random
@@ -37,10 +31,10 @@ ALL_INVOKES = [
 
 
 @loader.tds
-class HikkaSettingsMod(loader.Module):
-    """Advanced settings for Hikka Userbot"""
+class SettingsMod(loader.Module):
+    """Advanced settings for Userbot"""
 
-    strings = {"name": "HikkaSettings"}
+    strings = {"name": "Settings"}
 
     def get_watchers(self) -> tuple:
         return [
@@ -77,10 +71,10 @@ class HikkaSettingsMod(loader.Module):
             if (
                 dialog.name
                 in {
-                    "hikka-logs",
+                    "acbot-logs",
                     "hikka-onload",
                     "hikka-assets",
-                    "hikka-backups",
+                    "acbot-backups",
                     "hikka-acc-switcher",
                     "silent-tags",
                 }
@@ -102,7 +96,7 @@ class HikkaSettingsMod(loader.Module):
 
         folders = await self._client(GetDialogFiltersRequest())
 
-        if any(folder.title == "hikka" for folder in folders):
+        if any(folder.title == "acbot" for folder in folders):
             folder_id = max(
                 folders,
                 key=lambda x: x.id,
