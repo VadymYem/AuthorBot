@@ -22,7 +22,9 @@ logger = logging.getLogger(__name__)
 class HikkaBackupMod(loader.Module):
     """Handles database and modules backups"""
 
-    strings = {"name": "Backup"}
+    strings = {"name": "Backup",
+               "period":"Як часто робити резервну копію?"
+              }
 
     async def client_ready(self):
         if not self.get("period"):
