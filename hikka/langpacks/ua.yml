@@ -336,7 +336,7 @@ unit_heta:
   install: "╭╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╮\n╵\n╵    💦 <b>𝙸𝚗𝚜𝚝𝚊𝚕𝚕</b>\n╵\n╰╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╯"
   loaded: "╭╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╮\n╵\n╵    ✅ <b>𝙸𝚗𝚜𝚝𝚊𝚕𝚕𝚎𝚍!</b>\n╵\n╰╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╯"
   not_loaded: "╭╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╮\n╵\n╵    ❌ <b>𝙽𝚘𝚝 𝚒𝚗𝚜𝚝𝚊𝚕𝚕𝚎𝚍! </b>\n╵\n╰╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╯"
-  language: "ru"
+  language: "ua"
   _cls_doc: "Керує речами, пов'язаними з @hikkamods_bot"
   404: "<emoji document_id=5210952531676504517>❌</emoji> <b>Модуль не знайдено</b>"
   args: "<emoji document_id=5210952531676504517>❌</emoji> <b>Ви маєте вказати аргументи</b>"
@@ -533,7 +533,8 @@ translations:
   rpc_error: "<emoji document_id=5877477244938489129>🚫</emoji> <b>Команда</b> <code>{}</code> <b>не вдалася через помилку RPC:</b> <code>{}</code>"
   _cmd_doc_dllangpack: "[посилання на пк | без аргументів щоб видалити] - Змінити зовнішній пак"
   _cmd_doc_setlang: "[мови] - Змінити стандартну мову"
-  eval: "<emoji document_id={}>💻</emoji><b> Код:</b>\n<pre><code class=\"language-{}\">{}</code></pre>\n\n<emoji document_id=5197688912457245639>✅</emoji><b> Результат:</b>\n<pre><code class=\"language-{}\">{}</code></pre>"
+  eval:
+  eval: "<emoji document_id={}>💻</emoji><b> Код:</b>\n<code>{}</code>\n\n<emoji document_id=5197688912457245639>✅</emoji><b> Результат:</b>\n<code>{}</code>"
   err: "<emoji document_id={}>💻</emoji><b> Код:</b>\n<pre><code class=\"language-{}\">{}</code></pre>\n\n<emoji document_id=5210952531676504517>🚫</emoji> <b>Помилка:</b>\n<pre><code class=\"language-{}\">{}</code></pre>"
   _cls_doc: "Виконує код різними мовами програмування"
   compiling: "<emoji document_id=5325787248363314644>🫥</emoji> <b>Компіляція коду...</b>"
@@ -549,14 +550,14 @@ translations:
 translate:
   no_args: "<emoji document_id=5210952531676504517>❌</emoji> <b>Немає аргументів</b>"
   error: "<emoji document_id=5210952531676504517>❌</emoji> <b>Йосип драний, це ж помилка</b>"
-  language: "ru"
+  language: "ua"
   _cls_doc: "Перекладає текст (ні блін, ядерку запускає)"
   _cmd_doc_tr: "[мова] [текст] - Перекласти текст"
 
 quickstart:
   base: "✍️🇺🇦 <b>Привіт.</b> Твій юзербот <b>AuthorBot</b> встановлено.\n\n❓ <b>Потрібна допомога?</b> питай у @vyfb_bot, у ньому ми допомагаємо <b>усім</b>.\n\n📼 <b>Ти можеш шукати та встановлювати модулі через </b><code>.heta</code><b>. Просто введи пошуковий запит і натисни ⛩ Install на потрібному модулі</b>\n\n💁‍♀️ <b>Швидкий гайд:</b>\n\n1️⃣ <b>Напиши</b> <code>.help</code> <b>щоб побачити список модулів</b>\n2️⃣ <b>Напиши</b> <code>.help &lt;Назву модуля/команди&gt;</code> <b>щоб побачити опис модуля</b>\n3️⃣ <b>Напиши</b> <code>.dlm &lt;посилання&gt;</code> <b>щоб завантажити модуль з посилання</b>\n4️⃣ <b>Напиши</b> <code>.lm</code> <b>відповіддю на файл, щоб завантажити модуль із нього</b>\n5️⃣ <b>Напиши</b> <code>.ulm &lt;Назву модуля&gt;</code> <b>щоб вивантажити модуль</b>\n\n💡 <b>AuthorBot підтримує модулі з Friendly-Telegram та GeekTG, Zikka, а також свої особисті.</b>\n"
   railway: "🚂 <b>Ти встановив юзербота на Railway, вітаю!</b>. На цій платформі ти отримуєш лише <b>500 безкоштовних годин на місяць</b>. Коли ліміт буде досягнуто, твій <b>юзербот буде заморожено</b>. Наступного місяця <b>ти повинен будеш перейти на https://railway.app і перезапустити його</b>."
-  language_saved: "🇺🇦 Мова збережена!"
+  language_saved: "🇺🇦 Мова збережена без проблем!"
   language: "🇺🇦 Українська"
   btn_support: "Коротко про Автора"
 
