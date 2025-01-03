@@ -534,7 +534,7 @@ translations:
   rpc_error: "<emoji document_id=5877477244938489129>🚫</emoji> <b>Команда</b> <code>{}</code> <b>не вдалася через помилку RPC:</b> <code>{}</code>"
   _cmd_doc_dllangpack: "[посилання на пк | без аргументів щоб видалити] - Змінити зовнішній пак"
   _cmd_doc_setlang: "[мови] - Змінити стандартну мову"
-  eval:
+eval:
   eval: "<emoji document_id={}>💻</emoji><b> Код:</b>\n<code>{}</code>\n\n<emoji document_id=5197688912457245639>✅</emoji><b> Результат:</b>\n<code>{}</code>"
   err: "<emoji document_id={}>💻</emoji><b> Код:</b>\n<pre><code class=\"language-{}\">{}</code></pre>\n\n<emoji document_id=5210952531676504517>🚫</emoji> <b>Помилка:</b>\n<pre><code class=\"language-{}\">{}</code></pre>"
   _cls_doc: "Виконує код різними мовами програмування"
