@@ -68,27 +68,24 @@ class CoreMod(loader.Module):
         return f"{str(chatid)}.{module}" if module else chatid
 
     @loader.command()
-    async def authorcmd(self, message: Message):
-    await utils.answer(
-        message,
-        self.strings("acbt").format(
-            (
-                utils.get_platform_emoji()
-                if self._client.hikka_me.premium and CUSTOM_EMOJIS
-                else "❤️<b>AuthorBot userbot</b>"
-            ),
-            *version.__version__,
-            utils.get_commit_url(),
-            f"{hikkatl.__version__} #{hikkatl.tl.alltlobjects.LAYER}",
-        )
-        + (
-            (
-                "\n\n<emoji document_id=5287454910059654880>💻</emoji> <b>@wsinfo</b>"
-            )
-            if random.choice([0, 1]) == 1
-            else ""
+    @loader.command()
+async def authorcmd(self, message: Message):
+    response = self.strings("acbt").format(
+        (
+            utils.get_platform_emoji()
+            if self._client.hikka_me.premium and CUSTOM_EMOJIS
+            else "❤️<b>AuthorBot userbot</b>"
         ),
+        *version.__version__,
+        utils.get_commit_url(),
+        f"{hikkatl.__version__} #{hikkatl.tl.alltlobjects.LAYER}",
     )
+    
+    # Add optional footer based on random choice
+    if random.choice([0, 1]) == 1:
+        response += "\n\n<emoji document_id=5287454910059654880>❤️</emoji> <b>@wsinfo</b>"
+    
+    await utils.answer(message, response)
     @loader.command()
     async def blacklist(self, message: Message):
         chatid = await self.blacklistcommon(message)
