@@ -1,7 +1,8 @@
-# � Dan G. && AuthorChe
+# © Dan G. && AuthorChe
 #  
 # You can redistribute it and/or modify it under the terms of the GNU AGPLv3
 #  https://www.gnu.org/licenses/agpl-3.0.html
+# -*- coding: utf-8 -*-
 
 import hikkatl
 from hikkatl.extensions.html import CUSTOM_EMOJIS
@@ -52,7 +53,7 @@ class CoreMod(loader.Module):
                 (
                     utils.get_platform_emoji()
                     if self._client.hikka_me.premium and CUSTOM_EMOJIS
-                    else "✍️<b>AuthorBot userbot</b>"
+                    else "âœï¸<b>AuthorBot userbot</b>"
                 ),
                 *version.__version__,
                 utils.get_commit_url(),
@@ -60,7 +61,7 @@ class CoreMod(loader.Module):
             )
             + (
                 (
-                    "\n\n<emoji document_id=5287454910059654880>❤️</emoji> <b>@wsinfo</b>"
+                    "\n\n<emoji document_id=5287454910059654880>â¤ï¸</emoji> <b>@wsinfo</b>"
                 )
                 if random.choice([0, 1]) == 1
                 else ""
@@ -155,7 +156,7 @@ class CoreMod(loader.Module):
         await utils.answer(
             message,
             self.strings("prefix_set").format(
-                "<emoji document_id=5197474765387864959>👍</emoji>",
+                "<emoji document_id=5197474765387864959>ðŸ‘</emoji>",
                 newprefix=utils.escape_html(args[0]),
                 oldprefix=utils.escape_html(oldprefix),
             ),
@@ -168,7 +169,7 @@ class CoreMod(loader.Module):
             self.strings("aliases")
             + "\n".join(
                 [
-                    f"<emoji document_id=4974259868996207180>🛑</emoji> <code>{i}</code> &lt;- {y}"
+                    f"<emoji document_id=4974259868996207180>ðŸ›‘</emoji> <code>{i}</code> &lt;- {y}"
                     for i, y in self.allmodules.aliases.items()
                 ]
             ),
