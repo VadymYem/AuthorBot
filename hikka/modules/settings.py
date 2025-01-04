@@ -68,11 +68,10 @@ class CoreMod(loader.Module):
         return f"{str(chatid)}.{module}" if module else chatid
 
     @loader.command()
-    async def authorcmd(self, message: Message):
-        await utils.answer_file(
-            message,
-            "https://github.com/VadymYem/AuthorBot/blob/421a04d850ac990525f1987646609d86622fd990/assets/acbot_pfp.png",
-            self.strings("acbt").format(
+async def authorcmd(self, message: Message):
+    await utils.answer(
+        message,
+        self.strings("acbt").format(
                 (
                     utils.get_platform_emoji()
                     if self._client.hikka_me.premium and CUSTOM_EMOJIS
