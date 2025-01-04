@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 security:
   name: "Security"
   invalid_name: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Invalid security group name</b>"
