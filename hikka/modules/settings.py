@@ -72,24 +72,23 @@ class CoreMod(loader.Module):
     await utils.answer(
         message,
         self.strings("acbt").format(
-                (
-                    utils.get_platform_emoji()
-                    if self._client.hikka_me.premium and CUSTOM_EMOJIS
-                    else "❤️<b>AuthorBot userbot</b>"
-                ),
-                *version.__version__,
-                utils.get_commit_url(),
-                f"{hikkatl.__version__} #{hikkatl.tl.alltlobjects.LAYER}",
-            )
-            + (
-                (
-                    "\n\n<emoji document_id=5287454910059654880>â¤ï¸</emoji> <b>@wsinfo</b>"
-                )
-                if random.choice([0, 1]) == 1
-                else ""
+            (
+                utils.get_platform_emoji()
+                if self._client.hikka_me.premium and CUSTOM_EMOJIS
+                else "❤️<b>AuthorBot userbot</b>"
             ),
+            *version.__version__,
+            utils.get_commit_url(),
+            f"{hikkatl.__version__} #{hikkatl.tl.alltlobjects.LAYER}",
         )
-
+        + (
+            (
+                "\n\n<emoji document_id=5287454910059654880>💻</emoji> <b>@wsinfo</b>"
+            )
+            if random.choice([0, 1]) == 1
+            else ""
+        ),
+    )
     @loader.command()
     async def blacklist(self, message: Message):
         chatid = await self.blacklistcommon(message)
