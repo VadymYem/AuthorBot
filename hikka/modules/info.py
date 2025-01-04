@@ -109,13 +109,13 @@ class acbotInfoMod(loader.Module):
             ),
             loader.ConfigValue(
                 "custom_button1",
-                ["AuthorChe✍️", "https://t.me/AuthorChe"],
+                ["🌐WebSite", "https://authorche.pp.ua/ubot.html"],
                 lambda: self.strings("_cfg_cst_btn"),
                 validator=loader.validators.Series(min_len=0, max_len=2),
             ),
             loader.ConfigValue(
                 "custom_button2",
-                [],
+                ["Donate❤️", "https://authorche.pp.ua/donate.html"],
                 lambda: self.strings("_cfg_cst_btn"),
                 validator=loader.validators.Series(min_len=0, max_len=2),
             ),
@@ -223,7 +223,7 @@ class acbotInfoMod(loader.Module):
             )
             if self.config["custom_message"] != "no"
             else (
-                "<b>𝙰𝚞𝚝𝚑𝚘𝚛𝙲𝚑𝚎'𝚜 𝚋𝚘𝚝✍️ </b>\n"
+                "<b>AuthorBot</b>\n"
                 f'<b>🤴 {self.strings("owner")}: </b>{me}\n\n'
                 f"<b>🕶 {self.strings('version')}: </b>{version} {build}\n"
                 f"<b>{upd}</b>\n"
@@ -277,7 +277,7 @@ class acbotInfoMod(loader.Module):
             "description": self.strings("description"),
             msg_type: self._render_info(),
             self.config["custom_format"]: self.config["custom_banner"],
-            "thumb": "https://te.legra.ph/file/c80f00c0fa6844d60a79c.jpg",
+            "thumb": "https://authorche.pp.ua/poems/logo.jpg",
             "reply_markup": btns,
         }
 
