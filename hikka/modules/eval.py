@@ -1,7 +1,9 @@
-# � Dan G. && AuthorChe
+# © Dan G. && AuthorChe
 #  
 # You can redistribute it and/or modify it under the terms of the GNU AGPLv3
 #  https://www.gnu.org/licenses/agpl-3.0.html
+# -*- coding: utf-8 -*-
+
 import contextlib
 import itertools
 import os
@@ -167,7 +169,7 @@ class Evaluator(loader.Module):
                         (
                             "\n".join(item.full_stack.splitlines()[:-1])
                             + "\n\n"
-                            + "🚫 "
+                            + "ðŸš« "
                             + item.full_stack.splitlines()[-1]
                         )
                     ),
