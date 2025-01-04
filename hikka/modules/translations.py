@@ -1,8 +1,8 @@
-# � Dan G. && AuthorChe
+# © Dan G. && AuthorChe
 #  
 # You can redistribute it and/or modify it under the terms of the GNU AGPLv3
 #  https://www.gnu.org/licenses/agpl-3.0.html
-
+# -*- coding: utf-8 -*-
 
 import logging
 
@@ -28,19 +28,19 @@ class Translations(loader.Module):
 
     def _get_flag(self, lang: str) -> str:
         emoji_flags = {
-            "🇬🇧": "<emoji document_id=6323589145717376403>🇬🇧</emoji>",
-            "🇺🇿": "<emoji document_id=6323430017179059570>🇺🇿</emoji>",
-            "🇷🇺": "<emoji document_id=6323139226418284334>🤮</emoji>",
-            "🇺🇦": "<emoji document_id=5276140694891666474>🇺🇦</emoji>",
-            "🇮🇹": "<emoji document_id=6323471399188957082>🇮🇹</emoji>",
-            "🇩🇪": "<emoji document_id=6320817337033295141>🇩🇪</emoji>",
-            "🇪🇸": "<emoji document_id=6323315062379382237>🇪🇸</emoji>",
-            "🇹🇷": "<emoji document_id=6321003171678259486>🇹🇷</emoji>",
-            "🇰🇿": "<emoji document_id=6323135275048371614>🇰🇿</emoji>",
-            "🥟": "<emoji document_id=5382337996123020810>🥟</emoji>",
+            "ðŸ‡¬ðŸ‡§": "<emoji document_id=6323589145717376403>ðŸ‡¬ðŸ‡§</emoji>",
+            "ðŸ‡ºðŸ‡¿": "<emoji document_id=6323430017179059570>ðŸ‡ºðŸ‡¿</emoji>",
+            "ðŸ‡·ðŸ‡º": "<emoji document_id=6323139226418284334>ðŸ¤®</emoji>",
+            "ðŸ‡ºðŸ‡¦": "<emoji document_id=5276140694891666474>ðŸ‡ºðŸ‡¦</emoji>",
+            "ðŸ‡®ðŸ‡¹": "<emoji document_id=6323471399188957082>ðŸ‡®ðŸ‡¹</emoji>",
+            "ðŸ‡©ðŸ‡ª": "<emoji document_id=6320817337033295141>ðŸ‡©ðŸ‡ª</emoji>",
+            "ðŸ‡ªðŸ‡¸": "<emoji document_id=6323315062379382237>ðŸ‡ªðŸ‡¸</emoji>",
+            "ðŸ‡¹ðŸ‡·": "<emoji document_id=6321003171678259486>ðŸ‡¹ðŸ‡·</emoji>",
+            "ðŸ‡°ðŸ‡¿": "<emoji document_id=6323135275048371614>ðŸ‡°ðŸ‡¿</emoji>",
+            "ðŸ¥Ÿ": "<emoji document_id=5382337996123020810>ðŸ¥Ÿ</emoji>",
         }
 
-        lang2country = {"en": "🇬🇧", "tt": "🥟", "kk": "🇰🇿", "ua": "🇺🇦", "ru":"🤮"}
+        lang2country = {"en": "ðŸ‡¬ðŸ‡§", "tt": "ðŸ¥Ÿ", "kk": "ðŸ‡°ðŸ‡¿", "ua": "ðŸ‡ºðŸ‡¦", "ru":"ðŸ¤®"}
 
         lang = lang2country.get(lang) or utils.get_lang_flag(lang)
         return emoji_flags.get(lang, lang)
@@ -84,7 +84,7 @@ class Translations(loader.Module):
                         (
                             self._get_flag(lang)
                             if not utils.check_url(lang)
-                            else "<emoji document_id=5433653135799228968>📁</emoji>"
+                            else "<emoji document_id=5433653135799228968>ðŸ“</emoji>"
                         )
                         for lang in args.split()
                     ]
