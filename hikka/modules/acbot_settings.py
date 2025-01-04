@@ -552,7 +552,7 @@ class SettingsMod(loader.Module):
             [
                 (
                     {
-                        "text": "❌ NoNick",
+                        "text": "✅ NoNick",
                         "callback": self.inline__setting,
                         "args": (
                             "no_nickname",
@@ -561,7 +561,7 @@ class SettingsMod(loader.Module):
                     }
                     if self._db.get(main.__name__, "no_nickname", False)
                     else {
-                        "text": "✅ NoNick",
+                        "text": "❌ NoNick",
                         "callback": self.inline__setting,
                         "args": (
                             "no_nickname",
@@ -571,7 +571,7 @@ class SettingsMod(loader.Module):
                 ),
                 (
                     {
-                        "text": "❌ Grep",
+                        "text": "✅ Grep",
                         "callback": self.inline__setting,
                         "args": (
                             "grep",
@@ -580,7 +580,7 @@ class SettingsMod(loader.Module):
                     }
                     if self._db.get(main.__name__, "grep", False)
                     else {
-                        "text": "✅ Grep",
+                        "text": "❌ Grep",
                         "callback": self.inline__setting,
                         "args": (
                             "grep",
@@ -590,7 +590,7 @@ class SettingsMod(loader.Module):
                 ),
                 (
                     {
-                        "text": "❌ InlineLogs",
+                        "text": "✅ InlineLogs",
                         "callback": self.inline__setting,
                         "args": (
                             "inlinelogs",
@@ -599,7 +599,7 @@ class SettingsMod(loader.Module):
                     }
                     if self._db.get(main.__name__, "inlinelogs", True)
                     else {
-                        "text": "✅ InlineLogs",
+                        "text": "❌ InlineLogs",
                         "callback": self.inline__setting,
                         "args": (
                             "inlinelogs",
