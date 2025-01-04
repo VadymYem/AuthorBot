@@ -171,11 +171,11 @@ class SettingsMod(loader.Module):
     async def watchers(self, message: Message):
         watchers, disabled_watchers = self.get_watchers()
         watchers = [
-            f"â™»ï¸ {watcher}"
+            f"👁️‍🗨️ {watcher}"
             for watcher in watchers
             if watcher not in list(disabled_watchers.keys())
         ]
-        watchers += [f"ðŸ’¢ {k} {v}" for k, v in disabled_watchers.items()]
+        watchers += [f"👁️‍🗨️ {k} {v}" for k, v in disabled_watchers.items()]
         await utils.answer(
             message, self.strings("watchers").format("\n".join(watchers))
         )
@@ -384,7 +384,7 @@ class SettingsMod(loader.Module):
             self.strings("cmd_nn_list").format(
                 "\n".join(
                     [
-                        f"â–«ï¸ <code>{utils.escape_html(self.get_prefix() + cmd)}</code>"
+                        f" <code>{utils.escape_html(self.get_prefix() + cmd)}</code>"
                         for cmd in self._db.get(main.__name__, "nonickcmds", [])
                     ]
                 )
@@ -493,8 +493,8 @@ class SettingsMod(loader.Module):
             await call.edit(
                 self.strings("confirm_update"),
                 reply_markup=[
-                    {"text": "ðŸª‚ Update", "callback": self.inline__update},
-                    {"text": "ðŸš« Cancel", "action": "close"},
+                    {"text": "🔄 Update", "callback": self.inline__update},
+                    {"text": "❌ Cancel", "action": "close"},
                 ],
             )
             return
@@ -537,8 +537,8 @@ class SettingsMod(loader.Module):
             await call.edit(
                 self.strings("confirm_restart"),
                 reply_markup=[
-                    {"text": "ðŸ”„ Restart", "callback": self.inline__restart},
-                    {"text": "ðŸš« Cancel", "action": "close"},
+                    {"text": "🔄 Restart", "callback": self.inline__restart},
+                    {"text": "❌ Cancel", "action": "close"},
                 ],
             )
             return
@@ -552,7 +552,7 @@ class SettingsMod(loader.Module):
             [
                 (
                     {
-                        "text": "âœ… NoNick",
+                        "text": "❌ NoNick",
                         "callback": self.inline__setting,
                         "args": (
                             "no_nickname",
@@ -561,7 +561,7 @@ class SettingsMod(loader.Module):
                     }
                     if self._db.get(main.__name__, "no_nickname", False)
                     else {
-                        "text": "ðŸš« NoNick",
+                        "text": "✅ NoNick",
                         "callback": self.inline__setting,
                         "args": (
                             "no_nickname",
@@ -571,7 +571,7 @@ class SettingsMod(loader.Module):
                 ),
                 (
                     {
-                        "text": "âœ… Grep",
+                        "text": "❌ Grep",
                         "callback": self.inline__setting,
                         "args": (
                             "grep",
@@ -580,7 +580,7 @@ class SettingsMod(loader.Module):
                     }
                     if self._db.get(main.__name__, "grep", False)
                     else {
-                        "text": "ðŸš« Grep",
+                        "text": "✅ Grep",
                         "callback": self.inline__setting,
                         "args": (
                             "grep",
@@ -590,7 +590,7 @@ class SettingsMod(loader.Module):
                 ),
                 (
                     {
-                        "text": "âœ… InlineLogs",
+                        "text": "❌ InlineLogs",
                         "callback": self.inline__setting,
                         "args": (
                             "inlinelogs",
@@ -599,7 +599,7 @@ class SettingsMod(loader.Module):
                     }
                     if self._db.get(main.__name__, "inlinelogs", True)
                     else {
-                        "text": "ðŸš« InlineLogs",
+                        "text": "✅ InlineLogs",
                         "callback": self.inline__setting,
                         "args": (
                             "inlinelogs",
@@ -793,7 +793,7 @@ class SettingsMod(loader.Module):
             form = message
             await form.edit(
                 self.strings("opening_tunnel"),
-                reply_markup={"text": "ðŸ•” Wait...", "data": "empty"},
+                reply_markup={"text": "⏳ Wait...", "data": "empty"},
                 gif=(
                     "https://i.gifer.com/origin/e4/e43e1b221fd960003dc27d2f2f1b8ce1.gif"
                 ),
@@ -802,7 +802,7 @@ class SettingsMod(loader.Module):
             form = await self.inline.form(
                 self.strings("opening_tunnel"),
                 message=message,
-                reply_markup={"text": "ðŸ•” Wait...", "data": "empty"},
+                reply_markup={"text": "⏳ Wait...", "data": "empty"},
                 gif=(
                     "https://i.gifer.com/origin/e4/e43e1b221fd960003dc27d2f2f1b8ce1.gif"
                 ),
