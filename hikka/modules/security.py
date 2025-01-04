@@ -3,6 +3,8 @@
 # -*- coding: utf-8 -*-
 # You can redistribute it and/or modify it under the terms of the GNU AGPLv3
 #  https://www.gnu.org/licenses/agpl-3.0.html
+
+
 import contextlib
 import datetime
 import time
@@ -35,7 +37,7 @@ from ..security import (
 class HikkaSecurityMod(loader.Module):
     """Control security settings"""
 
-    strings = {"name": "Security"}
+    strings = {"name": "HikkaSecurity"}
 
     async def client_ready(self):
         self._sgroups: typing.Iterable[str, SecurityGroup] = self.pointer(
@@ -134,7 +136,7 @@ class HikkaSecurityMod(loader.Module):
             utils.chunks(
                 [
                     {
-                        "text": f"{'âœ…' if level else 'ðŸš«'} {self.strings[group]}",
+                        "text": f"{'✅' if level else '🚫'} {self.strings[group]}",
                         "callback": self.inline__switch_perm,
                         "args": (
                             command.__name__.rsplit("_inline_handler", maxsplit=1)[0],
@@ -152,7 +154,7 @@ class HikkaSecurityMod(loader.Module):
             else utils.chunks(
                 [
                     {
-                        "text": f"{'âœ…' if level else 'ðŸš«'} {self.strings[group]}",
+                        "text": f"{'✅' if level else '🚫'} {self.strings[group]}",
                         "callback": self.inline__switch_perm,
                         "args": (
                             command.__name__.rsplit("cmd", maxsplit=1)[0],
@@ -182,7 +184,7 @@ class HikkaSecurityMod(loader.Module):
         return utils.chunks(
             [
                 {
-                    "text": f"{'âœ…' if level else 'ðŸš«'} {self.strings[group]}",
+                    "text": f"{'✅' if level else '🚫'} {self.strings[group]}",
                     "callback": self.inline__switch_perm_bm,
                     "args": (group, not level, is_inline),
                 }
@@ -236,10 +238,6 @@ class HikkaSecurityMod(loader.Module):
     async def newsgroup(self, message: Message):
         if not (args := utils.get_args_raw(message)):
             await utils.answer(message, self.strings("no_args"))
-            return
-
-        if not all([i.isalnum() for i in args]):
-            await utils.answer(message, self.strings("invalid_name"))
             return
 
         if args in self._sgroups:
@@ -305,7 +303,7 @@ class HikkaSecurityMod(loader.Module):
                 (
                     self.strings("permissions_list").format(
                         "\n".join(
-                            "<emoji document_id=4974307891025543730>â–«ï¸</emoji>"
+                            "<emoji document_id=4974307891025543730>▫️</emoji>"
                             " <b>{}</b> <code>{}</code> <b>{}</b>".format(
                                 self.strings(rule["rule_type"]),
                                 rule["rule"],
@@ -334,7 +332,7 @@ class HikkaSecurityMod(loader.Module):
             await utils.answer(message, self.strings("no_args"))
             return
 
-        if not self._sgroups.get(args):
+        if self._sgroups.get(args):
             await utils.answer(message, self.strings("sgroup_not_found").format(args))
             return
 
@@ -867,7 +865,7 @@ class HikkaSecurityMod(loader.Module):
                 message=message,
                 text=self.strings("multiple_rules").format(
                     "\n".join(
-                        "ðŸ›¡ <b>{}</b> <code>{}</code>".format(
+                        "🛡 <b>{}</b> <code>{}</code>".format(
                             self.strings(rule.split("/")[0]).capitalize(),
                             rule.split("/", maxsplit=1)[1],
                         )
@@ -877,7 +875,7 @@ class HikkaSecurityMod(loader.Module):
                 reply_markup=utils.chunks(
                     [
                         {
-                            "text": "ðŸ›¡ {} {}".format(
+                            "text": "🛡 {} {}".format(
                                 self.strings(rule.split("/")[0]).capitalize(),
                                 rule.split("/", maxsplit=1)[1],
                             ),
@@ -915,7 +913,7 @@ class HikkaSecurityMod(loader.Module):
                 message=message,
                 text=self.strings("multiple_rules").format(
                     "\n".join(
-                        "ðŸ›¡ <b>{}</b> <code>{}</code>".format(
+                        "🛡 <b>{}</b> <code>{}</code>".format(
                             self.strings(rule.split("/")[0]).capitalize(),
                             rule.split("/", maxsplit=1)[1],
                         )
@@ -925,7 +923,7 @@ class HikkaSecurityMod(loader.Module):
                 reply_markup=utils.chunks(
                     [
                         {
-                            "text": "ðŸ›¡ {} {}".format(
+                            "text": "🛡 {} {}".format(
                                 self.strings(rule.split("/")[0]).capitalize(),
                                 rule.split("/", maxsplit=1)[1],
                             ),
@@ -984,7 +982,7 @@ class HikkaSecurityMod(loader.Module):
                 message=message,
                 text=self.strings("multiple_rules").format(
                     "\n".join(
-                        "ðŸ›¡ <b>{}</b> <code>{}</code>".format(
+                        "🛡 <b>{}</b> <code>{}</code>".format(
                             self.strings(rule.split("/")[0]).capitalize(),
                             rule.split("/", maxsplit=1)[1],
                         )
@@ -994,7 +992,7 @@ class HikkaSecurityMod(loader.Module):
                 reply_markup=utils.chunks(
                     [
                         {
-                            "text": "ðŸ›¡ {} {}".format(
+                            "text": "🛡 {} {}".format(
                                 self.strings(rule.split("/")[0]).capitalize(),
                                 rule.split("/", maxsplit=1)[1],
                             ),
@@ -1200,7 +1198,7 @@ class HikkaSecurityMod(loader.Module):
                 self.strings("rules").format(
                     "\n".join(
                         [
-                            "<emoji document_id=6037355667365300960>ðŸ‘¥</emoji> <b><a"
+                            "<emoji document_id=6037355667365300960>👥</emoji> <b><a"
                             " href='{}'>{}</a> {} {} {}</b> <code>{}</code>".format(
                                 rule["entity_url"],
                                 utils.escape_html(rule["entity_name"]),
@@ -1212,7 +1210,7 @@ class HikkaSecurityMod(loader.Module):
                             for rule in self._client.dispatcher.security.tsec_chat
                         ]
                         + [
-                            "<emoji document_id=6037122016849432064>ðŸ‘¤</emoji> <b><a"
+                            "<emoji document_id=6037122016849432064>👤</emoji> <b><a"
                             " href='{}'>{}</a> {} {} {}</b> <code>{}</code>".format(
                                 rule["entity_url"],
                                 utils.escape_html(rule["entity_name"]),
@@ -1226,8 +1224,9 @@ class HikkaSecurityMod(loader.Module):
                         + [
                             "\n".join(
                                 [
-                                    "<emoji document_id=5870704313440932932>ðŸ”’</emoji>"
-                                    " <code>{}</code> <b>{} {} {}</b> <code>{}</code>".format(
+                                    "<emoji document_id=5870704313440932932>🔒</emoji>"
+                                    " <code>{}</code> <b>{} {} {}</b> <code>{}</code>"
+                                    .format(
                                         utils.escape_html(group.name),
                                         self._convert_time(
                                             int(rule["expires"] - time.time())
