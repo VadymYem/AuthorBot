@@ -18,7 +18,7 @@ class CoreMod(loader.Module):
     """Control core userbot settings"""
 
     strings = {"name": "Settings",
-               "acbot": '''
+               "acbt": '''
     ✌️ <b>Привіт!</b>
     
     <b>Юзербот</b> — це бот, який працює від імені звичайного користувача Telegram, надаючи розширені можливості, недоступні для класичних ботів. Наприклад, юзербот може читати повідомлення після їх надсилання, шукати інфо в гугл та виконувати інші дії, як і звичайний бот, але від імені користувача.
@@ -72,11 +72,11 @@ class CoreMod(loader.Module):
         await utils.answer_file(
             message,
             "https://github.com/VadymYem/AuthorBot/blob/421a04d850ac990525f1987646609d86622fd990/assets/acbot_pfp.png",
-            self.strings("acbot").format(
+            self.strings("acbt").format(
                 (
                     utils.get_platform_emoji()
                     if self._client.hikka_me.premium and CUSTOM_EMOJIS
-                    else "âœï¸<b>AuthorBot userbot</b>"
+                    else "❤️<b>AuthorBot userbot</b>"
                 ),
                 *version.__version__,
                 utils.get_commit_url(),
