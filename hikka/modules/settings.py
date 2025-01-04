@@ -66,10 +66,9 @@ class CoreMod(loader.Module):
 
         module = self.allmodules.get_classname(module)
         return f"{str(chatid)}.{module}" if module else chatid
-
+    
     @loader.command()
-    @loader.command()
-async def authorcmd(self, message: Message):
+    async def authorcmd(self, message: Message):
     response = self.strings("acbt").format(
         (
             utils.get_platform_emoji()
