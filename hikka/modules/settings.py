@@ -68,7 +68,7 @@ class CoreMod(loader.Module):
         return f"{str(chatid)}.{module}" if module else chatid
 
     @loader.command()
-async def authorcmd(self, message: Message):
+    async def authorcmd(self, message: Message):
     await utils.answer(
         message,
         self.strings("acbt").format(
