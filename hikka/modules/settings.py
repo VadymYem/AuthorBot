@@ -17,7 +17,7 @@ import random
 class CoreMod(loader.Module):
     """Control core userbot settings"""
 
-    strings = {"name": "Settings"
+    strings = {"name": "Settings",
                "acbot": '''
     ✌️ <b>Привіт!</b>
     
