@@ -94,7 +94,7 @@ security:
   _cmd_doc_sgroupadd: "<name> [user or reply] - Add user to security group"
   _cmd_doc_sgroupdel: "<name> [user or reply] - Remove user from security group"
 
-settings:
+acbot_settings:
   name: "Settings"
   watchers: "<emoji document_id=5424885441100782420>👀</emoji> <b>Watchers:</b>\n\n<b>{}</b>"
   no_args: "<emoji document_id=5210952531676504517>🚫</emoji> <b>No arguments specified</b>"
@@ -226,7 +226,7 @@ presets:
   already_installed: "✅ [Installed]"
   _cls_doc: "Suggests new users a packs of modules to load"
 
-acbot_settings:
+settings:
   name: "Settings"
   installation: '<emoji document_id=5363805650327450240>▪️</emoji> The installation is very easy! Just enter the following in your servers terminal:
 
@@ -443,7 +443,7 @@ help:
   request_join: "You requested link for support chat"
   core_notice: "<emoji document_id=5312383351217201533>☝️</emoji> <b>This is a core module. You can't unload it nor replace</b>"
 
-hikka_info:
+info:
   name: "Info"
   owner: "Owner"
   version: "Version"
