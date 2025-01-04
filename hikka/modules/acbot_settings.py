@@ -1,7 +1,9 @@
-# � Dan G. && AuthorChe
+# © Dan G. && AuthorChe
 #  
 # You can redistribute it and/or modify it under the terms of the GNU AGPLv3
 #  https://www.gnu.org/licenses/agpl-3.0.html
+# -*- coding: utf-8 -*-
+
 import logging
 import os
 import random
@@ -169,11 +171,11 @@ class SettingsMod(loader.Module):
     async def watchers(self, message: Message):
         watchers, disabled_watchers = self.get_watchers()
         watchers = [
-            f"♻️ {watcher}"
+            f"â™»ï¸ {watcher}"
             for watcher in watchers
             if watcher not in list(disabled_watchers.keys())
         ]
-        watchers += [f"💢 {k} {v}" for k, v in disabled_watchers.items()]
+        watchers += [f"ðŸ’¢ {k} {v}" for k, v in disabled_watchers.items()]
         await utils.answer(
             message, self.strings("watchers").format("\n".join(watchers))
         )
@@ -382,7 +384,7 @@ class SettingsMod(loader.Module):
             self.strings("cmd_nn_list").format(
                 "\n".join(
                     [
-                        f"▫️ <code>{utils.escape_html(self.get_prefix() + cmd)}</code>"
+                        f"â–«ï¸ <code>{utils.escape_html(self.get_prefix() + cmd)}</code>"
                         for cmd in self._db.get(main.__name__, "nonickcmds", [])
                     ]
                 )
@@ -411,7 +413,7 @@ class SettingsMod(loader.Module):
                 continue
 
             users += [
-                '▫️ <b><a href="tg://user?id={}">{}</a></b>'.format(
+                'â–«ï¸ <b><a href="tg://user?id={}">{}</a></b>'.format(
                     user_id,
                     utils.escape_html(get_display_name(user)),
                 )
@@ -445,7 +447,7 @@ class SettingsMod(loader.Module):
                 continue
 
             chats += [
-                '▫️ <b><a href="{}">{}</a></b>'.format(
+                'â–«ï¸ <b><a href="{}">{}</a></b>'.format(
                     utils.get_entity_url(chat_entity),
                     utils.escape_html(get_display_name(chat_entity)),
                 )
@@ -491,8 +493,8 @@ class SettingsMod(loader.Module):
             await call.edit(
                 self.strings("confirm_update"),
                 reply_markup=[
-                    {"text": "🪂 Update", "callback": self.inline__update},
-                    {"text": "🚫 Cancel", "action": "close"},
+                    {"text": "ðŸª‚ Update", "callback": self.inline__update},
+                    {"text": "ðŸš« Cancel", "action": "close"},
                 ],
             )
             return
@@ -535,8 +537,8 @@ class SettingsMod(loader.Module):
             await call.edit(
                 self.strings("confirm_restart"),
                 reply_markup=[
-                    {"text": "🔄 Restart", "callback": self.inline__restart},
-                    {"text": "🚫 Cancel", "action": "close"},
+                    {"text": "ðŸ”„ Restart", "callback": self.inline__restart},
+                    {"text": "ðŸš« Cancel", "action": "close"},
                 ],
             )
             return
@@ -550,7 +552,7 @@ class SettingsMod(loader.Module):
             [
                 (
                     {
-                        "text": "✅ NoNick",
+                        "text": "âœ… NoNick",
                         "callback": self.inline__setting,
                         "args": (
                             "no_nickname",
@@ -559,7 +561,7 @@ class SettingsMod(loader.Module):
                     }
                     if self._db.get(main.__name__, "no_nickname", False)
                     else {
-                        "text": "🚫 NoNick",
+                        "text": "ðŸš« NoNick",
                         "callback": self.inline__setting,
                         "args": (
                             "no_nickname",
@@ -569,7 +571,7 @@ class SettingsMod(loader.Module):
                 ),
                 (
                     {
-                        "text": "✅ Grep",
+                        "text": "âœ… Grep",
                         "callback": self.inline__setting,
                         "args": (
                             "grep",
@@ -578,7 +580,7 @@ class SettingsMod(loader.Module):
                     }
                     if self._db.get(main.__name__, "grep", False)
                     else {
-                        "text": "🚫 Grep",
+                        "text": "ðŸš« Grep",
                         "callback": self.inline__setting,
                         "args": (
                             "grep",
@@ -588,7 +590,7 @@ class SettingsMod(loader.Module):
                 ),
                 (
                     {
-                        "text": "✅ InlineLogs",
+                        "text": "âœ… InlineLogs",
                         "callback": self.inline__setting,
                         "args": (
                             "inlinelogs",
@@ -597,7 +599,7 @@ class SettingsMod(loader.Module):
                     }
                     if self._db.get(main.__name__, "inlinelogs", True)
                     else {
-                        "text": "🚫 InlineLogs",
+                        "text": "ðŸš« InlineLogs",
                         "callback": self.inline__setting,
                         "args": (
                             "inlinelogs",
@@ -791,7 +793,7 @@ class SettingsMod(loader.Module):
             form = message
             await form.edit(
                 self.strings("opening_tunnel"),
-                reply_markup={"text": "🕔 Wait...", "data": "empty"},
+                reply_markup={"text": "ðŸ•” Wait...", "data": "empty"},
                 gif=(
                     "https://i.gifer.com/origin/e4/e43e1b221fd960003dc27d2f2f1b8ce1.gif"
                 ),
@@ -800,7 +802,7 @@ class SettingsMod(loader.Module):
             form = await self.inline.form(
                 self.strings("opening_tunnel"),
                 message=message,
-                reply_markup={"text": "🕔 Wait...", "data": "empty"},
+                reply_markup={"text": "ðŸ•” Wait...", "data": "empty"},
                 gif=(
                     "https://i.gifer.com/origin/e4/e43e1b221fd960003dc27d2f2f1b8ce1.gif"
                 ),
