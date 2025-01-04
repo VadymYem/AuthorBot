@@ -1,7 +1,8 @@
-# � Dan G. && AuthorChe
+# © Dan G. && AuthorChe
 #  
 # You can redistribute it and/or modify it under the terms of the GNU AGPLv3
 #  https://www.gnu.org/licenses/agpl-3.0.html
+# -*- coding: utf-8 -*-
 import asyncio
 import contextlib
 
@@ -143,6 +144,6 @@ class UpdateNotifier(loader.Module):
         with open('CHANGELOG.md', mode='r', encoding='utf-8') as f:
             changelog = f.read().split('##')[1].strip()
         if (await self._client.get_me()).premium:
-            changelog.replace('AuthorBot', '<emoji document_id=5192765204898783881>🌘</emoji><emoji document_id=5195311729663286630>🌘</emoji><emoji document_id=5195045669324201904>🌘</emoji>')
+            changelog.replace('AuthorBot', '<emoji document_id=5192765204898783881>ðŸŒ˜</emoji><emoji document_id=5195311729663286630>ðŸŒ˜</emoji><emoji document_id=5195045669324201904>ðŸŒ˜</emoji>')
 
         await utils.answer(message, self.strings('changelog').format(changelog))
