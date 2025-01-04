@@ -89,7 +89,7 @@ security:
   _cmd_doc_sgroupadd: "<ім'я> [користувач або відповідь] - Додати користувача до групи безпеки"
   _cmd_doc_sgroupdel: "<ім'я> [користувач або відповідь] - Видалити користувача з групи безпеки"
 
-settings:
+acbot_settings:
   watchers: "<emoji document_id=5424885441100782420>👀</emoji> <b>Наглядачі:</b>\n\n<b>{}</b>"
   mod404: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Наглядача {} не знайдено</b>"
   disabled: "<emoji document_id=5424885441100782420>👀</emoji> <b>Наглядача {} тепер <u>вимкнено</u></b>"
@@ -214,7 +214,7 @@ presets:
   installed: "<emoji document_id=5436040291507247633>🎉</emoji> <b>Набір</b> <code>{}</code> <b>встановлено!</b>"
   already_installed: "✅ [Встановлено]"
 
-acbot_settings:
+settings:
   installation: '<emoji document_id=5363805650327450240>▪️</emoji> Установка дуже легка! Достатньо написати в термінал твого сервера:
 
 <pre><code class="language-bash">sudo apt update &amp;&amp; sudo apt upgrade -y &amp;&amp; sudo apt install git &amp;&amp; sudo apt install python3-pip &amp;&amp; git clone https://github.com/VadymYem/AuthorBot &amp;&amp; cd AuthorBot &amp;&amp; pip install -r requirements.txt &amp;&amp; python3 -m hikka</code></pre>
