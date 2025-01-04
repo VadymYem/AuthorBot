@@ -1,8 +1,8 @@
-# � Dan G. && AuthorChe
+# © Dan G. && AuthorChe
 #  
 # You can redistribute it and/or modify it under the terms of the GNU AGPLv3
 #  https://www.gnu.org/licenses/agpl-3.0.html
-
+# -*- coding: utf-8 -*-
 
 from random import choice, randint
 
@@ -20,7 +20,7 @@ class InlineRandomMod(loader.Module):
     async def coin_inline_handler(self, query: InlineQuery) -> dict:
         """Heads or tails?"""
 
-        r = "🦅 Heads" if randint(0, 1) else "🪙 Tails"
+        r = "ðŸ¦… Heads" if randint(0, 1) else "ðŸª™ Tails"
 
         return {
             "title": "Toss a coin",
@@ -61,7 +61,7 @@ class InlineRandomMod(loader.Module):
             "title": "Choose one item from list",
             "description": "Trust in the God of luck, and he will be by your side!",
             "message": (
-                "<i>Бог удачі шепоче...</i>"
+                "<i>Ð‘Ð¾Ð³ ÑƒÐ´Ð°Ñ‡Ñ– ÑˆÐµÐ¿Ð¾Ñ‡Ðµ...</i>"
                 f" <b>{choice(a.split(',')).strip()}</b>"
             ),
             "thumb": "https://img.icons8.com/external-filled-outline-geotatah/64/000000/external-choice-customer-satisfaction-filled-outline-filled-outline-geotatah.png",
