@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 security:
   invalid_name: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Неправильне ім'я</b>"
   no_command: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Команда</b> <code>{}</code> <b>не знайдена!</b>"
