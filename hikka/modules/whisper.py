@@ -30,10 +30,8 @@ class WhisperMod(loader.Module):
             " recognize.</b>"
         ),
         "recognized": (
-            "<b><emoji"
-            " document_id=5821302890932736039>🗣</emojA:</b>\n{transcription}"
-
-uthorBot
+            "<b>"
+            "🗣 AuthorBot:</b>\n{transcription}"
         ),
         "error": (
             "<b><emoji document_id=5980953710157632545>❌</emoji>Error occurred during"
