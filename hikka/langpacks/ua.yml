@@ -521,7 +521,7 @@ loader:
   basic_auth_doc: "Авторизація для доступу до репозиторію"
 
 translations:
-  lang_saved: "{} <b>Мову збережено!</b>"
+  lang_saved: "🇺🇦 <b>Мову збережено!</b>"
   pack_saved: "<emoji document_id=5197474765387864959>👍</emoji> <b>Пакет перекладів збережено!</b>"
   incorrect_language: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Вказано неправильну мову</b>"
   lang_removed: "<emoji document_id=5197474765387864959>👍</emoji> <b>Переклади скинуто на стандартні</b>"
