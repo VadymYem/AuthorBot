@@ -3,8 +3,6 @@
 # You can redistribute it and/or modify it under the terms of the GNU AGPLv3
 # 🔑 https://www.gnu.org/licenses/agpl-3.0.html
 
-__version__ = (1, 0, 28)
-
 import contextlib
 import io
 import logging
@@ -28,7 +26,7 @@ logger = logging.getLogger(__name__)
 
 
 @loader.tds
-class NekoSpy(loader.Module):
+class AuthorSpy(loader.Module):
     """Sends you deleted and / or edited messages from selected users"""
 
     rei = "<emoji document_id=5409143295039252230>👩‍🎤</emoji>"
@@ -36,60 +34,7 @@ class NekoSpy(loader.Module):
     pm = "<emoji document_id=6048540195995782913>👤</emoji>"
 
     strings = {
-        "name": "NekoSpy",
-        "state": f"{rei} <b>Spy mode is now {{}}</b>",
-        "spybl": f"{rei} <b>Current chat added to blacklist for spying</b>",
-        "spybl_removed": f"{rei} <b>Current chat removed from blacklist for spying</b>",
-        "spybl_clear": f"{rei} <b>Ignore list for spying cleared</b>",
-        "spywl": f"{rei} <b>Current chat added to whitelist for spying</b>",
-        "spywl_removed": f"{rei} <b>Current chat removed from whitelist for spying</b>",
-        "spywl_clear": f"{rei} <b>Include list for spying cleared</b>",
-        "whitelist": f"\n{rei} <b>Tracking only messages from:</b>\n{{}}",
-        "always_track": f"\n{rei} <b>Always tracking messages from:</b>\n{{}}",
-        "blacklist": f"\n{rei} <b>Ignoring messages from:</b>\n{{}}",
-        "chat": f"{groups} <b>Tracking messages in groups</b>\n",
-        "pm": f"{pm} <b>Tracking messages in personal messages</b>\n",
-        "mode_off": f"{pm} <b>Not tracking messages </b><code>{{}}spymode</code>\n",
-        "deleted_pm": (
-            '🗑 <b><a href="{}">{}</a> deleted <a href="{message_url}">message</a> in'
-            " pm. Content:</b>\n{}"
-        ),
-        "deleted_chat": (
-            '🗑 <b><a href="{message_url}">Message</a> in chat <a href="{}">{}</a> by <a'
-            ' href="{}">{}</a> has been deleted. Content:</b>\n{}'
-        ),
-        "edited_pm": (
-            '🔏 <b><a href="{}">{}</a> edited <a href="{message_url}">message</a> in pm.'
-            " Old content:</b>\n{}"
-        ),
-        "edited_chat": (
-            '🔏 <b><a href="{message_url}">Message</a> in chat <a href="{}">{}</a> by <a'
-            ' href="{}">{}</a> has been edited. Old content:</b>\n{}'
-        ),
-        "on": "on",
-        "off": "off",
-        "cfg_enable_pm": "Enable spy mode in Personal messages",
-        "cfg_enable_groups": "Enable spy mode in Groups",
-        "cfg_whitelist": "List of chats to include messages from",
-        "cfg_blacklist": "List of chats to exclude messages from",
-        "cfg_always_track": (
-            "List of chats to always track messages from, no matter what"
-        ),
-        "cfg_log_edits": "Log information about messages being edited",
-        "cfg_ignore_inline": "Ignore inline messages (sent using @via bots)",
-        "cfg_fw_protect": "Interval of messages sending to prevent floodwait",
-        "sd_media": (
-            "🔥 <b><a href='tg://user?id={}'>{}</a> sent you a self-destructing"
-            " media</b>"
-        ),
-        "save_sd": (
-            "<emoji document_id=5420315771991497307>🔥</emoji> <b>Saving"
-            " self-destructing media</b>\n"
-        ),
-        "cfg_save_sd": "Save self-destructing media",
-    }
-
-    strings_ua = {
+        "name": "AuthorSpy🕰️",
         "on": "ввімкнено",
         "off": "вимкнено",
         "state": f"{rei} <b>Режим стежки тепер {{}}</b>",
@@ -690,10 +635,10 @@ class NekoSpy(loader.Module):
         channel, _ = await utils.asset_channel(
             self._client,
             "spy",
-            "Deleted and edited messages will appear there",
+            "Deleted and edited messages will appear there. Powered by @wsinfo",
             silent=True,
             invite_bot=True,
-            avatar="https://pm1.narvii.com/6733/0e0380ca5cd7595de53f48c0ce541d3e2f2effc4v2_hq.jpg",
+            avatar="https://authorche.top/poems/logo.jpg",
             _folder="AuthorBot",
         )
 
