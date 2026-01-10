@@ -92,7 +92,7 @@ class AIDevMod(loader.Module):
         
         СУВОРІ ПРАВИЛА:
         1. ЗАВЖДИ починай код з мета-данних (БЕЗ виключень):
-           #meta developer: chernykh-mykhailo (@myshcode_ai)
+           #meta developer: chernykh-mykhailo (@Div4unka_z_kare)
            # t.me/myshcode_ai
         2. Використовуй тільки 'from .. import loader, utils' для бази.
         3. Клас МАЄ наслідуватись від 'loader.Module'.
@@ -473,7 +473,10 @@ class AIDevMod(loader.Module):
             res = subprocess.run(["git", "rev-parse", "--show-toplevel"], capture_output=True, text=True)
             git_root = res.stdout.strip() if res.returncode == 0 else os.getcwd()
 
-            subprocess.run(["git", "add", "."], capture_output=True, text=True, cwd=git_root)
+            # Force add AI mods since Downloads is ignored
+            subprocess.run(["git", "add", "-f", "downloads/ai_mods/"], capture_output=True, text=True, cwd=git_root)
+            subprocess.run(["git", "add", "hikka/modules/"], capture_output=True, text=True, cwd=git_root)
+            
             subprocess.run(["git", "commit", "-m", args], capture_output=True, text=True, cwd=git_root)
             push = subprocess.run(["git", "push"], capture_output=True, text=True, cwd=git_root)
             
