@@ -28,6 +28,7 @@ tgcrypto = "1.2.5"
 hikka-tl-new = "2.0.8"
 ruamel-yaml = "0.17.21"
 rsa = "4.9"
+pydub = "0.25.1"
 
 
 [build-system]

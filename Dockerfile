@@ -54,6 +54,11 @@ RUN poetry lock --no-update && poetry install --only main
 
 # `production` image used for runtime
 FROM python-base AS production
+RUN apt-get update && apt-get install --no-install-recommends -y \
+    ffmpeg \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
 COPY --from=builder-base $PYSETUP_PATH $PYSETUP_PATH
 
 WORKDIR /data/AuthorBot
