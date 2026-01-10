@@ -22,14 +22,13 @@ class MenuBotMod(loader.Module):
         "name": "ТестBot",
         "/donate": (
             "<i>✌️So you want to donate?\nAmazing!\n\nYou can send money to my cards(UA)</i>:\n"
-            "<b>ABank24🍏</b> - <code>5169155111758361</code>\n"
             "<b>Privat24💸</b> - <code>5168745150640644\n</code>\n"
             "<i>Or my crypto wallets👛</i>:\n\n"
             "<b>•🪙 BTC</b>:\n<code>123MgBkkpu6XwrU53SvrBxiW9useRSt6qR\n</code>\n"
             "<b>•💎 TON</b>:\n<code>UQDicYt03peG8l0CBCKW2YQJ914YoKkzObWFbbIIdUlqnpNJ\n</code>\n"
             "<b>•💲USDT(TON): \n</b><code>UQBqKU8fvbZVZJvyAw85wQP88O0sTzFkBxW1lfbht9hGayBK</code> \n"
             "or\n<b>•💲USDT(TRX): \n</b><code>TXkiayvYBwyuX7r9dj5NvEfdF5FCJbu5kb</code>\n\n"
-            "<b>❤️Donate via xRocket🚀 - /xrocket\n\n"
+            "<b>❤️Donate via xRocket🚀 - /xrocket\n🙏 authorche.top/sup - всі способи підтримки.\n\n"
             "<i>🙃It's a trifle for you, but I'm pleased, so I thank you for your support!</i></b>"
         ),
         "/author": (
@@ -41,14 +40,14 @@ class MenuBotMod(loader.Module):
             "<i>Наразі працюють лише два боти😢:\n</i>@authorche_nice_bot та @vyfb_bot.\n\n"
             "🥺 Допоможи проекту відновити роботу решти ботів. Орендування серверів дуже недешева річ.\n"
             "<b>Підтримай проект донатом: /donate</b>\n\n"
-            "<i>👀 Також Автор пише ботів(only python) та створює веб-сайти[Портфоліо](html/css/js) на замовлення. \nЯкщо я тебе зацікавив, то "
-            "можеш звернутися до нього через: @vyfb_bot\n</i>"
+            "<i>👀 Також Автор пише ботів(only python already) та створює веб-сайти[Портфоліо](html/css/js) на замовлення. \nЯкщо я тебе зацікавив, то "
+            "можеш звернутися до нього через: @vyfb_bot або authorche.top/dev\n</i>"
         ),
         "/bots": (
             "<b>Список безкоштовних ботів:</b>\n"
-            "@authorche_nice_bot - багатофункціональний бот,\n"
-            "@vycalc_bot - простий та зручний калькулятор,\n"
-            "@Guess_the_number_acbot - гра 'Вгадай число'.\n"
+            "@authorche_nice_bot - HandWriter бот,\n"
+            "@emails_tgbot - простий та зручний поштовий клієнт в; телеграи,\n"
+            "@authorcloud_bot - Безкоштовний файлообмінник. Хмарне сховище в телеграм.\n"
             "@ac_moder_bot - Модератор чатів. Ваш помічник в модерації груп\n"
             "@vyfb_bot - бот зворотнього зв'язку з Автором.\n\n"
             "<b>Список всих проектів:</b> @wsinfo\n"
