@@ -1,32 +1,106 @@
-<hr>
-<img src="https://authorche.pp.ua/poems/logo.jpg">
-<hr>
-<h2> Changes</h2>
+<div align="center">
+  <img src="https://authorche.pp.ua/poems/logo.jpg" alt="AuthorBot Logo" width="600">
+  <hr>
+  <h1>🚀 AuthorBot</h1>
+  <p><i>Modern, fast, and feature-rich Telegram Userbot.</i></p>
+  <p>
+    <a href="https://authorche.pp.ua">Website</a> •
+    <a href="https://authorche.pp.ua/ubot.html">Installation Page</a> •
+    <a href="https://authorche.pp.ua/donate.html">Donate💌</a>
+  </p>
+</div>
 
-<ul>
-	<li>🆕 <b>Best telegram layer</b> with reactions, video stickers and other stuff</li>
-	<li>🔓 <b>Security</b> improvements, including <b>native entity caching</b></li>
-	<li>🎨 <b>UI/UX</b> improvements</li>
-	<li>📼 New <b>core modules</b></li>
-	<li>⏱ Stable and speed</li>
-	<li>▶️ <b>Inline forms, galleries and lists</b></li>
-	<li>👨‍👦 NoNick, NoNickUser, NoNickCmd, NoNickChat - use another account for userbot</li>
-	<li>🔁 Full <b>backward compatibility</b> with popular telethon userbots</li>
-        <li>🇺🇦 Ukraine language support</li>
-        <li>Unique modules specially by Author</li><br><br>
-	### Installation page
+<hr>
 
-<b>Manual installation (no script):</b><br>
-<code>sudo apt update && sudo apt upgrade -y && sudo apt install git python3 -y && git clone https://github.com/VadymYem/AuthorBot && cd AuthorBot && pip install -r requirements.txt && python3 -m hikka</code><br><b>Manual installation (Termux):</b><br><code>termux-wake-lock && export AIOHTTP_NO_EXTENSIONS=1 && pkg upgr -y && pkg i wget ncurses-utils python openssl git -y && clear && . <(wget -qO- https://raw.githubusercontent.com/VadymYem/AuthorBot/refs/heads/master/termux.sh)</code><br><br>
-<i>If you are on VPS\VDS, type <code>--proxy-pass</code> in the end of command to open SSH tunnel to your AuthorBot web interface, or use <code>--no-web</code> to complete setup in console</i><br>
-More info for install:<a href="https://authorche.pp.ua/ubot.html"> Webpage of project</a>
-<br>
-<h2 border="none"><img src="https://github.com/hikariatama/assets/raw/master/1312-micro-sd-card-flat.webp" height="54" align="middle"> Requirements</h2>
-<ul>
- <li>Python 3.8-3.11</li>
- <li>API_ID and HASH from <a href="https://my.telegram.org/apps" color="#2594cb">Telegram</a></li>
-</ul>
- <h3>Other links:</h3><br>
- <li><a href="https://authorche.pp.ua/donate.html" class="button">Donate💌</a></li><br>
- <li><a href="https://authorche.pp.ua" class="button">WebSite of Author</a>
- </li>
+## ✨ Основні переваги (Features)
+
+*   🇺🇦 **Повна підтримка української мови.**
+*   🆕 **Сучасний шар Telegram:** Реакції, відео-стікери та кастомні емодзі.
+*   🔓 **Безпека:** Нативне кешування та оптимізований код.
+*   🎨 **Красивий UI/UX:** Інтерактивні форми, галереї та списки.
+*   👨‍👦 **Мульти-аккаунт (NoNick):** Можливість використовувати окремий аккаунт для юзербота.
+*   🔁 **Сумісність:** Повна зворотна сумісність з популярними модулями.
+
+---
+
+## 📱 Встановлення на телефон (Android + Termux)
+*Навіть якщо ви ніколи не чули, що таке юзербот, просто слідуйте крокам нижче:*
+
+### Крок 1: Підготовка API ID та HASH
+Це ключі, які дозволяють програмі підключитися до вашого Telegram.
+1. Зайдіть на [my.telegram.org](https://my.telegram.org).
+2. Введіть свій номер телефону та код з Telegram.
+3. Перейдіть у **API development tools**.
+4. Створіть новий додаток (можна вписати будь-яку назву).
+5. Ви побачите **App api_id** та **App api_hash**. Скопіюйте їх кудись.
+
+### Крок 2: Встановлення Termux
+> [!IMPORTANT]
+> Не встановлюйте Termux з Play Store (там застаріла версія).
+> Використовуйте [F-Droid](https://f-droid.org/en/packages/com.termux/) або завантажте прямо по [цьому посиланню](https://f-droid.org/repo/com.termux_118.apk).
+
+### Крок 3: Запуск встановлення
+Відкрийте Termux та вставте цю команду (одним рядком):
+
+```bash
+termux-wake-lock && export AIOHTTP_NO_EXTENSIONS=1 && pkg upgr -y && pkg i wget ncurses-utils python openssl git -y && clear && . <(wget -qO- https://raw.githubusercontent.com/VadymYem/AuthorBot/refs/heads/master/termux.sh)
+```
+
+### Крок 4: Авторизація
+Після завершення бот запитає ваші дані:
+1. **Phone number**: Ваш номер у міжнародному форматі (наприклад, `+380...`).
+2. **Confirmation code**: Код, який прийде вам у Telegram (якщо у вас стоїть 2FA пароль, введіть і його).
+3. **API ID & HASH**: Ті самі ключі, які ви отримали на першому кроці.
+
+---
+
+## 🔌 Додаткові модулі (Custom Modules)
+*Найцікавіші можливості AuthorBot, які вже встановлені:*
+
+### 🧠 [AIContext](downloads/ai_mods/AIContext.py)
+Розумний аналізатор ваших чатів на базі Gemini AI.
+- **Команда**: `.sum [кількість повідомлень] [запит]`
+- **Що робить**: Робить короткий підсумок (Summary) останніх повідомлень або відповідає на ваші питання по контексту переписки.
+- **Налаштування**: Потребує API Key (`.setconf AIContext api_key ВАШ_КЛЮЧ`).
+
+### 🤖 [AIDev](downloads/ai_mods/AIDev.py)
+Ваш особистий розробник модулів.
+- **Команда**: `.gen [запит]`
+- **Що робить**: Пише код нових модулів прямо у Telegram за вашим описом та автоматично їх встановлює.
+
+### 🎁 [GiftClaimer](downloads/ai_mods/GiftClaimer.py)
+Автоматичний збирач подарунків (Gifts/Giveaways).
+- **Що робить**: Моніторить вказаний канал та миттєво натискає на кнопки збору подарунків, щоб ви були першими.
+
+### 📥 Як активувати ці модулі?
+Оскільки ці модулі вже знаходяться у папці проекту, вам не потрібно їх завантажувати з інтернету. Просто відправте боту команду:
+- `.dlmod downloads/ai_mods/AIContext.py`
+- `.dlmod downloads/ai_mods/GiftClaimer.py`
+- `.dlmod downloads/ai_mods/AIDev.py`
+
+*Порада: Для модулів, які ви згенерували самі через `AIDev`, можна використовувати швидку команду `.aim назва_файлу`.*
+
+---
+
+## 💻 Встановлення на ПК / VPS (Linux)
+
+```bash
+sudo apt update && sudo apt upgrade -y && sudo apt install git python3 -y && git clone https://github.com/VadymYem/AuthorBot && cd AuthorBot && pip install -r requirements.txt && python3 -m hikka
+```
+*На VPS використовуйте `--proxy-pass` в кінці команди для доступу до веб-інтерфейсу.*
+
+---
+
+## 🛠️ Виправлення помилок (Troubleshooting)
+
+- **Бот перестав працювати?** Просто знову зайдіть у Termux та пропишіть: `python3 -m hikka`.
+- **Телефон закриває Termux у фоні?** Упевніться, що ви виконали `termux-wake-lock` та вимкнули обмеження батареї для Termux у налаштуваннях телефона.
+
+---
+
+### 👨‍💻 Контакти та підтримка
+- **[MyShCode AI](https://t.me/myshcode_ai)** — Новини розробки, підтримка та нові ШІ-модулі.
+
+---
+
+*Цей проект базується на оригінальному [AuthorBot (Hikka)](https://authorche.pp.ua).*
