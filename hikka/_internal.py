@@ -29,7 +29,10 @@ def die():
     else:
         # This one is actually better, because it kills all subprocesses
         # but it can't be used inside the Docker
-        os.killpg(os.getpgid(os.getpid()), signal.SIGTERM)
+        try:
+            os.killpg(os.getpgid(os.getpid()), signal.SIGTERM)
+        except Exception:
+            sys.exit(0)
 
 
 def restart():
