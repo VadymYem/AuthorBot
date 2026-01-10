@@ -136,6 +136,7 @@ acbot/loaded_modules
 loaded_modules
 acbot/debug_modules
 acbot*.session*
+hikka*.session*
 database-*.json
 *.swp
 .setup_complete
