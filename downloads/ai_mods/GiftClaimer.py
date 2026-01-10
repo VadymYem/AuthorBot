@@ -1,3 +1,6 @@
+#meta developer: chernykh-mykhailo (@Div4unka_z_kare)
+# t.me/myshcode_ai
+
 from .. import loader, utils
 import asyncio
 import logging
@@ -22,7 +25,7 @@ class GiftClaimerMod(loader.Module):
         self.config = loader.ModuleConfig(
             loader.ConfigValue(
                 "target_channel",
-                "TrueMafia",
+                "mafiauachannel",
                 lambda: self.strings["config_channel"],
             ),
             loader.ConfigValue(

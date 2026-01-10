@@ -1,3 +1,6 @@
+#meta developer: chernykh-mykhailo (@Div4unka_z_kare)
+# t.me/myshcode_ai
+
 import aiohttp
 import json
 import asyncio
