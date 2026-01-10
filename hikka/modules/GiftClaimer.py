@@ -11,10 +11,11 @@ class GiftClaimerMod(loader.Module):
     strings = {
         "name": "GiftClaimer",
         "config_channel": "Юзернейм або ID каналу для моніторингу (без @)",
-        "config_api_key": "API ключ для Gemini (вимоги розробки)",
         "enabled": "✅ <b>Авто-збір увімкнено:</b> <code>{}</code>",
-        "claimed": "🎁 <b>Подарунок було натиснуто у каналі!</b>",
-        "status": "ℹ️ <b>Статус модуля:</b>\nКаннал: <code>{}</code>\nАктивний: <code>{}</code>"
+        "claimed": "🎁 <b>Спроба натиснути на кнопку подарунка!</b>",
+        "status": "ℹ️ <b>Статус модуля:</b>\nКанал: <code>{}</code>\nАктивний: <code>{}</code>",
+        "set_channel": "✅ <b>Канал для моніторингу змінено на:</b> <code>{}</code>",
+        "no_args": "⚠️ <b>Вкажіть юзернейм каналу після команди!</b>"
     }
 
     def __init__(self):
@@ -25,21 +26,22 @@ class GiftClaimerMod(loader.Module):
                 lambda: self.strings["config_channel"],
             ),
             loader.ConfigValue(
-                "api_key",
-                "",
-                lambda: self.strings["config_api_key"],
-            ),
-            loader.ConfigValue(
                 "enabled",
                 True,
                 lambda: "Увімкнути/Вимкнути автоматичний збір",
             ),
-            loader.ConfigValue(
-                "gemini_model",
-                "gemini-1.5-flash-preview",
-                lambda: "Актуальна модель Gemini для аналізу (за вимогами)",
-            ),
         )
+
+    async def giftsetcmd(self, message):
+        """Вказати юзернейм каналу для збору подарунків"""
+        args = utils.get_args_raw(message)
+        if not args:
+            await utils.answer(message, self.strings["no_args"])
+            return
+        
+        channel = args.replace("@", "").strip()
+        self.config["target_channel"] = channel
+        await utils.answer(message, self.strings["set_channel"].format(channel))
 
     async def giftclaimcmd(self, message):
         """Перевірити статус налаштувань авто-збору"""
@@ -53,41 +55,30 @@ class GiftClaimerMod(loader.Module):
         await utils.answer(message, self.strings["enabled"].format(self.config["enabled"]))
 
     async def watcher(self, message):
-        """Спостерігач за новими повідомленнями"""
+        """Спостерігач за новими повідомленнями в каналі"""
         if not self.config["enabled"]:
             return
 
         if not message or not message.chat:
             return
 
-        # Отримуємо юзернейм або ID чату
+        # Отримуємо цільовий канал з конфігу
         target = str(self.config["target_channel"]).replace("@", "").lower()
+        
+        # Перевіряємо юзернейм та ID
         chat_username = (message.chat.username or "").lower()
         chat_id = str(message.chat_id)
 
-        # Перевірка чи повідомлення з потрібного каналу
         if chat_username == target or chat_id == target:
-            # Перевіряємо наявність кнопок у повідомленні
+            # Якщо повідомлення має кнопки
             if hasattr(message, "reply_markup") and message.reply_markup:
                 try:
-                    # Затримка для запобігання флуду та підозрілої активності
+                    # Затримка 0.5с для безпеки від анти-флуду
                     await asyncio.sleep(0.5)
                     
-                    # Намагаємося натиснути на першу кнопку в повідомленні
-                    # (зазвичай подарунки мають одну головну кнопку)
+                    # Натискаємо на першу кнопку (index 0)
                     await message.click(0)
                     
-                    # Логуємо успішну спробу
-                    logger.info(f"Спроба забрати подарунок у чаті {chat_id}")
-                    
+                    logger.info(f"GiftClaimer: Кнопку натиснуто в каналі {target}")
                 except Exception as e:
-                    logger.error(f"Помилка при натисканні кнопки: {e}")
-
-    async def geministatcmd(self, message):
-        """Команда для перевірки конфігурації Gemini (згідно з правилом 9)"""
-        api_key_status = "Встановлено" if self.config["api_key"] else "Відсутній"
-        model = self.config["gemini_model"]
-        await utils.answer(
-            message, 
-            f"🤖 <b>Gemini Config:</b>\nМодель: <code>{model}</code>\nAPI Key: <code>{api_key_status}</code>"
-        )
+                    logger.error(f"GiftClaimer Error: {e}")
