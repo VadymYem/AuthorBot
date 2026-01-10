@@ -24,16 +24,8 @@ Creates new modules for you via .gen command"""
 
     def __init__(self):
         self.config = loader.ModuleConfig(
-            loader.ConfigValue(
-                "api_key",
-                "",
-                lambda: "Google Gemini API Key (Get it at aistudio.google.com)",
-            ),
-            loader.ConfigValue(
-                "last_mod_path",
-                "",
-                lambda: "Path to the last generated module",
-            ),
+            "api_key", "", "Google Gemini API Key",
+            "last_mod_path", "", "Path to the last generated module"
         )
 
     async def gencmd(self, message):
@@ -42,19 +34,29 @@ Creates new modules for you via .gen command"""
             await utils.answer(
                 message,
                 "⚠️ <b>API Key not found!</b>\n"
-                "Set it using this command:\n"
-                "<code>.setcfg AIDev api_key ВАШ_КЛЮЧ</code>\n\n"
-                "<i>(Отримати ключ можна на <a href='https://aistudio.google.com/app/apikey'>Google AI Studio</a>)</i>"
+                "Спробуйте встановити його так:\n"
+                "<code>.setkey ВАШ_КЛЮЧ</code>\n\n"
+                "<i>(Або через .setcfg AIDev api_key, якщо він запрацює)</i>"
             )
             return
 
         args = utils.get_args_raw(message)
         if not args:
-            await utils.answer(message, "❌ <b>Напишіть, що має робити модуль!</b>")
+            await utils.answer(message, "❌ <b>Напишіть, що має робити модуль!</b>\nПриклад: <code>.gen напиши модуль для показу курсу валют</code>")
             return
 
         api_key = self.config["api_key"]
         await utils.answer(message, self.strings("generating").format(args))
+
+    async def setkeycmd(self, message):
+        """<key> - Set Gemini API Key directly"""
+        args = utils.get_args_raw(message)
+        if not args:
+            await utils.answer(message, "❌ <b>Введіть ключ!</b>")
+            return
+        
+        self.config["api_key"] = args
+        await utils.answer(message, "✅ <b>API Ключ збережено!</b>\nТепер спробуйте <code>.gen ...</code>")
 
         prompt = f"""
         Ти - професійний розробник модулів для AuthorBot (Hikka Userbot).
