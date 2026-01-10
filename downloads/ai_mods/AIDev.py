@@ -60,8 +60,8 @@ class AIDevMod(loader.Module):
         context = ""
         # Try to find a filename in the query (e.g. "update Currency.py")
         fn_match = re.search(r"([\w.-]+)\.py", args)
-        if fn_match:
-            target_fn = fn_match.group(0)
+        target_fn = fn_match.group(0) if fn_match else None
+
         # Search everywhere we might store modules
         this_path = getattr(self, "__origin__", None)
         search_dirs = [
@@ -74,10 +74,11 @@ class AIDevMod(loader.Module):
             search_dirs.append(os.path.dirname(os.path.abspath(this_path)))
             
             target_path = None
-            for d in search_dirs:
-                if d and os.path.exists(os.path.join(d, target_fn)):
-                    target_path = os.path.join(d, target_fn)
-                    break
+            if target_fn:
+                for d in search_dirs:
+                    if d and os.path.exists(os.path.join(d, target_fn)):
+                        target_path = os.path.join(d, target_fn)
+                        break
             
             if target_path and os.path.exists(target_path):
                 with open(target_path, "r", encoding="utf-8") as f:

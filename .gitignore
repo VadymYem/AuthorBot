@@ -12,6 +12,7 @@ build/
 develop-eggs/
 dist/
 downloads/
+!downloads/ai_mods/
 eggs/
 .eggs/
 lib/

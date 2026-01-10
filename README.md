@@ -85,6 +85,11 @@ termux-wake-lock && export AIOHTTP_NO_EXTENSIONS=1 && pkg upgr -y && pkg i wget 
 - `.dlmod downloads/ai_mods/GiftClaimer.py`
 - `.dlmod downloads/ai_mods/AIDev.py`
 
+Або за прямим посиланням:
+- `.dlmod https://raw.githubusercontent.com/chernykh-mykhailo/AuthorBot/main/downloads/ai_mods/AIContext.py`
+- `.dlmod https://raw.githubusercontent.com/chernykh-mykhailo/AuthorBot/main/downloads/ai_mods/GiftClaimer.py`
+- `.dlmod https://raw.githubusercontent.com/chernykh-mykhailo/AuthorBot/main/downloads/ai_mods/AIDev.py`
+
 *Порада: Для модулів, які ви згенерували самі через `AIDev`, можна використовувати швидку команду `.aim назва_файлу`.*
 
 ---
