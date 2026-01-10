@@ -9,5 +9,13 @@ services:
     ports:
       - "${EXTERNAL_PORT:-8085}:8080"
 
+    networks:
+      - default
+      - bot_infrastructure
+
+networks:
+  bot_infrastructure:
+    external: true
+
 volumes:
   worker:
