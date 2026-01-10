@@ -76,7 +76,7 @@ class acbotInfoMod(loader.Module):
             ),
             loader.ConfigValue(
                 "custom_banner",
-                "https://authorche.pp.ua/poems/logo.html",
+                "",
                 lambda: self.strings("_cfg_cst_bnr"),
             ),
             loader.ConfigValue(
@@ -109,13 +109,13 @@ class acbotInfoMod(loader.Module):
             ),
             loader.ConfigValue(
                 "custom_button1",
-                ["🌐WebSite", "https://authorche.pp.ua/ubot.html"],
+                ["🌐WebSite", "https://authorche.top/ubot"],
                 lambda: self.strings("_cfg_cst_btn"),
                 validator=loader.validators.Series(min_len=0, max_len=2),
             ),
             loader.ConfigValue(
                 "custom_button2",
-                ["Donate❤️", "https://authorche.pp.ua/donate.html"],
+                ["Donate❤️", "https://authorche.top/donate"],
                 lambda: self.strings("_cfg_cst_btn"),
                 validator=loader.validators.Series(min_len=0, max_len=2),
             ),
