@@ -28,6 +28,7 @@ Creates new modules for you via .gen command"""
             "last_mod_path", "", "Path to the last generated module"
         )
 
+    @loader.command(alias="gen")
     async def gencmd(self, message):
         """<query> - Create a new module using AI"""
         if not self.config["api_key"]:
@@ -48,6 +49,7 @@ Creates new modules for you via .gen command"""
         api_key = self.config["api_key"]
         await utils.answer(message, self.strings("generating").format(args))
 
+    @loader.command(alias="setkey")
     async def setkeycmd(self, message):
         """<key> - Set Gemini API Key directly"""
         args = utils.get_args_raw(message)
