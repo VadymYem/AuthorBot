@@ -26,13 +26,14 @@ class CurrencyMod(loader.Module):
             res_text = "<b>📊 Актуальний курс валют:</b>\n\n"
 
             # Обробка фіатних валют
-            for coin in fiat_data:
-                if coin['ccy'] in ['USD', 'EUR']:
-                    buy = round(float(coin['buy']), 2)
-                    sale = round(float(coin['sale']), 2)
-                    res_text += f"💵 <b>{coin['ccy']}/UAH</b>\n"
-                    res_text += f"┣ Купівля: <code>{buy}</code>\n"
-                    res_text += f"┗ Продаж: <code>{sale}</code>\n\n"
+            if isinstance(fiat_data, list):
+                for coin in fiat_data:
+                    if coin.get('ccy') in ['USD', 'EUR']:
+                        buy = round(float(coin['buy']), 2)
+                        sale = round(float(coin['sale']), 2)
+                        res_text += f"💵 <b>{coin['ccy']}/UAH</b>\n"
+                        res_text += f"┣ Купівля: <code>{buy}</code>\n"
+                        res_text += f"┗ Продаж: <code>{sale}</code>\n\n"
 
             # Обробка криптовалют
             btc_price = round(float(btc_data['price']), 2)
