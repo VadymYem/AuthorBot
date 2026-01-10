@@ -1,10 +1,11 @@
 import aiohttp
 import json
+import asyncio
 from .. import loader, utils
 
 @loader.tds
 class AIContextMod(loader.Module):
-    """Аналіз контексту чату за допомогою Gemini AI (Модифікована версія)"""
+    """Аналіз контексту чату за допомогою Gemini AI"""
     
     strings = {
         "name": "AIContext",
@@ -30,7 +31,7 @@ class AIContextMod(loader.Module):
         )
 
     async def sumcmd(self, message):
-        """[кількість] [запит] - Аналіз контексту або Summary (ліміт до 50,000)"""
+        """[кількість] [запит] - Аналіз контексту або Summary (ліміт до 50,000 повідомлень)"""
         args = utils.get_args_raw(message)
         api_key = self.config["api_key"]
 
@@ -38,7 +39,7 @@ class AIContextMod(loader.Module):
             await utils.answer(message, self.strings["no_api_key"])
             return
 
-        # Парсинг аргументів (за замовчуванням 500 повідомлень)
+        # Парсинг аргументів
         limit = 500
         query = ""
         
@@ -56,12 +57,21 @@ class AIContextMod(loader.Module):
 
         # Отримання історії повідомлень
         messages_history = []
-        # Використовуємо raw_text, ігноруємо сервісні повідомлення та порожні тексти
-        async for msg in message.client.iter_messages(message.chat_id, limit=limit):
-            if msg.raw_text and not msg.action:
-                sender = (msg.sender.first_name if msg.sender and hasattr(msg.sender, 'first_name') else "Анонім")
-                date = msg.date.strftime("%Y-%m-%d %H:%M")
-                messages_history.append(f"{sender} [{date}]: {msg.raw_text}")
+        try:
+            async for msg in message.client.iter_messages(message.chat_id, limit=limit):
+                if msg.raw_text and not msg.action:
+                    sender = "Анонім"
+                    if msg.sender:
+                        if hasattr(msg.sender, 'first_name') and msg.sender.first_name:
+                            sender = msg.sender.first_name
+                        elif hasattr(msg.sender, 'title') and msg.sender.title:
+                            sender = msg.sender.title
+                    
+                    date = msg.date.strftime("%Y-%m-%d %H:%M")
+                    messages_history.append(f"{sender} [{date}]: {msg.raw_text}")
+        except Exception as e:
+            await utils.answer(message, f"<b>❌ Помилка при читанні історії:</b> <code>{str(e)}</code>")
+            return
 
         if not messages_history:
             await utils.answer(message, self.strings["no_messages"])
@@ -116,13 +126,14 @@ class AIContextMod(loader.Module):
                     ai_response = result['candidates'][0]['content']['parts'][0]['text']
                     
                     header = f"<b>📊 Результат аналізу ({len(messages_history)} повідомлень):</b>\n\n"
-                    # Використовуємо ліміт Telegram на довжину повідомлення
-                    if len(header + ai_response) > 4096:
-                        full_res = header + ai_response
+                    full_res = header + ai_response
+                    
+                    # Відправка результату з урахуванням лімітів Telegram
+                    if len(full_res) > 4096:
                         for i in range(0, len(full_res), 4000):
                             await utils.answer(message, full_res[i:i+4000])
                     else:
-                        await utils.answer(message, f"{header}{ai_response}")
+                        await utils.answer(message, full_res)
 
         except Exception as e:
             await utils.answer(message, self.strings["api_error"].format(str(e)))
