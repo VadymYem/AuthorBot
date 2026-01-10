@@ -1,3 +1,5 @@
+#meta developer: chernykh-mykhailo, t.me/Div4unka_z_kare
+
 from .. import loader, utils
 import aiohttp
 import json
