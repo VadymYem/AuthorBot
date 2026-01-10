@@ -18,8 +18,8 @@ class AIDevMod(loader.Module):
     """🤖 AI Module Developer (Gemini AI)
     Creates new modules for you via .gen command
 
-    👤 <b>Developer:</b> chernykh-mykhailo (@myshcode_ai)
-    🌐 <b>Channel:</b> <a href="https://t.me/myshcode_ai">t.me/myshcode_ai</a>"""
+    👤 Developer: chernykh-mykhailo (@myshcode_ai)
+    🌐 Channel: t.me/myshcode_ai"""
     
     strings = {
         "name": "AIDev",
@@ -216,13 +216,32 @@ class AIDevMod(loader.Module):
             # Sort and mark
             for f in sorted(list(all_files)):
                 star = "⭐ " if f == this_file else "• "
-                # Check if it's in our AI dir
+                info = ""
+                
+                # Try to find developer info
+                found_path = None
+                for d in dirs_to_check:
+                    p = os.path.join(d, f)
+                    if os.path.exists(p):
+                        found_path = p
+                        break
+                
+                if found_path:
+                    try:
+                        with open(found_path, "r", encoding="utf-8") as file:
+                            header = file.read(500)
+                            dev_match = re.search(r"# ?meta developer: ?(.+)", header)
+                            if dev_match:
+                                info = f" [by {dev_match.group(1).strip()}]"
+                    except:
+                        pass
+
                 if os.path.exists(os.path.join("downloads", "ai_mods", f)):
-                    msg += f"🤖 <code>{f}</code> (AI)\n"
+                    msg += f"🤖 <code>{f}</code> (AI){info}\n"
                 elif os.path.exists(os.path.join("hikka", "modules", f)):
-                    msg += f"⚙️ <code>{f}</code> (Sys)\n"
+                    msg += f"⚙️ <code>{f}</code> (Sys){info}\n"
                 else:
-                    msg += f"{star}<code>{f}</code>\n"
+                    msg += f"{star}<code>{f}</code>{info}\n"
             
             msg += f"\n💡 Використовуйте <code>.vmod назва</code> щоб переглянути код."
             await utils.answer(message, msg)
@@ -326,6 +345,10 @@ class AIDevMod(loader.Module):
         new_dir = os.path.join(git_root, "downloads", "ai_mods")
         new_path = os.path.join(new_dir, filename)
         
+        if os.path.exists(new_path):
+            await utils.answer(message, f"ℹ️ <b>Модуль</b> <code>{filename}</code> <b>вже знаходиться в ai_mods.</b>")
+            return
+            
         if not os.path.exists(old_path):
             await utils.answer(message, f"❌ <b>Модуль</b> <code>{filename}</code> <b>не знайдено в hikka/modules.</b>")
             return
