@@ -18,7 +18,7 @@ class AIDevMod(loader.Module):
     """🤖 AI Module Developer (Gemini AI)
     Creates new modules for you via .gen command
 
-    👤 Developer: chernykh-mykhailo (@myshcode_ai)
+    👤 Developer: chernykh-mykhailo (@Div4unka_z_kare)
     🌐 Channel: t.me/myshcode_ai"""
     
     strings = {
