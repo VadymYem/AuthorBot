@@ -34,7 +34,7 @@ Creates new modules for you via .gen command"""
             "last_mod_path", "", "Path to the last generated module"
         )
 
-    @loader.command(alias="gen")
+    @loader.command()
     async def gencmd(self, message):
         """<query> - Create a new module using AI"""
         if not self.config["api_key"]:
@@ -128,7 +128,7 @@ Creates new modules for you via .gen command"""
             
             # Direct loading attempt
             try:
-                await self.installcmd(message, mod_path)
+                await self.aimcmd(message, mod_path)
                 
                 # Auto-configure the new module
                 module_name = filename.replace(".py", "")
@@ -151,7 +151,7 @@ Creates new modules for you via .gen command"""
         except Exception as e:
             await utils.answer(message, self.strings("error").format(str(e)))
 
-    @loader.command(alias="setkey")
+    @loader.command()
     async def setkeycmd(self, message):
         """<key> - Set Gemini API Key directly"""
         args = utils.get_args_raw(message)
@@ -162,7 +162,7 @@ Creates new modules for you via .gen command"""
         self.config["api_key"] = args
         await utils.answer(message, "✅ <b>API Ключ збережено!</b>\nТепер спробуйте <code>.gen ...</code>")
 
-    @loader.command(alias="setmodel")
+    @loader.command()
     async def setmodelcmd(self, message):
         """<model> - Set Gemini model name"""
         args = utils.get_args_raw(message)
@@ -173,7 +173,7 @@ Creates new modules for you via .gen command"""
         self.config["model"] = args
         await utils.answer(message, f"✅ <b>Модель змінена на:</b> <code>{args}</code>")
 
-    @loader.command(alias="lmods")
+    @loader.command()
     async def lmodscmd(self, message):
         """- List all files in modules folders"""
         try:
@@ -226,7 +226,7 @@ Creates new modules for you via .gen command"""
         except Exception as e:
             await utils.answer(message, f"❌ <b>Помилка:</b> <code>{str(e)}</code>")
 
-    @loader.command(alias="vmod")
+    @loader.command()
     async def vmodcmd(self, message):
         """<name> - View module source code"""
         args = utils.get_args_raw(message)
@@ -263,7 +263,7 @@ Creates new modules for you via .gen command"""
         except Exception as e:
             await utils.answer(message, f"❌ <b>Помилка:</b> <code>{str(e)}</code>")
 
-    @loader.command(alias="vtxt")
+    @loader.command()
     async def vtxtcmd(self, message):
         """<name> - View module source code as text blocks"""
         args = utils.get_args_raw(message)
@@ -307,7 +307,7 @@ Creates new modules for you via .gen command"""
         except Exception as e:
             await utils.answer(message, f"❌ <b>Помилка:</b> <code>{str(e)}</code>")
 
-    @loader.command(alias="gmove")
+    @loader.command()
     async def gmovecmd(self, message):
         """<name> - Move module from hikka/modules to downloads/ai_mods"""
         args = utils.get_args_raw(message)
@@ -343,7 +343,7 @@ Creates new modules for you via .gen command"""
         except Exception as e:
             await utils.answer(message, f"❌ <b>Помилка перенесення:</b> <code>{str(e)}</code>")
 
-    @loader.command(alias="gdel")
+    @loader.command()
     async def gdelcmd(self, message):
         """<name> - Delete module file"""
         args = utils.get_args_raw(message)
@@ -387,8 +387,8 @@ Creates new modules for you via .gen command"""
         except Exception as e:
             await utils.answer(message, f"❌ <b>Помилка видалення:</b> <code>{str(e)}</code>")
 
-    @loader.command(alias="aim")
-    async def installcmd(self, message, path=None):
+    @loader.command()
+    async def aimcmd(self, message, path=None):
         """[path] - Force install module from local path"""
         target = path or utils.get_args_raw(message)
         if not target:
@@ -437,7 +437,7 @@ Creates new modules for you via .gen command"""
             except Exception as e2:
                 await utils.answer(message, f"❌ <b>Помилка:</b> <code>{str(e)}</code>\n(також: {str(e2)})")
 
-    @loader.command(alias="gpush")
+    @loader.command()
     async def gpushcmd(self, message):
         """[message] - Commit and push all changes to Git"""
         args = utils.get_args_raw(message) or "Update modules via AI"
@@ -458,7 +458,7 @@ Creates new modules for you via .gen command"""
         except Exception as e:
             await utils.answer(message, f"❌ <b>Помилка Git:</b>\n<code>{str(e)}</code>")
 
-    @loader.command(alias="gpull")
+    @loader.command()
     async def gpullcmd(self, message):
         """- Pull latest changes from Git"""
         await utils.answer(message, "🔌 <b>Git: Завантажую оновлення (Pull)...</b>")
