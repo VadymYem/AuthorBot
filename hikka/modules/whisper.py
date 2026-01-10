@@ -7,7 +7,7 @@
 # You CANNOT edit this file without direct permission from the author.
 # You can redistribute this file without any changes.
 
-# meta developer: @nercymods, lite version by @blazeftg / @wsinfo for termux users
+# meta developer: @AuthorChe
 # scope: hikka_min 1.6.2
 # requires: pydub ffmpeg requests
 
@@ -16,7 +16,6 @@ import logging
 from hikkatl.tl.types import Message
 from pydub import AudioSegment
 import requests
-import base64
 from .. import loader, utils
 
 @loader.tds
@@ -31,7 +30,7 @@ class WhisperMod(loader.Module):
         ),
         "recognized": (
             "<b>"
-            "🗣 AuthorBot:</b>\n{transcription}"
+            "🗣 AuthorChe:</b>\n{transcription}"
         ),
         "error": (
             "<b><emoji document_id=5980953710157632545>❌</emoji>Error occurred during"
@@ -70,7 +69,7 @@ class WhisperMod(loader.Module):
         ),
         "recognized": (
             "<b><emoji"
-            " document_id=5821302890932736039>🗣</emoji>AuthorBot:</b>\n{transcription}"
+            " document_id=5821302890932736039>🗣</emoji>AuthorChe:</b>\n{transcription}"
         ),
         "error": (
             "<b><emoji document_id=5980953710157632545>❌</emoji>Помилка при"
@@ -113,7 +112,7 @@ class WhisperMod(loader.Module):
         ),
         "recognized": (
             "<b><emoji"
-            " document_id=5821302890932736039>🗣</emoji>AuthorBot:</b>\n{transcription}"
+            " document_id=5821302890932736039>🗣</emoji>AuthorChe:</b>\n{transcription}"
         ),
         "error": (
             "<b><emoji document_id=5980953710157632545>❌</emoji>Ошибка при"
@@ -176,28 +175,28 @@ class WhisperMod(loader.Module):
         file_extension = os.path.splitext(file_path)[1].lower()
         
         try:
-            if file_extension in ['.ogg', '.oga']:
-                with open(file_path, "rb") as f:
-                    audio_bytes = f.read()
-            else:
-                audio = AudioSegment.from_file(file_path, format=file_extension.lstrip('.'))
-                audio.export("temp_audio.mp3", format="mp3")
-                with open("temp_audio.mp3", "rb") as f:
-                    audio_bytes = f.read()
-                os.remove("temp_audio.mp3")
-
-            audio_b64 = base64.b64encode(audio_bytes).decode('utf-8')
+            # Hugging Face API now prefers raw bytes for audio files
+            # Converting to MP3/Opus first ensures compatibility and smaller size
+            audio = AudioSegment.from_file(file_path, format=file_extension.lstrip('.'))
             
+            # Export to memory as MP3
+            temp_file = "temp_audio_whisper.mp3"
+            audio.export(temp_file, format="mp3")
+            
+            with open(temp_file, "rb") as f:
+                audio_bytes = f.read()
+            
+            os.remove(temp_file)
+
+            # Updated endpoint and method (sending raw data instead of json)
             response = await utils.run_sync(
                 requests.post,
-                url="https://router.huggingface.co/hf-inference/models/openai/whisper-large-v3-turbo",
+                url="https://api-inference.huggingface.co/models/openai/whisper-large-v3-turbo",
                 headers={
                     "Authorization": f"Bearer {self.config['hf_api_key']}",
-                    "x-use-cache": "false",
-                    "x-wait-for-model": "true",
-                    "Content-Type": "application/json"
+                    "Content-Type": "audio/mpeg" # Specifying content type for the bytes
                 },
-                json={"inputs": audio_b64},
+                data=audio_bytes, # Sending raw bytes
             )
 
             if response.status_code != 200:
