@@ -16,7 +16,10 @@ logger = logging.getLogger(__name__)
 @loader.tds
 class AIDevMod(loader.Module):
     """🤖 AI Module Developer (Gemini AI)
-Creates new modules for you via .gen command"""
+    Creates new modules for you via .gen command
+
+    👤 <b>Developer:</b> chernykh-mykhailo (@myshcode_ai)
+    🌐 <b>Channel:</b> <a href="https://t.me/myshcode_ai">t.me/myshcode_ai</a>"""
     
     strings = {
         "name": "AIDev",
