@@ -7,7 +7,6 @@ import asyncio
 import json
 import os
 import re
-import subprocess
 import logging
 import html
 
@@ -114,8 +113,9 @@ class AIDevMod(loader.Module):
             return # Помилка вже виведена в _query_gemini
 
         # Find Git root to ensure we save INSIDE the repo
-        res = subprocess.run(["git", "rev-parse", "--show-toplevel"], capture_output=True, text=True)
-        git_root = res.stdout.strip() if res.returncode == 0 else os.getcwd()
+        code_ret, git_root, _ = await self._run_git("rev-parse", "--show-toplevel")
+        if code_ret != 0:
+            git_root = os.getcwd()
 
         ai_mods_dir = os.path.join(git_root, "downloads", "ai_mods")
         if not os.path.exists(ai_mods_dir):
@@ -338,8 +338,9 @@ class AIDevMod(loader.Module):
             await utils.answer(message, "❌ <b>Вкажіть назву модуля!</b>")
             return
         
-        res = subprocess.run(["git", "rev-parse", "--show-toplevel"], capture_output=True, text=True)
-        git_root = res.stdout.strip() if res.returncode == 0 else os.getcwd()
+        code_ret, git_root, _ = await self._run_git("rev-parse", "--show-toplevel")
+        if code_ret != 0:
+            git_root = os.getcwd()
         
         filename = args if args.endswith(".py") else f"{args}.py"
         old_path = os.path.join(git_root, "hikka", "modules", filename)
@@ -401,7 +402,7 @@ class AIDevMod(loader.Module):
             # Push changes to Git
             git_status = "Skipped"
             if git_root:
-                subprocess.run(["git", "add", "-A"], cwd=git_root)
+                await self._run_git("add", "-A", cwd=git_root)
                 push = await self._git_push(git_root, f"Delete module {filename}")
                 git_status = push
                 
@@ -471,20 +472,21 @@ class AIDevMod(loader.Module):
         await utils.answer(message, "🔌 <b>Git: Додаю файли та пушу...</b>")
         
         try:
-            res = subprocess.run(["git", "rev-parse", "--show-toplevel"], capture_output=True, text=True)
-            git_root = res.stdout.strip() if res.returncode == 0 else os.getcwd()
+            code_ret, git_root, _ = await self._run_git("rev-parse", "--show-toplevel")
+            if code_ret != 0:
+                git_root = os.getcwd()
 
             # Force add AI mods since Downloads is ignored
-            subprocess.run(["git", "add", "-f", "downloads/ai_mods/"], capture_output=True, text=True, cwd=git_root)
-            subprocess.run(["git", "add", "hikka/modules/"], capture_output=True, text=True, cwd=git_root)
+            await self._run_git("add", "-f", "downloads/ai_mods/", cwd=git_root)
+            await self._run_git("add", "hikka/modules/", cwd=git_root)
             
-            subprocess.run(["git", "commit", "-m", args], capture_output=True, text=True, cwd=git_root)
-            push = subprocess.run(["git", "push"], capture_output=True, text=True, cwd=git_root)
+            await self._run_git("commit", "-m", args, cwd=git_root)
+            code_ret, stdout, stderr = await self._run_git("push", cwd=git_root, timeout=30)
             
-            if push.returncode == 0:
+            if code_ret == 0:
                 await utils.answer(message, "🚀 <b>Усі зміни успішно відправлені в GitHub!</b>")
             else:
-                await utils.answer(message, f"❌ <b>Помилка пушу:</b>\n<code>{push.stderr.strip()}</code>")
+                await utils.answer(message, f"❌ <b>Помилка пушу:</b>\n<code>{stderr}</code>")
         except Exception as e:
             await utils.answer(message, f"❌ <b>Помилка Git:</b>\n<code>{str(e)}</code>")
 
@@ -494,15 +496,16 @@ class AIDevMod(loader.Module):
         await utils.answer(message, "🔌 <b>Git: Завантажую оновлення (Pull)...</b>")
         
         try:
-            res = subprocess.run(["git", "rev-parse", "--show-toplevel"], capture_output=True, text=True)
-            git_root = res.stdout.strip() if res.returncode == 0 else os.getcwd()
+            code_ret, git_root, _ = await self._run_git("rev-parse", "--show-toplevel")
+            if code_ret != 0:
+                git_root = os.getcwd()
 
-            pull = subprocess.run(["git", "pull"], capture_output=True, text=True, cwd=git_root)
+            code_ret, stdout, stderr = await self._run_git("pull", cwd=git_root, timeout=30)
             
-            if pull.returncode == 0:
-                await utils.answer(message, f"📥 <b>Оновлення отримано!</b>\n<pre>{pull.stdout.strip()}</pre>")
+            if code_ret == 0:
+                await utils.answer(message, f"📥 <b>Оновлення отримано!</b>\n<pre>{stdout}</pre>")
             else:
-                if "CONFLICT" in pull.stderr or "CONFLICT" in pull.stdout or "resolve your current index" in pull.stderr:
+                if "CONFLICT" in stderr or "CONFLICT" in stdout or "resolve your current index" in stderr:
                     await self.inline.form(
                         message=message,
                         text=(
@@ -518,7 +521,7 @@ class AIDevMod(loader.Module):
                         ]
                     )
                 else:
-                    await utils.answer(message, f"❌ <b>Помилка Pull:</b>\n<code>{pull.stderr.strip() or pull.stdout.strip()}</code>")
+                    await utils.answer(message, f"❌ <b>Помилка Pull:</b>\n<code>{stderr or stdout}</code>")
         except Exception as e:
             await utils.answer(message, f"❌ <b>Помилка Git:</b>\n<code>{str(e)}</code>")
 
@@ -527,16 +530,16 @@ class AIDevMod(loader.Module):
         await call.edit("⏳ <b>Виконую...</b>")
         try:
             if action == "remote":
-                subprocess.run(["git", "fetch", "--all"], cwd=git_root)
-                subprocess.run(["git", "reset", "--hard", "origin/main"], cwd=git_root)
+                await self._run_git("fetch", "--all", cwd=git_root)
+                await self._run_git("reset", "--hard", "origin/main", cwd=git_root)
                 text = "✅ <b>Файли скинуто до стану GitHub! (Локальні зміни видалено)</b>"
             elif action == "abort":
-                subprocess.run(["git", "merge", "--abort"], cwd=git_root)
+                await self._run_git("merge", "--abort", cwd=git_root)
                 text = "✅ <b>Злиття скасовано. Ваші локальні файли не змінено.</b>"
             elif action == "stash":
-                subprocess.run(["git", "stash"], cwd=git_root)
-                subprocess.run(["git", "pull"], cwd=git_root)
-                subprocess.run(["git", "stash", "pop"], cwd=git_root)
+                await self._run_git("stash", cwd=git_root)
+                await self._run_git("pull", cwd=git_root, timeout=30)
+                await self._run_git("stash", "pop", cwd=git_root)
                 text = "✅ <b>Спробував злити через Stash. Перевірте файли!</b>"
             
             await call.edit(text, reply_markup=[{"text": "❌ Закрити", "action": "close"}])
@@ -547,10 +550,15 @@ class AIDevMod(loader.Module):
         url = f"https://generativelanguage.googleapis.com/v1beta/models/{self.config['model']}:generateContent?key={self.config['api_key']}"
         payload = {"contents": [{"parts": [{"text": prompt}]}]}
         
-        async with aiohttp.ClientSession() as session:
-            async with session.post(url, json=payload) as resp:
-                data = await resp.json()
-                try:
+        logger.info("AIDev: Starting Gemini API request...")
+        timeout = aiohttp.ClientTimeout(total=90)  # 90 sec max
+        
+        try:
+            async with aiohttp.ClientSession(timeout=timeout) as session:
+                async with session.post(url, json=payload) as resp:
+                    logger.info(f"AIDev: Gemini responded with status {resp.status}")
+                    data = await resp.json()
+                    
                     if "candidates" not in data:
                         error_msg = data.get("error", {}).get("message", "Unknown API Error")
                         await utils.answer(message, self.strings("error").format(f"Gemini API: {error_msg}"))
@@ -565,32 +573,65 @@ class AIDevMod(loader.Module):
                     code = code_match.group(1) if code_match else text
                     fn_match = re.search(r"class (\w+)Mod", code)
                     filename = f"{fn_match.group(1)}.py" if fn_match else "GeneratedMod.py"
+                    logger.info(f"AIDev: Code parsed successfully, filename: {filename}")
                     return code, filename
-                except Exception as e:
-                    logger.error(f"Gemini parsing error: {e}")
-                    await utils.answer(message, self.strings("error").format(f"Parsing: {str(e)}"))
-                    return None, None
+                    
+        except asyncio.TimeoutError:
+            logger.error("AIDev: Gemini API request timed out after 90s")
+            await utils.answer(message, self.strings("error").format("⏱️ Таймаут: Gemini не відповів за 90 секунд"))
+            return None, None
+        except aiohttp.ClientError as e:
+            logger.error(f"AIDev: Network error: {e}")
+            await utils.answer(message, self.strings("error").format(f"Мережева помилка: {str(e)}"))
+            return None, None
+        except Exception as e:
+            logger.error(f"AIDev: Gemini parsing error: {e}")
+            await utils.answer(message, self.strings("error").format(f"Parsing: {str(e)}"))
+            return None, None
+
+    async def _run_git(self, *args, cwd=None, timeout=15):
+        """Run git command asynchronously with timeout"""
+        try:
+            proc = await asyncio.create_subprocess_exec(
+                "git", *args,
+                stdout=asyncio.subprocess.PIPE,
+                stderr=asyncio.subprocess.PIPE,
+                cwd=cwd
+            )
+            stdout, stderr = await asyncio.wait_for(proc.communicate(), timeout=timeout)
+            return proc.returncode, stdout.decode().strip(), stderr.decode().strip()
+        except asyncio.TimeoutError:
+            logger.warning(f"AIDev: Git command timed out: git {' '.join(args)}")
+            try:
+                proc.kill()
+            except:
+                pass
+            return -1, "", "Таймаут команди Git"
+        except Exception as e:
+            logger.error(f"AIDev: Git subprocess error: {e}")
+            return -1, "", str(e)
 
     async def _git_push(self, file_path, commit_msg):
         try:
             # Find the git root directory
-            res = subprocess.run(["git", "rev-parse", "--show-toplevel"], capture_output=True, text=True)
-            git_root = res.stdout.strip() if res.returncode == 0 else os.getcwd()
+            code, stdout, stderr = await self._run_git("rev-parse", "--show-toplevel")
+            git_root = stdout if code == 0 else os.getcwd()
 
             # Ensure path is absolute for git commands
             abs_file_path = os.path.abspath(file_path)
 
             # Stage changes (use -f to force add even if ignored by .gitignore)
-            subprocess.run(["git", "add", "-f", abs_file_path], capture_output=True, text=True, cwd=git_root)
+            await self._run_git("add", "-f", abs_file_path, cwd=git_root)
             
             # Commit changes
-            commit = subprocess.run(["git", "commit", "-m", commit_msg], capture_output=True, text=True, cwd=git_root)
+            await self._run_git("commit", "-m", commit_msg, cwd=git_root)
             
             # Push to origin
-            push = subprocess.run(["git", "push"], capture_output=True, text=True, cwd=git_root)
-            if push.returncode != 0:
-                return f"⚠️ Git push error: {push.stderr.strip()}"
+            code, stdout, stderr = await self._run_git("push", cwd=git_root, timeout=30)
+            if code != 0:
+                return f"⚠️ Git push error: {stderr}"
 
             return "🚀 Запушено в GitHub!"
         except Exception as e:
+            logger.error(f"AIDev: Git push error: {e}")
             return f"⚠️ Внутрішня помилка Git: {str(e)}"
