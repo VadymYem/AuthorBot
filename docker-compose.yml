@@ -14,9 +14,17 @@ services:
       - bot_infrastructure
     environment:
       - DOCKER=1
+      # Git configuration
+      - GIT_AUTHOR_NAME=aidev-by-mchernykh
+      - GIT_COMMITTER_NAME=aidev-by-mchernykh
+      - GIT_AUTHOR_EMAIL=aidev@mchernykh.dev
+      - GIT_COMMITTER_EMAIL=aidev@mchernykh.dev
       # Recommended: Add your API keys here if you have them
       # - api_id=123456
       # - api_hash=abcdef1234567890abcdef1234567890
+      # Git credentials (uncomment and add your GitHub PAT token)
+      # - GIT_ASKPASS=/bin/echo
+      # - GIT_PASSWORD=ghp_YOUR_PERSONAL_ACCESS_TOKEN
     stdin_open: true
     tty: true
     command: [ "python3", "-m", "hikka", "--root", "--data-root", "/data/AuthorBot" ]

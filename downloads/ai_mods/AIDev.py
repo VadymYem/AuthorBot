@@ -128,9 +128,29 @@ class AIDevMod(loader.Module):
             
             self.config["last_mod_path"] = mod_path
             git_status = await self._git_push(mod_path, f"AI-gen: {filename} for '{args[:20]}...'")
-            await utils.answer(message, self.strings("success").format(filename, git_status))
             
-            # Direct loading attempt
+            # Check if git push failed - send file as fallback
+            git_failed = "⚠️" in git_status or "error" in git_status.lower() or "таймаут" in git_status.lower()
+            
+            if git_failed:
+                # Send file to chat as fallback
+                try:
+                    await self._client.send_file(
+                        message.peer_id,
+                        mod_path,
+                        caption=(
+                            f"📦 <b>Модуль</b> <code>{filename}</code> <b>згенеровано!</b>\n"
+                            f"⚠️ <b>Git push не вдався:</b> {git_status}\n\n"
+                            f"📥 <b>Встановіть вручну:</b>\n"
+                            f"<code>.lm</code> (reply на файл)"
+                        )
+                    )
+                except Exception as e:
+                    logger.error(f"Failed to send file: {e}")
+            else:
+                await utils.answer(message, self.strings("success").format(filename, git_status))
+            
+            # Direct loading attempt (always try to load locally)
             try:
                 await self.aimcmd(message, mod_path)
                 
@@ -148,7 +168,11 @@ class AIDevMod(loader.Module):
                         changed = True
                     
                     if changed:
-                        await utils.answer(message, self.strings("success").format(filename, f"{git_status}\n⚙️ <b>Конфігурація (API Key/Model) застосована автоматично!</b>"))
+                        config_msg = "⚙️ <b>Конфігурація (API Key/Model) застосована автоматично!</b>"
+                        if git_failed:
+                            await message.respond(config_msg)
+                        else:
+                            await utils.answer(message, self.strings("success").format(filename, f"{git_status}\n{config_msg}"))
             except Exception as e:
                 logger.error(f"Instant load/config failed: {e}")
 
