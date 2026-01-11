@@ -655,12 +655,16 @@ async def set_avatar(
         return False
 
     await fw_protect()
-    res = await client(
-        EditPhotoRequest(
-            channel=peer,
-            photo=await client.upload_file(f, file_name="photo.png"),
+    try:
+        res = await client(
+            EditPhotoRequest(
+                channel=peer,
+                photo=await client.upload_file(f, file_name="photo.png"),
+            )
         )
-    )
+    except Exception:
+        logger.exception("Failed to set avatar")
+        return False
 
     await fw_protect()
 

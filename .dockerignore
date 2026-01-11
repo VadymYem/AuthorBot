@@ -11,7 +11,9 @@ __pycache__/
 build/
 develop-eggs/
 dist/
+# downloads/
 downloads/
+!downloads/ai_mods/
 eggs/
 .eggs/
 lib/

@@ -1,0 +1,29 @@
+services:
+  worker:
+    build:
+      context: .
+    volumes:
+      - worker:/data
+    stop_signal: SIGINT
+    restart: unless-stopped
+    ports:
+      - "${EXTERNAL_PORT:-8085}:8080"
+
+    networks:
+      - default
+      - bot_infrastructure
+    environment:
+      - DOCKER=1
+      # Recommended: Add your API keys here if you have them
+      # - api_id=123456
+      # - api_hash=abcdef1234567890abcdef1234567890
+    stdin_open: true
+    tty: true
+    command: [ "python3", "-m", "hikka", "--root", "--data-root", "/data/AuthorBot" ]
+
+networks:
+  bot_infrastructure:
+    external: true
+
+volumes:
+  worker:
