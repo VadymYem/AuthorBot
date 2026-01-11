@@ -70,10 +70,10 @@ class AIDevMod(loader.Module):
             os.path.join("downloads"),
             os.getcwd()
         ]
+        target_path = None
         if this_path:
             search_dirs.append(os.path.dirname(os.path.abspath(this_path)))
             
-            target_path = None
             if target_fn:
                 for d in search_dirs:
                     if d and os.path.exists(os.path.join(d, target_fn)):
