@@ -16,7 +16,8 @@ class AIContextMod(loader.Module):
         "no_api_key": "<b>⚠️ Помилка: Вкажіть API Key для Gemini у конфігурації (.setconf AIContext api_key <key>)</b>",
         "loading": "<b>⏳ Збираю повідомлення та аналізую (це може зайняти час)...</b>",
         "api_error": "<b>❌ Помилка API:</b> <code>{}</code>",
-        "no_messages": "<b>❌ Не вдалося отримати текстові повідомлення для аналізу.</b>"
+        "no_messages": "<b>❌ Не вдалося отримати текстові повідомлення для аналізу.</b>",
+        "fallback": "⚠️ <b>Ліміт Gemini вичерпано. Перемикаюсь на Groq...</b>"
     }
 
     def __init__(self):
@@ -32,6 +33,17 @@ class AIContextMod(loader.Module):
                 "model",
                 "gemini-3-flash-preview", 
                 lambda: "Модель Gemini"
+            ),
+            loader.ConfigValue(
+                "groq_key",
+                None,
+                lambda: "API ключ для Groq (fallback)",
+                validator=loader.validators.Hidden(),
+            ),
+            loader.ConfigValue(
+                "groq_model",
+                "llama-3.3-70b-versatile",
+                lambda: "Модель Groq"
             )
         )
 
@@ -119,15 +131,14 @@ class AIContextMod(loader.Module):
             )
 
         # Запит до API Gemini
+        await self._query_gemini(message, prompt, context_text, len(messages_history))
+
+    async def _query_gemini(self, message, prompt, context_text, msgs_count):
+        api_key = self.config["api_key"]
         url = f"https://generativelanguage.googleapis.com/v1beta/models/{self.config['model']}:generateContent?key={api_key}"
         payload = {
-            "contents": [{
-                "parts": [{"text": prompt}]
-            }],
-            "generationConfig": {
-                "temperature": 0.7,
-                "maxOutputTokens": 4096,
-            }
+            "contents": [{"parts": [{"text": prompt}]}],
+            "generationConfig": {"temperature": 0.7, "maxOutputTokens": 4096}
         }
 
         try:
@@ -135,6 +146,11 @@ class AIContextMod(loader.Module):
                 async with session.post(url, json=payload) as resp:
                     result = await resp.json()
                     
+                    if resp.status == 429 or (resp.status != 200 and "quota" in str(result).lower()):
+                        if self.config["groq_key"]:
+                            await utils.answer(message, self.strings["fallback"])
+                            return await self._query_groq(message, prompt, msgs_count)
+
                     if resp.status != 200:
                         error_msg = result.get("error", {}).get("message", "Unknown error")
                         await utils.answer(message, self.strings["api_error"].format(error_msg))
@@ -145,19 +161,49 @@ class AIContextMod(loader.Module):
                         return
 
                     ai_response = result['candidates'][0]['content']['parts'][0]['text']
-                    
-                    # Виправляємо форматування (замінюємо зірочки на HTML теги, якщо AI все ж їх використав)
-                    formatted_response = self._format_markdown_to_html(ai_response)
-                    
-                    header = f"<b>📊 Результат аналізу ({len(messages_history)} повідомлень):</b>\n\n"
-                    full_res = header + formatted_response
-                    
-                    # Відправка результату з урахуванням лімітів Telegram
-                    if len(full_res) > 4096:
-                        for i in range(0, len(full_res), 4000):
-                            await utils.answer(message, full_res[i:i+4000])
-                    else:
-                        await utils.answer(message, full_res)
+                    await self._send_response(message, ai_response, msgs_count)
 
         except Exception as e:
+            if self.config["groq_key"]:
+                await utils.answer(message, self.strings["fallback"])
+                return await self._query_groq(message, prompt, msgs_count)
             await utils.answer(message, self.strings["api_error"].format(str(e)))
+
+    async def _query_groq(self, message, prompt, msgs_count):
+        url = "https://api.groq.com/openai/v1/chat/completions"
+        headers = {
+            "Authorization": f"Bearer {self.config['groq_key']}",
+            "Content-Type": "application/json"
+        }
+        payload = {
+            "model": self.config["groq_model"],
+            "messages": [{"role": "user", "content": prompt}]
+        }
+
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with session.post(url, json=payload, headers=headers) as resp:
+                    result = await resp.json()
+                    if resp.status != 200:
+                        error_msg = result.get("error", {}).get("message", "Unknown Groq error")
+                        await utils.answer(message, self.strings["api_error"].format(f"Groq: {error_msg}"))
+                        return
+
+                    ai_response = result['choices'][0]['message']['content']
+                    await self._send_response(message, ai_response, msgs_count)
+        except Exception as e:
+            await utils.answer(message, self.strings["api_error"].format(f"Groq exception: {str(e)}"))
+
+    async def _send_response(self, message, ai_response, msgs_count):
+        # Виправляємо форматування (замінюємо зірочки на HTML теги, якщо AI все ж їх використав)
+        formatted_response = self._format_markdown_to_html(ai_response)
+        
+        header = f"<b>📊 Результат аналізу ({msgs_count} повідомлень):</b>\n\n"
+        full_res = header + formatted_response
+        
+        # Відправка результату з урахуванням лімітів Telegram
+        if len(full_res) > 4096:
+            for i in range(0, len(full_res), 4000):
+                await utils.answer(message, full_res[i:i+4000])
+        else:
+            await utils.answer(message, full_res)

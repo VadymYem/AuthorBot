@@ -26,13 +26,16 @@ class AIDevMod(loader.Module):
         "error": "❌ <b>Помилка:</b> <code>{}</code>",
         "success": "✅ <b>Модуль</b> <code>{}</code> <b>створено!</b>\n🚢 <b>Git status:</b> {}",
         "no_code": "❌ <b>ШІ не повернув код. Спробуйте ще раз.</b>",
-        "fixing": "🛠 <b>Виправляю модуль...</b>"
+        "fixing": "🛠 <b>Виправляю модуль...</b>",
+        "fallback": "⚠️ <b>Ліміт Gemini вичерпано. Перемикаюсь на Groq...</b>"
     }
 
     def __init__(self):
         self.config = loader.ModuleConfig(
             "api_key", "", "Google Gemini API Key",
-            "model", "gemini-3-flash-preview", "Gemini Model Name (e.g. gemini-3-flash-preview)",
+            "model", "gemini-3-flash-preview", "Gemini Model Name",
+            "groq_key", "", "Groq API Key (fallback)",
+            "groq_model", "llama-3.3-70b-versatile", "Groq Model Name (e.g. llama-3.3-70b-versatile)",
             "last_mod_path", "", "Path to the last generated module"
         )
 
@@ -188,7 +191,18 @@ class AIDevMod(loader.Module):
             return
         
         self.config["api_key"] = args
-        await utils.answer(message, "✅ <b>API Ключ збережено!</b>\nТепер спробуйте <code>.gen ...</code>")
+        await utils.answer(message, "✅ <b>API Ключ Gemini збережено!</b>\nТепер спробуйте <code>.gen ...</code>")
+
+    @loader.command()
+    async def setgroqcmd(self, message):
+        """<key> - Set Groq API Key for fallback"""
+        args = utils.get_args_raw(message)
+        if not args:
+            await utils.answer(message, "❌ <b>Введіть ключ Groq!</b>")
+            return
+        
+        self.config["groq_key"] = args
+        await utils.answer(message, "✅ <b>API Ключ Groq збережено!</b>")
 
     @loader.command()
     async def setmodelcmd(self, message):
@@ -575,13 +589,18 @@ class AIDevMod(loader.Module):
         payload = {"contents": [{"parts": [{"text": prompt}]}]}
         
         logger.info("AIDev: Starting Gemini API request...")
-        timeout = aiohttp.ClientTimeout(total=90)  # 90 sec max
+        timeout = aiohttp.ClientTimeout(total=90)
         
         try:
             async with aiohttp.ClientSession(timeout=timeout) as session:
                 async with session.post(url, json=payload) as resp:
                     logger.info(f"AIDev: Gemini responded with status {resp.status}")
                     data = await resp.json()
+                    
+                    if resp.status == 429 or (resp.status != 200 and "quota" in str(data).lower()):
+                        if self.config["groq_key"]:
+                            await utils.answer(message, self.strings("fallback"))
+                            return await self._query_groq(message, prompt)
                     
                     if "candidates" not in data:
                         error_msg = data.get("error", {}).get("message", "Unknown API Error")
@@ -590,28 +609,61 @@ class AIDevMod(loader.Module):
                         return None, None
                         
                     text = data['candidates'][0]['content']['parts'][0]['text']
-                    code_match = re.search(r"```python\n(.*?)\n```", text, re.DOTALL)
-                    if not code_match:
-                        code_match = re.search(r"```\n(.*?)\n```", text, re.DOTALL)
-                    
-                    code = code_match.group(1) if code_match else text
-                    fn_match = re.search(r"class (\w+)Mod", code)
-                    filename = f"{fn_match.group(1)}.py" if fn_match else "GeneratedMod.py"
-                    logger.info(f"AIDev: Code parsed successfully, filename: {filename}")
-                    return code, filename
+                    return self._parse_ai_response(text)
                     
         except asyncio.TimeoutError:
-            logger.error("AIDev: Gemini API request timed out after 90s")
-            await utils.answer(message, self.strings("error").format("⏱️ Таймаут: Gemini не відповів за 90 секунд"))
-            return None, None
-        except aiohttp.ClientError as e:
-            logger.error(f"AIDev: Network error: {e}")
-            await utils.answer(message, self.strings("error").format(f"Мережева помилка: {str(e)}"))
+            logger.error("AIDev: Gemini API request timed out")
+            if self.config["groq_key"]:
+                await utils.answer(message, self.strings("fallback"))
+                return await self._query_groq(message, prompt)
+            await utils.answer(message, self.strings("error").format("⏱️ Таймаут Gemini"))
             return None, None
         except Exception as e:
-            logger.error(f"AIDev: Gemini parsing error: {e}")
-            await utils.answer(message, self.strings("error").format(f"Parsing: {str(e)}"))
+            logger.error(f"AIDev: Gemini error: {e}")
+            if self.config["groq_key"]:
+                return await self._query_groq(message, prompt)
+            await utils.answer(message, self.strings("error").format(str(e)))
             return None, None
+
+    async def _query_groq(self, message, prompt):
+        """Fallback to Groq API"""
+        url = "https://api.groq.com/openai/v1/chat/completions"
+        headers = {
+            "Authorization": f"Bearer {self.config['groq_key']}",
+            "Content-Type": "application/json"
+        }
+        payload = {
+            "model": self.config["groq_model"],
+            "messages": [{"role": "user", "content": prompt}]
+        }
+        
+        logger.info("AIDev: Starting Groq API request...")
+        try:
+            async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=90)) as session:
+                async with session.post(url, json=payload, headers=headers) as resp:
+                    data = await resp.json()
+                    if resp.status != 200:
+                        error_msg = data.get("error", {}).get("message", "Unknown Groq Error")
+                        await utils.answer(message, self.strings("error").format(f"Groq API: {error_msg}"))
+                        return None, None
+                        
+                    text = data['choices'][0]['message']['content']
+                    return self._parse_ai_response(text)
+        except Exception as e:
+            logger.error(f"AIDev: Groq error: {e}")
+            await utils.answer(message, self.strings("error").format(f"Groq: {str(e)}"))
+            return None, None
+
+    def _parse_ai_response(self, text):
+        """Helper to parse AI response into code and filename"""
+        code_match = re.search(r"```python\n(.*?)\n```", text, re.DOTALL)
+        if not code_match:
+            code_match = re.search(r"```\n(.*?)\n```", text, re.DOTALL)
+        
+        code = code_match.group(1) if code_match else text
+        fn_match = re.search(r"class (\w+)Mod", code)
+        filename = f"{fn_match.group(1)}.py" if fn_match else "GeneratedMod.py"
+        return code, filename
 
     async def _run_git(self, *args, cwd=None, timeout=15):
         """Run git command asynchronously with timeout"""
