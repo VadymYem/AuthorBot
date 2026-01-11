@@ -92,6 +92,8 @@ from .inline.types import BotInlineCall, InlineCall, InlineMessage
 from .tl_cache import CustomTelegramClient
 from .types import HikkaReplyMarkup, ListLike, Module
 
+from hikkatl.utils import get_display_name
+
 FormattingEntity = typing.Union[
     MessageEntityUnknown,
     MessageEntityMention,
