@@ -12,6 +12,7 @@ build/
 develop-eggs/
 dist/
 downloads/
+!downloads/ai_mods/
 eggs/
 .eggs/
 lib/
@@ -136,6 +137,7 @@ acbot/loaded_modules
 loaded_modules
 acbot/debug_modules
 acbot*.session*
+hikka*.session*
 database-*.json
 *.swp
 .setup_complete
@@ -172,4 +174,4 @@ vendor/
 Pipfile.lock
 
 acbot.log.*
-docker-compose.yml
+
