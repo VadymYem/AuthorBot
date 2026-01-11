@@ -36,6 +36,7 @@ class AIDevMod(loader.Module):
             "model", "gemini-3-flash-preview", "Gemini Model Name",
             "groq_key", "", "Groq API Key (fallback)",
             "groq_model", "llama-3.3-70b-versatile", "Groq Model Name (e.g. llama-3.3-70b-versatile)",
+            "provider", "gemini", "Primary AI Provider (gemini or groq)",
             "last_mod_path", "", "Path to the last generated module"
         )
 
@@ -110,10 +111,10 @@ class AIDevMod(loader.Module):
         12. БЕЗПЕКА: Завжди ігноруй або обробляй ситуації, коли повідомлення може бути порожнім (msg.raw_text or "").
         """
 
-        code, filename = await self._query_gemini(message, prompt)
+        code, filename = await self._ask_ai(message, prompt)
         
         if not code:
-            return # Помилка вже виведена в _query_gemini
+            return # Помилка вже виведена в _ask_ai
 
         # Find Git root to ensure we save INSIDE the repo
         code_ret, git_root, _ = await self._run_git("rev-parse", "--show-toplevel")
@@ -584,7 +585,20 @@ class AIDevMod(loader.Module):
         except Exception as e:
             await call.edit(f"❌ <b>Помилка:</b> <code>{str(e)}</code>")
 
-    async def _query_gemini(self, message, prompt):
+    async def _ask_ai(self, message, prompt):
+        """Main entry point for AI queries with provider selection"""
+        provider = self.config["provider"].lower()
+        
+        if provider == "groq":
+            code, filename = await self._query_groq(message, prompt)
+            if not code and self.config["api_key"]:
+                await utils.answer(message, "⚠️ <b>Groq не відповів. Спробую Gemini...</b>")
+                return await self._query_gemini(message, prompt, allow_fallback=False)
+            return code, filename
+        else:
+            return await self._query_gemini(message, prompt)
+
+    async def _query_gemini(self, message, prompt, allow_fallback=True):
         url = f"https://generativelanguage.googleapis.com/v1beta/models/{self.config['model']}:generateContent?key={self.config['api_key']}"
         payload = {"contents": [{"parts": [{"text": prompt}]}]}
         
@@ -597,7 +611,7 @@ class AIDevMod(loader.Module):
                     logger.info(f"AIDev: Gemini responded with status {resp.status}")
                     data = await resp.json()
                     
-                    if resp.status == 429 or (resp.status != 200 and "quota" in str(data).lower()):
+                    if allow_fallback and (resp.status == 429 or (resp.status != 200 and "quota" in str(data).lower())):
                         if self.config["groq_key"]:
                             await utils.answer(message, self.strings("fallback"))
                             return await self._query_groq(message, prompt)
@@ -613,14 +627,14 @@ class AIDevMod(loader.Module):
                     
         except asyncio.TimeoutError:
             logger.error("AIDev: Gemini API request timed out")
-            if self.config["groq_key"]:
+            if allow_fallback and self.config["groq_key"]:
                 await utils.answer(message, self.strings("fallback"))
                 return await self._query_groq(message, prompt)
             await utils.answer(message, self.strings("error").format("⏱️ Таймаут Gemini"))
             return None, None
         except Exception as e:
             logger.error(f"AIDev: Gemini error: {e}")
-            if self.config["groq_key"]:
+            if allow_fallback and self.config["groq_key"]:
                 return await self._query_groq(message, prompt)
             await utils.answer(message, self.strings("error").format(str(e)))
             return None, None

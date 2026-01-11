@@ -44,6 +44,11 @@ class AIContextMod(loader.Module):
                 "groq_model",
                 "llama-3.3-70b-versatile",
                 lambda: "Модель Groq"
+            ),
+            loader.ConfigValue(
+                "provider",
+                "gemini",
+                lambda: "Основний провайдер (gemini або groq)"
             )
         )
 
@@ -130,10 +135,24 @@ class AIContextMod(loader.Module):
                 f"ІСТОРІЯ ПЕРЕПИСКИ:\n{context_text}"
             )
 
-        # Запит до API Gemini
-        await self._query_gemini(message, prompt, context_text, len(messages_history))
+        # Вибір провайдера та запит
+        await self._ask_ai(message, prompt, context_text, len(messages_history))
 
-    async def _query_gemini(self, message, prompt, context_text, msgs_count):
+    async def _ask_ai(self, message, prompt, context_text, msgs_count):
+        """Main entry point for AI queries with provider selection"""
+        provider = self.config["provider"].lower()
+        
+        if provider == "groq":
+            ai_response = await self._query_groq_direct(message, prompt)
+            if not ai_response and self.config["api_key"]:
+                await utils.answer(message, "⚠️ <b>Groq не відповів. Спробую Gemini...</b>")
+                return await self._query_gemini(message, prompt, context_text, msgs_count, allow_fallback=False)
+            if ai_response:
+                await self._send_response(message, ai_response, msgs_count)
+        else:
+            await self._query_gemini(message, prompt, context_text, msgs_count)
+
+    async def _query_gemini(self, message, prompt, context_text, msgs_count, allow_fallback=True):
         api_key = self.config["api_key"]
         url = f"https://generativelanguage.googleapis.com/v1beta/models/{self.config['model']}:generateContent?key={api_key}"
         payload = {
@@ -146,7 +165,7 @@ class AIContextMod(loader.Module):
                 async with session.post(url, json=payload) as resp:
                     result = await resp.json()
                     
-                    if resp.status == 429 or (resp.status != 200 and "quota" in str(result).lower()):
+                    if allow_fallback and (resp.status == 429 or (resp.status != 200 and "quota" in str(result).lower())):
                         if self.config["groq_key"]:
                             await utils.answer(message, self.strings["fallback"])
                             return await self._query_groq(message, prompt, msgs_count)
@@ -164,10 +183,31 @@ class AIContextMod(loader.Module):
                     await self._send_response(message, ai_response, msgs_count)
 
         except Exception as e:
-            if self.config["groq_key"]:
+            if allow_fallback and self.config["groq_key"]:
                 await utils.answer(message, self.strings["fallback"])
                 return await self._query_groq(message, prompt, msgs_count)
             await utils.answer(message, self.strings["api_error"].format(str(e)))
+
+    async def _query_groq_direct(self, message, prompt):
+        """Helper for direct Groq query (without immediate formatting)"""
+        url = "https://api.groq.com/openai/v1/chat/completions"
+        headers = {
+            "Authorization": f"Bearer {self.config['groq_key']}",
+            "Content-Type": "application/json"
+        }
+        payload = {
+            "model": self.config["groq_model"],
+            "messages": [{"role": "user", "content": prompt}]
+        }
+
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with session.post(url, json=payload, headers=headers) as resp:
+                    result = await resp.json()
+                    if resp.status != 200: return None
+                    return result['choices'][0]['message']['content']
+        except:
+            return None
 
     async def _query_groq(self, message, prompt, msgs_count):
         url = "https://api.groq.com/openai/v1/chat/completions"
