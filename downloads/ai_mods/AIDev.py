@@ -32,12 +32,38 @@ class AIDevMod(loader.Module):
 
     def __init__(self):
         self.config = loader.ModuleConfig(
-            "api_key", "", "Google Gemini API Key",
-            "model", "gemini-3-flash-preview", "Gemini Model Name",
-            "groq_key", "", "Groq API Key (fallback)",
-            "groq_model", "llama-3.3-70b-versatile", "Groq Model Name (e.g. llama-3.3-70b-versatile)",
-            "provider", "gemini", "Primary AI Provider (gemini or groq)",
-            "last_mod_path", "", "Path to the last generated module"
+            loader.ConfigValue(
+                "api_key",
+                "",
+                lambda: "Google Gemini API Key",
+                validator=loader.validators.Hidden(),
+            ),
+            loader.ConfigValue(
+                "model",
+                "gemini-3-flash-preview",
+                lambda: "Gemini Model Name",
+            ),
+            loader.ConfigValue(
+                "groq_key",
+                "",
+                lambda: "Groq API Key (fallback)",
+                validator=loader.validators.Hidden(),
+            ),
+            loader.ConfigValue(
+                "groq_model",
+                "llama-3.3-70b-versatile",
+                lambda: "Groq Model Name (e.g. llama-3.3-70b-versatile)",
+            ),
+            loader.ConfigValue(
+                "provider",
+                "gemini",
+                lambda: "Primary AI Provider (gemini or groq)",
+            ),
+            loader.ConfigValue(
+                "last_mod_path",
+                "",
+                lambda: "Path to the last generated module",
+            ),
         )
 
     @loader.command()
