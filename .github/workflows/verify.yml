@@ -103,6 +103,9 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y build-essential libtalloc-dev
+          # PRoot 5.1.107.80 needs the Android UAPI header omitted by Ubuntu.
+          curl -fL --retry 3 https://raw.githubusercontent.com/torvalds/linux/v5.17/drivers/staging/android/uapi/ashmem.h -o "$RUNNER_TEMP/ashmem.h"
+          sudo install -m644 "$RUNNER_TEMP/ashmem.h" /usr/include/linux/ashmem.h
           git clone --depth 1 --branch v5.1.107.80 https://github.com/termux/proot.git "$RUNNER_TEMP/authorbot-proot"
           # This job runs a native 64-bit guest and needs only the native loader.
           sed -i '/#define HAS_LOADER_32BIT true/d' "$RUNNER_TEMP/authorbot-proot/src/arch.h"
