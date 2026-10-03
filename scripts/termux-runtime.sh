@@ -15,8 +15,10 @@ case "${1:-}" in
       exit 3
     fi
     export DEBIAN_FRONTEND=noninteractive
-    apt-get update
-    apt-get install -y --no-install-recommends \
+    # PRoot cannot perform a real privilege drop to Debian's _apt account.
+    # Keep APT under the emulated guest root; signature verification stays enabled.
+    apt-get -o APT::Sandbox::User=root update
+    apt-get -o APT::Sandbox::User=root install -y --no-install-recommends \
       ca-certificates git ffmpeg build-essential pkg-config \
       python3.11 python3.11-venv python3.11-dev \
       libcairo2-dev libffi-dev libjpeg-dev libwebp-dev zlib1g-dev
