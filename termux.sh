@@ -1,7 +1,7 @@
 #!/data/data/com.termux/files/usr/bin/bash
 set -euo pipefail
 
-APP_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
+APP_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]:-/dev/stdin}")" && pwd -P)"
 PROFILE="${AUTHORBOT_PROFILE:-$HOME/.bash_profile}"
 DISTRO="authorbot"
 MARKER="# >>> AuthorBot autostart >>>"
@@ -11,8 +11,29 @@ if ! command -v pkg >/dev/null || [ -z "${PREFIX:-}" ]; then
   exit 2
 fi
 if [ ! -f "$APP_DIR/scripts/termux-runtime.sh" ] || [ ! -f "$APP_DIR/bootstrap-termux.sh" ]; then
-  printf 'Потрібна повна копія репозиторію AuthorBot.\n' >&2
-  exit 2
+  # The website also supports downloading/sourcing termux.sh by itself.
+  # Keep stdin attached to the terminal; the script download uses a temp file.
+  LOG_FILE="${AUTHORBOT_LOG_FILE:-$HOME/authorbot-install.log}"
+  printf 'AuthorBot by AuthorChe · Підготовка встановлення…\n'
+  umask 077
+  if ! { pkg update -y && pkg install -y curl; } >"$LOG_FILE" 2>&1; then
+    printf 'Не вдалося підготувати Termux. Журнал: %s\n' "$LOG_FILE" >&2
+    exit 1
+  fi
+  installer="$(mktemp "$PREFIX/tmp/authorbot-bootstrap.XXXXXX")"
+  if ! curl -fsSL --retry 3 https://raw.githubusercontent.com/VadymYem/AuthorBot/main/bootstrap-termux.sh -o "$installer" 2>>"$LOG_FILE"; then
+    rm -f "$installer"
+    printf 'Не вдалося завантажити інсталятор. Журнал: %s\n' "$LOG_FILE" >&2
+    exit 1
+  fi
+  export AUTHORBOT_LOG_FILE="$LOG_FILE" AUTHORBOT_LOG_INITIALIZED=1
+  status=0
+  bash "$installer" "$@" || status=$?
+  rm -f "$installer"
+  if [[ -n "${BASH_SOURCE[0]:-}" && "${BASH_SOURCE[0]}" != "$0" ]]; then
+    return "$status"
+  fi
+  exit "$status"
 fi
 
 source "$APP_DIR/bootstrap-termux.sh"

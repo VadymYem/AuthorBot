@@ -27,6 +27,7 @@ class TermuxInstallerTests(unittest.TestCase):
         self.prefix = root / "prefix"
         self.bin = self.prefix / "bin"
         self.bin.mkdir(parents=True)
+        (self.prefix / "tmp").mkdir()
         (self.bin / "bash").symlink_to(shutil.which("bash"))
         self.profile = root / "profile"
         self.profile.write_text("export KEEP_ME=yes\n", encoding="utf-8")
@@ -63,6 +64,11 @@ if name == "git":
         destination = Path(args[-1])
         shutil.copytree(os.environ["MOCK_BOOTSTRAP_SOURCE"], destination)
         (destination / ".git").mkdir()
+if name == "curl":
+    if os.environ.get("MOCK_FAIL_CURL"):
+        print("download failure", file=sys.stderr)
+        sys.exit(10)
+    shutil.copy(os.environ["MOCK_BOOTSTRAP_SCRIPT"], args[-1])
 if name == "proot-distro":
     if args == ["install", "--help"]:
         stream = sys.stderr if os.environ.get("MOCK_HELP_STDERR") else sys.stdout
@@ -88,7 +94,7 @@ if name == "proot-distro":
         print("API INPUT: ", end="", flush=True)
         print("AUTH_OK=" + input())
 '''
-        for name in ("pkg", "proot-distro", "git"):
+        for name in ("pkg", "proot-distro", "git", "curl"):
             path = self.bin / name
             path.write_text(mock, encoding="utf-8")
             path.chmod(0o700)
@@ -257,6 +263,47 @@ if name == "proot-distro":
         self.assertIn("100%", output)
         self.assertIn("\033[?25h", output)
         self.assertNotIn("MOCK PACKAGE NOISE", output)
+
+    def downloaded_installer(self):
+        script = self.app.parent / "downloaded-termux.sh"
+        shutil.copy(ROOT / "termux.sh", script)
+        destination = self.app.parent / "standalone checkout"
+        self.env["AUTHORBOT_APP_DIR"] = str(destination)
+        self.env["MOCK_BOOTSTRAP_SOURCE"] = str(self.app)
+        self.env["MOCK_BOOTSTRAP_SCRIPT"] = str(ROOT / "bootstrap-termux.sh")
+        return script, destination
+
+    def test_standalone_download_builds_full_checkout(self):
+        script, destination = self.downloaded_installer()
+        result = subprocess.run(["bash", str(script)], env=self.env, capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertTrue((destination / "bootstrap-termux.sh").is_file())
+        self.assertTrue((self.bin / "authorbot").exists())
+        self.assertEqual(list((self.prefix / "tmp").iterdir()), [])
+        download = next(call for call in self.recorded() if call[0] == "curl")
+        self.assertIn("https://raw.githubusercontent.com/VadymYem/AuthorBot/main/bootstrap-termux.sh", download)
+
+    def test_website_source_preserves_parent_shell_and_keyboard(self):
+        script, _ = self.downloaded_installer()
+        self.env.pop("AUTHORBOT_INSTALL_ONLY")
+        self.env["MOCK_AUTH"] = "1"
+        result = subprocess.run(["bash", "-c", 'source "$1"; printf "PARENT_SHELL_ALIVE\\n"',
+                                 "authorbot-test", str(script)], env=self.env, input="13579\n",
+                                capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("AUTH_OK=13579", result.stdout)
+        self.assertIn("PARENT_SHELL_ALIVE", result.stdout)
+        self.assertEqual(list((self.prefix / "tmp").iterdir()), [])
+
+    def test_standalone_download_failure_stops_before_clone(self):
+        script, _ = self.downloaded_installer()
+        self.env["MOCK_FAIL_CURL"] = "1"
+        result = subprocess.run(["bash", str(script)], env=self.env, capture_output=True, text=True)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertNotIn("download failure", result.stdout + result.stderr)
+        self.assertIn("Журнал:", result.stderr)
+        self.assertFalse(any(call[0] == "git" for call in self.recorded()))
+        self.assertFalse((self.bin / "authorbot").exists())
 
 
 if __name__ == "__main__":
