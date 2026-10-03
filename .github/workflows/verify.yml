@@ -84,8 +84,12 @@ jobs:
         run: docker run --rm authorbot-ci python -m acbot --help
 
   termux-runtime:
-    name: Debian Bookworm runtime through PRoot
-    runs-on: ubuntu-latest
+    name: Debian Bookworm runtime through PRoot (${{ matrix.runner }})
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [ubuntu-latest, ubuntu-24.04-arm]
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -103,6 +107,11 @@ jobs:
 
       - name: Install the same Debian image used by Termux
         run: proot-distro install debian:bookworm --name authorbot
+
+      - name: Verify Debian archive keyring
+        run: |
+          proot-distro login authorbot -- /bin/ls -l /usr/share/keyrings/debian-archive-keyring.gpg
+          proot-distro login authorbot -- /usr/bin/apt-get -o APT::Sandbox::User=root -o Debug::Acquire::gpgv=true update
 
       - name: Verify guest dependencies and offline regression checks
         run: |
