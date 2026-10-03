@@ -3,6 +3,7 @@
 # You can redistribute it and/or modify it under the terms of the GNU AGPLv3
 # 🔑 https://www.gnu.org/licenses/agpl-3.0.html
 
+import asyncio
 import inspect
 import logging
 import os
@@ -359,7 +360,7 @@ class TestMod(loader.Module):
                 message,
                 self.strings("suspended").format(time_sleep),
             )
-            time.sleep(time_sleep)
+            await asyncio.sleep(time_sleep)
         except ValueError:
             await utils.answer(message, self.strings("suspend_invalid_time"))
 
