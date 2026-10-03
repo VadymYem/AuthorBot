@@ -25,7 +25,7 @@ from herokutl.errors.rpcerrorlist import ChatSendInlineForbiddenError
 from herokutl.extensions.html import CUSTOM_EMOJIS
 from herokutl.tl.types import Message
 
-from .. import main, utils
+from .. import utils
 from ..types import AuthorBotReplyMarkup
 from .types import InlineMessage, InlineUnit
 
@@ -350,7 +350,7 @@ class Form(InlineUnit):
                         "\n".join(traceback.format_exc().splitlines()[1:])
                     )
                 )
-                if self._db.get(main.__name__, "inlinelogs", True)
+                if self._db.get("acbot.main", "inlinelogs", True)
                 else self.translator.getkey("inline.invoke_failed")
             )
 

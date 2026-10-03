@@ -49,5 +49,8 @@ jobs:
           python -c "import acbot.database"
           python -c "import acbot.modules.loader"
 
+      - name: Startup argument smoke test
+        run: python -m acbot --help >/dev/null
+
       - name: Verify Docker Compose config
         run: docker compose config --quiet
