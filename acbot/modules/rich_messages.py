@@ -74,7 +74,7 @@ class RichMessagesMod(loader.Module):
     html="&lt;h1&gt;Hello&lt;/h1&gt;"
 )</code></pre></details>
 <tg-button-row align="center">
-<tg-button type="url" style="primary" url="https://github.com/VadymYem/AuthorBot">AuthorBot</tg-button>
+<tg-button type="url" style="primary" url="https://github.com/AuthorGramProject/AuthorBot">AuthorBot</tg-button>
 <tg-button type="url" url="https://authorche.top">Author C</tg-button>
 </tg-button-row>"""
         try:

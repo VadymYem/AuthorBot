@@ -2,6 +2,7 @@
 
 import asyncio
 import contextlib
+import hashlib
 import logging
 import time
 import typing
@@ -15,6 +16,7 @@ from herokutl.tl.types import Message
 from herokutl.utils import get_display_name
 
 from .. import utils
+from ..branding import BOT_PHOTO, bot_photo
 from ..database import Database
 from ..tl_cache import CustomTelegramClient
 from ..translations import Translator
@@ -83,6 +85,22 @@ class InlineManager(
         self.rich: RichBotAPI = None
         self.bot_id: int = None
         self.bot_username: str = None
+        self._brand_photo_lock = asyncio.Lock()
+
+    async def brand_photo(self) -> str:
+        """Upload bundled artwork once per bot and artwork revision."""
+        fingerprint = hashlib.sha256(BOT_PHOTO.read_bytes()).hexdigest()
+        cache_key = f"{self.bot_id}:{fingerprint}"
+        async with self._brand_photo_lock:
+            cached = self._db.get("acbot.inline", "brand_photo", {})
+            if cached.get("key") == cache_key and cached.get("file_id"):
+                return cached["file_id"]
+            sent = await self.bot.send_photo(self._me, photo=bot_photo(), disable_notification=True)
+            file_id = sent.photo[-1].file_id
+            self._db.set("acbot.inline", "brand_photo", {"key": cache_key, "file_id": file_id})
+            with contextlib.suppress(Exception):
+                await self.bot.delete_message(sent.chat.id, sent.message_id)
+            return file_id
 
     async def _cleaner(self):
         """Cleans outdated inline units"""

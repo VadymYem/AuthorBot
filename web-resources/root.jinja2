@@ -9,15 +9,12 @@
 
 {% block head %}
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/bodymovin/5.8.1/lottie.min.js"></script>
-<script src="{{ static("sakura.min.js") }}"></script>
-<script src="//unpkg.com/@dotlottie/player-component@1.0.0/dist/dotlottie-player.js"></script>
 <script src="//unpkg.com/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
 
-<link href="{{ static("sakura.min.css") }}" rel="stylesheet">
 <link href="https://css.gg/css?=arrow-right-r|add|brackets|chevron-right-o|smartphone" rel="stylesheet">
 
 <link rel="stylesheet" href="{{ static("base.min.css") }}">
+<link rel="stylesheet" href="{{ static("branding.css") }}">
 {% endblock %}
 
 {% block content %}
@@ -29,13 +26,13 @@
 </div>
 <div class="blur auth vert_center">
   <div id="tg_icon"></div>
-  <div class="waiting_for_auth">Waiting for authentification...</div>
-  <div class="confirm_auth">Please, confirm action in <span style="color:#28a0dc">Telegram</span></div>
+  <div class="waiting_for_auth">Очікування авторизації…</div>
+  <div class="confirm_auth">Підтвердіть дію в <span style="color:#28a0dc">Telegram</span></div>
 </div>
 <div class="auth-code-form blur">
   <div id="monkey"></div>
   <div id="monkey-close"></div>
-  <span class="code-caption">Enter the code you recieved from Telegram</span>
+  <span class="code-caption">Введіть код, отриманий у Telegram</span>
   <input type="text" class="code-input" autocomplete="off">
   <div class="enter">Enter</div>
 </div>
@@ -52,13 +49,13 @@
 <div class="wrapper">
   <div class="blur main finish_block">
     <div id="installation_icon"></div>
-    <div class="title">AuthorBot is installed</div>
+    <div class="title">AuthorBot встановлено</div>
     <div class="description">
-      AuthorBot is installed. You can close this page now.
+      AuthorBot встановлено. Тепер цю сторінку можна закрити.
       <br>
-      <b>It might take a while for installation to fully complete. Please, be patient.</b>
+      <b>Завершення налаштування може зайняти трохи часу.</b>
       <br>
-      <b>AuthorBot will restart and might send several configuration messages to complete the installation!</b>
+      <b>AuthorBot перезапуститься й надішле повідомлення для завершення налаштування.</b>
       <br>
       <span style="font-size: 24px;">Check <span style="color:#28a0dc">Telegram</span> for a message from your <b>inline
           bot</b></span>
@@ -68,19 +65,19 @@
     <div class="title">
       <div class="acbot_label">
         <div class="label_inner">
-          <img src="https://raw.githubusercontent.com/VadymYem/AuthorBot/main/assets/bot_pfp.jpg" class="moon" style="border-radius: 50%; object-fit: cover;">
+          <img src="/branding/bot.jpg" class="moon" style="border-radius: 50%; object-fit: cover;">
           &nbsp;AuthorBot
         </div>
       </div>
     </div><br>
-    <div class="description">The ultimate <span style="color:#c54245">branded</span> userbot by AuthorChe<br><span
-        style="color: #18cc18; display: none" class="authorized">Authorized!</span></div>
+    <div class="description">Модульний Telegram userbot від Author C<br><span
+        style="color: #18cc18; display: none" class="authorized">Авторизовано</span></div>
     <div class="center">
       {% if not tg_done %}
       <div class="button" id="get_started">
         <div class="horiz_center">
           <div class="vert_center">
-            Get started
+            Почати
           </div>
 
           <div class="vert_center">
@@ -92,7 +89,7 @@
       <div class="button" id="get_started">
         <div class="horiz_center">
           <div class="vert_center">
-            Add phone
+            Додати акаунт
           </div>
 
           <div class="vert_center">
@@ -105,7 +102,7 @@
       <div class="button" id="enter_api">
         <div class="horiz_center">
           <div class="vert_center">
-            Change API Creds
+            Змінити дані API
           </div>
 
           <div class="vert_center">
@@ -134,9 +131,7 @@
       <span id="block_qr_login">
         <div class="qr_outer">
           <div class="qr_inner">
-            <dotlottie-player autoplay loop mode="normal" src="https://static.dan.tatar/4T7FajtZbx.lottie"
-              style="width: 100px; height: 100px">
-            </dotlottie-player>
+              <img src="/branding/bot.jpg" alt="AuthorBot" class="qr-loading-artwork">
           </div>
         </div>
         <div class="tg_guide">

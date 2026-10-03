@@ -2,7 +2,7 @@
 set -euo pipefail
 
 APP_DIR="$HOME/AuthorBot"
-REPO_URL="${AUTHORBOT_REPO_URL:-https://github.com/VadymYem/AuthorBot.git}"
+REPO_URL="${AUTHORBOT_REPO_URL:-https://github.com/AuthorGramProject/AuthorBot.git}"
 LOG_FILE="$HOME/authorbot-install.log"
 PROFILE="$HOME/.bash_profile"
 MARKER="# >>> AuthorBot autostart >>>"
@@ -17,7 +17,7 @@ banner_bootstrap() {
   printf '/_/   \\_\\__,_|\\__|_| |_|\\___/|_|   |____/ \\___/ \\__|\n'
   printf '\033[0m'
   printf '                 \033[2mby Author C\033[0m\n\n'
-  printf '\033[0;36mGitHub:\033[0m https://github.com/VadymYem/AuthorBot\n'
+  printf '\033[0;36mGitHub:\033[0m https://github.com/AuthorGramProject/AuthorBot\n'
   printf '\033[0;36mWeb:\033[0m    https://authorche.top\n\n'
 }
 
@@ -72,10 +72,12 @@ run "$VPY" -m pip install --upgrade -r requirements.txt --no-cache-dir --disable
 if [ -f optional_requirements.txt ]; then
   run "$VPY" -m pip install --upgrade -r optional_requirements.txt --no-cache-dir --disable-pip-version-check || true
 fi
+run "$VPY" -m pip check || fail "Python dependency conflicts detected." 5
 ok "Python environment ready."
 
 step "Running AuthorBot self-check..."
 run "$VPY" scripts/selfcheck.py || fail "AuthorBot self-check failed." 6
+run "$VPY" scripts/runtimecheck.py || fail "AuthorBot runtime checks failed." 6
 ok "Self-check passed."
 touch .setup_complete
 

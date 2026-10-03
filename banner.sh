@@ -10,7 +10,7 @@ printf '\n'
 if [ -f "$HOME/AuthorBot/assets/download.txt" ]; then
   while IFS= read -r line; do printf '%b\n' "$line"; done < "$HOME/AuthorBot/assets/download.txt"
 else
-  printf '\033[0;36mGitHub:\033[0m https://github.com/VadymYem/AuthorBot\n'
+  printf '\033[0;36mGitHub:\033[0m https://github.com/AuthorGramProject/AuthorBot\n'
   printf '\033[0;36mWeb:\033[0m    https://authorche.top\n'
 fi
 printf '\n\033[1;32mAuthorBot is running.\033[0m\n'

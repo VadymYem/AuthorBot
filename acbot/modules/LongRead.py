@@ -34,7 +34,7 @@ class LongReadMod(loader.Module):
     }
 
     strings_ua = {
-        "no_text": "🚫 <b>Please, specify text to hide</b>",
+        "no_text": "🚫 <b>Вкажіть текст, який потрібно приховати</b>",
         "longread": (
             "🔥 <b>Для вас цікаве повідомлення</b>\n<i>Натисніть на кнопку, щоб прочитати його :) \nКнопка"
             " активна протягом 6 годин</i>"
@@ -47,13 +47,14 @@ class LongReadMod(loader.Module):
         """<text> - Create new hidden message"""
         args = utils.get_args_raw(message)
         if not args:
+            await utils.answer(message, self.strings("no_text"))
             return
 
         await self.inline.form(
             self.strings("longread"),
             message,
             reply_markup={
-                "text": "📖 Open spoiler",
+                "text": "📖 Прочитати",
                 "callback": self._handler,
                 "args": (args,),
             },
@@ -70,10 +71,10 @@ class LongReadMod(loader.Module):
         return {
             "title": "Сховати текст під гарну кнопочку",
             "description": "ℹ This will create button-spoiler",
-            "thumb": "https://img.icons8.com/external-wanicon-flat-wanicon/64/000000/external-read-free-time-wanicon-flat-wanicon.png",
+            "thumb": "https://authorche.top/poems/logo.jpg",
             "message": self.strings("longread"),
             "reply_markup": {
-                "text": "📖 Open spoiler",
+                "text": "📖 Прочитати",
                 "callback": self._handler,
                 "args": (text,),
                 "disable_security": True,

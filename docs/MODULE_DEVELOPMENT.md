@@ -86,7 +86,7 @@ class PublicInlineMod(loader.Module):
             "title": "AuthorBot",
             "description": "Public inline example",
             "message": "<b>Hello from a public inline command.</b>",
-            "thumb": "https://raw.githubusercontent.com/VadymYem/AuthorBot/main/assets/bot_pfp.jpg",
+            "thumb": "https://raw.githubusercontent.com/AuthorGramProject/AuthorBot/main/assets/bot_pfp.jpg",
         }
 ```
 
@@ -147,7 +147,7 @@ class RichExampleMod(loader.Module):
 </table>
 <details><summary>More</summary>Rich HTML is rendered by Telegram.</details>
 <tg-button-row align="center">
-<tg-button type="url" style="primary" url="https://github.com/VadymYem/AuthorBot">GitHub</tg-button>
+<tg-button type="url" style="primary" url="https://github.com/AuthorGramProject/AuthorBot">GitHub</tg-button>
 </tg-button-row>"""
 
         await self.inline.rich.send(self._client.tg_id, html=rich_html)

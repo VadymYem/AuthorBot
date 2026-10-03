@@ -32,7 +32,7 @@ from herokutl import events
 from herokutl.errors import FloodWaitError, RPCError
 from herokutl.tl.types import Message
 
-from . import main, security, utils
+from . import security, utils
 from .database import Database
 from .loader import Modules
 from .tl_cache import CustomTelegramClient
@@ -268,7 +268,7 @@ class CommandDispatcher:
         if not hasattr(event, "message") or not hasattr(event.message, "message"):
             return False
 
-        prefix = self._db.get(main.__name__, "command_prefix", False) or "."
+        prefix = self._db.get("acbot.main", "command_prefix", False) or "."
         change = str.maketrans(ru_keys + en_keys, en_keys + ru_keys)
         message = utils.censor(event.message)
 
@@ -315,9 +315,9 @@ class CommandDispatcher:
         ):
             return False
 
-        blacklist_chats = self._db.get(main.__name__, "blacklist_chats", [])
-        whitelist_chats = self._db.get(main.__name__, "whitelist_chats", [])
-        whitelist_modules = self._db.get(main.__name__, "whitelist_modules", [])
+        blacklist_chats = self._db.get("acbot.main", "blacklist_chats", [])
+        whitelist_chats = self._db.get("acbot.main", "whitelist_chats", [])
+        whitelist_modules = self._db.get("acbot.main", "whitelist_modules", [])
 
         chat_id = utils.get_chat_id(message)
         if (
@@ -353,12 +353,12 @@ class CommandDispatcher:
             pass
         elif (
             not event.is_private
-            and not self._db.get(main.__name__, "no_nickname", False)
-            and command not in self._db.get(main.__name__, "nonickcmds", [])
-            and initiator not in self._db.get(main.__name__, "nonickusers", [])
+            and not self._db.get("acbot.main", "no_nickname", False)
+            and command not in self._db.get("acbot.main", "nonickcmds", [])
+            and initiator not in self._db.get("acbot.main", "nonickusers", [])
             and not self.security.check_tsec(initiator, command)
             and utils.get_chat_id(event)
-            not in self._db.get(main.__name__, "nonickchats", [])
+            not in self._db.get("acbot.main", "nonickchats", [])
         ):
             return False
 
@@ -403,7 +403,7 @@ class CommandDispatcher:
         if await self._handle_tags(event, func):
             return False
 
-        if self._db.get(main.__name__, "grep", False) and not watcher:
+        if self._db.get("acbot.main", "grep", False) and not watcher:
             message = self._handle_grep(message)
 
         return message, prefix, txt, func
@@ -474,7 +474,7 @@ class CommandDispatcher:
                     )
                 )
         else:
-            if not self._db.get(main.__name__, "inlinelogs", True):
+            if not self._db.get("acbot.main", "inlinelogs", True):
                 txt = (
                     "<emoji document_id=5877477244938489129>🚫</emoji><b> Call</b>"
                     f" <code>{utils.escape_html(message.message)}</code><b>"
@@ -611,9 +611,9 @@ class CommandDispatcher:
         """Handle all incoming messages"""
         message = utils.censor(getattr(event, "message", event))
 
-        blacklist_chats = self._db.get(main.__name__, "blacklist_chats", [])
-        whitelist_chats = self._db.get(main.__name__, "whitelist_chats", [])
-        whitelist_modules = self._db.get(main.__name__, "whitelist_modules", [])
+        blacklist_chats = self._db.get("acbot.main", "blacklist_chats", [])
+        whitelist_chats = self._db.get("acbot.main", "whitelist_chats", [])
+        whitelist_modules = self._db.get("acbot.main", "whitelist_modules", [])
 
         chat_id = utils.get_chat_id(message)
         if (
@@ -624,7 +624,7 @@ class CommandDispatcher:
             return
 
         for func in self._modules.watchers:
-            bl = self._db.get(main.__name__, "disabled_watchers", {})
+            bl = self._db.get("acbot.main", "disabled_watchers", {})
             modname = str(func.__self__.__class__.strings["name"])
 
             if (

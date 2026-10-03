@@ -63,6 +63,7 @@ class LoaderMod(loader.Module):
         self.fully_loaded = False
         self._links_cache = {}
         self._storage: RemoteStorage = None
+        self._background_tasks = []
 
         self.config = loader.ModuleConfig(
             loader.ConfigValue(
@@ -111,7 +112,7 @@ class LoaderMod(loader.Module):
             )
         )
         logger.debug("Modules: %s", modules)
-        asyncio.ensure_future(self._storage.preload(modules))
+        await self._storage.preload(modules)
 
     async def client_ready(self):
         while not (settings := self.lookup("settings")):
@@ -123,8 +124,16 @@ class LoaderMod(loader.Module):
 
         main.acbot.ready.set()
 
-        asyncio.ensure_future(self._update_modules())
-        asyncio.ensure_future(self._async_init())
+        self._background_tasks = [
+            asyncio.create_task(self._update_modules()),
+            asyncio.create_task(self._async_init()),
+        ]
+
+    async def on_unload(self):
+        for task in self._background_tasks:
+            task.cancel()
+        await asyncio.gather(*self._background_tasks, return_exceptions=True)
+        self._background_tasks = []
 
     @loader.loop(interval=3, wait_before=True, autostart=True)
     async def _config_autosaver(self):
@@ -280,7 +289,7 @@ class LoaderMod(loader.Module):
         return {
             repo: {
                 f"Mod/{repo_id}/{i}": f'{repo.strip("/")}/{link}.py'
-                for i, link in enumerate(set(await self._get_repo(repo)))
+                for i, link in enumerate(dict.fromkeys(await self._get_repo(repo)))
             }
             for repo_id, repo in enumerate(repos)
             if repo.startswith("http")
@@ -342,14 +351,14 @@ class LoaderMod(loader.Module):
 
                 return MODULE_LOADING_FAILED
 
-            await self.load_module(
+            loaded = await self.load_module(
                 r,
                 message,
                 module_name,
                 url,
                 blob_link=blob_link,
             )
-            return MODULE_LOADING_SUCCESS
+            return MODULE_LOADING_SUCCESS if loaded else MODULE_LOADING_FAILED
         except Exception:
             logger.exception("Failed to load %s", module_name)
             return MODULE_LOADING_FAILED
@@ -486,7 +495,7 @@ class LoaderMod(loader.Module):
                 "💫 <b>Joined <a"
                 f' href="https://t.me/{channel.username}">{utils.escape_html(channel.title)}</a></b>'
             ),
-            gif="https://data.whicdn.com/images/324445359/original.gif",
+            photo=await self.inline.brand_photo(),
         )
 
     async def load_module(
@@ -504,7 +513,7 @@ class LoaderMod(loader.Module):
         ) and os.system("ffmpeg -version 1>/dev/null 2>/dev/null"):
             if isinstance(message, Message):
                 await utils.answer(message, self.strings("ffmpeg_required"))
-            return
+            return False
 
         if (
             any(line.replace(" ", "") == "#scope:inline" for line in doc.splitlines())
@@ -512,7 +521,7 @@ class LoaderMod(loader.Module):
         ):
             if isinstance(message, Message):
                 await utils.answer(message, self.strings("inline_init_failed"))
-            return
+            return False
 
         if re.search(r"# ?scope: ?acbot_min", doc):
             ver = re.search(r"# ?scope: ?acbot_min ((?:\d+\.){2}\d+)", doc).group(1)
@@ -539,7 +548,7 @@ class LoaderMod(loader.Module):
                             },
                         ],
                     )
-                return
+                return False
 
         developer = re.search(r"# ?meta developer: ?(.+)", doc)
         developer = developer.group(1) if developer else False
@@ -583,7 +592,7 @@ class LoaderMod(loader.Module):
                 self.allmodules.modules.remove(instance)
 
             if not message:
-                return
+                return False
 
             await utils.answer(
                 message,
@@ -634,7 +643,7 @@ class LoaderMod(loader.Module):
                         {
                             "sklearn": "scikit-learn",
                             "pil": "Pillow",
-                            "herokutl": "AuthorBot-TL-New",
+                            "herokutl": "herokutl==2.1.0",
                         }.get(e.name.lower(), e.name)
                     ]
 
@@ -650,7 +659,7 @@ class LoaderMod(loader.Module):
                             self.strings("requirements_restart").format(e.name),
                         )
 
-                    return
+                    return False
 
                 if message is not None:
                     await utils.answer(
@@ -693,7 +702,7 @@ class LoaderMod(loader.Module):
                                 self.strings("requirements_failed"),
                             )
 
-                    return
+                    return False
 
                 importlib.invalidate_caches()
 
@@ -703,7 +712,7 @@ class LoaderMod(loader.Module):
                 return await self.load_module(**kwargs)  # Try again
             except CoreOverwriteError as e:
                 await core_overwrite(e)
-                return
+                return False
             except loader.LoadError as e:
                 with contextlib.suppress(Exception):
                     await self.allmodules.unload_module(instance.__class__.__name__)
@@ -719,14 +728,14 @@ class LoaderMod(loader.Module):
                             f" <b>{utils.escape_html(str(e))}</b>"
                         ),
                     )
-                return
+                return False
         except Exception as e:
             logger.exception("Loading external module failed due to %s", e)
 
             if message is not None:
                 await utils.answer(message, self.strings("load_failed"))
 
-            return
+            return False
 
         if hasattr(instance, "__version__") and isinstance(instance.__version__, tuple):
             version = (
@@ -760,20 +769,24 @@ class LoaderMod(loader.Module):
                                         self.inline.bot_username,
                                     ),
                                 )
-                                return
+                                return False
 
                         await asyncio.sleep(0.1)
 
                 task = asyncio.ensure_future(inner_proxy())
-                await self.allmodules.send_ready_one(
-                    instance,
-                    no_self_unload=True,
-                    from_dlmod=bool(message),
-                )
-                task.cancel()
+                try:
+                    await self.allmodules.send_ready_one(
+                        instance,
+                        no_self_unload=True,
+                        from_dlmod=bool(message),
+                    )
+                finally:
+                    task.cancel()
+                    with contextlib.suppress(asyncio.CancelledError):
+                        await task
             except CoreOverwriteError as e:
                 await core_overwrite(e)
-                return
+                return False
             except loader.LoadError as e:
                 with contextlib.suppress(Exception):
                     await self.allmodules.unload_module(instance.__class__.__name__)
@@ -789,7 +802,7 @@ class LoaderMod(loader.Module):
                             f" <b>{utils.escape_html(str(e))}</b>"
                         ),
                     )
-                return
+                return False
             except loader.SelfUnload as e:
                 logger.debug("Unloading %s, because it raised `SelfUnload`", instance)
                 with contextlib.suppress(Exception):
@@ -806,7 +819,7 @@ class LoaderMod(loader.Module):
                             f" <b>{utils.escape_html(str(e))}</b>"
                         ),
                     )
-                return
+                return False
             except loader.SelfSuspend as e:
                 logger.debug("Suspending %s, because it raised `SelfSuspend`", instance)
                 if message:
@@ -817,14 +830,14 @@ class LoaderMod(loader.Module):
                             f" {utils.escape_html(str(e))}</b>"
                         ),
                     )
-                return
+                return False
         except Exception as e:
             logger.exception("Module threw because of %s", e)
 
             if message is not None:
                 await utils.answer(message, self.strings("load_failed"))
 
-            return
+            return False
 
         instance.acbot_meta_pic = next(
             (
@@ -880,7 +893,7 @@ class LoaderMod(loader.Module):
             developer_entity = None
 
         if message is None:
-            return
+            return True
 
         modhelp = ""
 
@@ -988,7 +1001,7 @@ class LoaderMod(loader.Module):
             for line in doc.splitlines()
         ):
             await utils.answer(message, loaded_msg(), reply_markup=subscribe_markup)
-            return
+            return True
 
         for _name, fun in sorted(
             instance.commands.items(),
@@ -1023,6 +1036,7 @@ class LoaderMod(loader.Module):
             await utils.answer(message, loaded_msg(), reply_markup=subscribe_markup)
         except MediaCaptionTooLongError:
             await message.reply(loaded_msg(False))
+        return True
 
     async def _inline__subscribe(
         self,
@@ -1199,13 +1213,13 @@ class LoaderMod(loader.Module):
 
     def flush_cache(self) -> int:
         """Flush the cache of links to modules"""
-        count = sum(map(len, self._links_cache.values()))
+        count = sum(len(entry.get("data", [])) for entry in self._links_cache.values())
         self._links_cache = {}
         return count
 
     def inspect_cache(self) -> int:
         """Inspect the cache of links to modules"""
-        return sum(map(len, self._links_cache.values()))
+        return sum(len(entry.get("data", [])) for entry in self._links_cache.values())
 
     async def reload_core(self) -> int:
         """Forcefully reload all core modules"""

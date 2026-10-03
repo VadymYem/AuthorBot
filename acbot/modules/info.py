@@ -20,6 +20,7 @@ from telethon.tl.types import Message
 from telethon.utils import get_display_name
 
 from .. import loader, main, utils
+from ..branding import DEFAULT_BANNER, LEGACY_BANNERS
 import datetime
 import time
 from ..inline.types import InlineQuery
@@ -37,7 +38,7 @@ class acbotInfoMod(loader.Module):
         "version": "Version",
         "build": "Build",
         "prefix": "Prefix",
-        "send_info": "Send bot info.",
+        "send_info": "Показати інформацію про бота.",
         "description": "ℹ This will not compromise any sensitive info.",
         "up-to-date": "😌 Up-to-date.",
         "update_required": "😕 Update required </b><code>.update</code><b>",
@@ -51,20 +52,20 @@ class acbotInfoMod(loader.Module):
 
     strings_ua = {
         "owner": "Власник",
-        "version": "Версiя",
+        "version": "Версія",
         "build": "Збірка",
         "prefix": "Префікс",
-        "send_info": "Send bot info.",
+        "send_info": "Показати інформацію про бота.",
         "description": "ℹ Це не розкриє особистої інформації :)",
-        "_ihandle_doc_info": "Send bot info.",
-        "up-to-date": "😌 Актуальна версия.",
+        "_ihandle_doc_info": "Показати інформацію про бота.",
+        "up-to-date": "😌 Актуальна версія.",
         "update_required": "😕 Потрібне оновлення </b><code>.update</code><b>",
-        "_cfg_cst_msg": "Кастом текст повідомлення в info. Може мати ключові слова {me}, {version}, {build}, {prefix}, {platform}, {upd}.",
-        "_cfg_cst_btn": "Кастом кнопка повідомлення в info. Залиш пустим, щоб при прибрати.",
-        "_cfg_cst_bnr": "Кастом банер.",
-        "_cfg_cst_frmt": "Кастом формат файлу для банера.",
+        "_cfg_cst_msg": "Власний текст повідомлення в info. Може мати ключові слова {me}, {version}, {build}, {prefix}, {platform}, {upd}.",
+        "_cfg_cst_btn": "Власна кнопка в info. Залиште порожньою, щоб прибрати.",
+        "_cfg_cst_bnr": "Власний банер.",
+        "_cfg_cst_frmt": "Формат файлу банера.",
         "_cfg_banner": "Постав `True`, щоб вимкнути банер-картинку.",
-        "_cfg_inline_banner": "Встановіть `True`, щоб відключити встроєний медіа-банер",
+        "_cfg_inline_banner": "Встановіть `True`, щоб вимкнути inline медіа-банер",
     }
 
     def __init__(self):
@@ -76,7 +77,7 @@ class acbotInfoMod(loader.Module):
             ),
             loader.ConfigValue(
                 "custom_banner",
-                "https://raw.githubusercontent.com/VadymYem/AuthorBot/main/assets/bot_pfp.jpg",
+                DEFAULT_BANNER,
                 lambda: self.strings("_cfg_cst_bnr"),
             ),
             loader.ConfigValue(
@@ -201,7 +202,7 @@ class acbotInfoMod(loader.Module):
 
         me = f'<b><a href="tg://user?id={self._me.id}">{utils.escape_html(get_display_name(self._me))}</a></b>'
         version = f'<i>{".".join(list(map(str, list(main.__version__))))}</i>'
-        build = f'<a href="https://github.com/VadymYem/AuthorBot/commit/{ver}">#{ver[:8]}</a>'  # fmt: skip
+        build = f'<a href="https://github.com/AuthorGramProject/AuthorBot/commit/{ver}">#{ver[:8]}</a>'  # fmt: skip
         prefix = f"«<code>{utils.escape_html(self.get_prefix())}</code>»"
         platform = utils.get_named_platform()
         uptime = utils.formatted_uptime()
@@ -241,19 +242,20 @@ class acbotInfoMod(loader.Module):
 
     def _get_mark(self, btn_count):
         btn_count = str(btn_count)
+        button = self.config[f"custom_button{btn_count}"]
         return (
             {
                 "text": self.config[f"custom_button{btn_count}"][0],
                 "url": self.config[f"custom_button{btn_count}"][1],
             }
-            if self.config[f"custom_button{btn_count}"]
+            if len(button) == 2 and utils.check_url(button[1])
             else None
         )
 
     @loader.inline_everyone
     async def info_inline_handler(self, query: InlineQuery) -> dict:
         """Подивитися інформацію про бота"""
-        m = {x: self._get_mark(x) for x in range(13)}
+        m = {x: self._get_mark(x) for x in range(1, 13)}
         btns = [
             [
                 *([m[1]] if m[1] else []),
@@ -276,20 +278,20 @@ class acbotInfoMod(loader.Module):
                 *([m[12]] if m[12] else []),
             ],
         ]
-        msg_type = "message" if self.config["disable_inline_banner"] else "caption"
+        banner = await self._banner(inline=True)
+        msg_type = "caption" if banner else "message"
         return {
             "title": self.strings("send_info"),
             "description": self.strings("description"),
             msg_type: self._render_info(),
-            self.config["custom_format"]: self.config["custom_banner"],
-            "thumb": "https://raw.githubusercontent.com/VadymYem/AuthorBot/main/assets/bot_pfp.jpg",
+            **banner,
             "reply_markup": btns,
         }
 
     @loader.unrestricted
     async def infocmd(self, message: Message):
         """Send bot info"""
-        m = {x: self._get_mark(x) for x in range(13)}
+        m = {x: self._get_mark(x) for x in range(1, 13)}
         btns = [
             [
                 *([m[1]] if m[1] else []),
@@ -316,7 +318,13 @@ class acbotInfoMod(loader.Module):
             message=message,
             text=self._render_info(),
             reply_markup=btns,
-            **{}
-            if self.config["disable_banner"]
-            else {self.config["custom_format"]: self.config["custom_banner"]}
+            **(await self._banner())
         )
+
+    async def _banner(self, inline: bool = False) -> dict:
+        if self.config["disable_inline_banner" if inline else "disable_banner"]:
+            return {}
+        banner = self.config["custom_banner"]
+        if banner == DEFAULT_BANNER or banner in LEGACY_BANNERS:
+            return {"photo": await self.inline.brand_photo()}
+        return {self.config["custom_format"]: banner} if banner else {}

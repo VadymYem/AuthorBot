@@ -10,7 +10,7 @@
 [![Telegram](https://img.shields.io/badge/Telegram-MTProto%20%2B%20Bot%20API-26A5E4?logo=telegram&logoColor=white)](https://core.telegram.org/)
 [![License](https://img.shields.io/badge/License-AGPLv3-663399)](LICENSE)
 [![Rich Messages](https://img.shields.io/badge/Rich%20Messages-Bot%20API%2010.x-111827)](https://core.telegram.org/bots/api#rich-messages)
-[![Verify](https://github.com/VadymYem/AuthorBot/actions/workflows/verify.yml/badge.svg)](https://github.com/VadymYem/AuthorBot/actions/workflows/verify.yml)
+[![Verify](https://github.com/AuthorGramProject/AuthorBot/actions/workflows/verify.yml/badge.svg)](https://github.com/AuthorGramProject/AuthorBot/actions/workflows/verify.yml)
 
 **AuthorBot** — модульний Telegram userbot від **Author C**.  
 Працює як розширення вашого Telegram-акаунта та окремий inline/public bot-інтерфейс.
@@ -49,14 +49,16 @@ https://github.com/hikariatama/host/raw/master
 
 ## Android / Termux
 
-> Рекомендовано актуальний Termux із F-Droid або GitHub releases.
+> Потрібен Termux із F-Droid або GitHub releases. Для приватного репозиторію використовуйте налаштовану Git-автентифікацію. Android-сумісність залежить від версії Python і наявності коліс залежностей; серверні перевірки виконуються на Python 3.10–3.11.
 
 ```bash
 termux-wake-lock
 pkg update -y
 pkg install -y wget git python openssl
 clear
-bash -c "$(wget -qO- https://raw.githubusercontent.com/VadymYem/AuthorBot/main/termux.sh)"
+git clone https://github.com/AuthorGramProject/AuthorBot.git
+cd AuthorBot
+bash termux.sh
 ```
 
 Інсталятор:
@@ -65,6 +67,7 @@ bash -c "$(wget -qO- https://raw.githubusercontent.com/VadymYem/AuthorBot/main/t
 - клонує чистий upstream;
 - створює `.venv`;
 - встановлює Python requirements без забруднення глобального Python;
+- перевіряє залежності та виконує тести запуску перед стартом;
 - конфігурує Termux autostart;
 - запускає `python -m acbot`.
 
@@ -82,7 +85,7 @@ cd ~/AuthorBot
 Production-профіль для Linux/VPS тестується на **Python 3.10 та 3.11**. Для чистої установки:
 
 ```bash
-git clone https://github.com/VadymYem/AuthorBot.git
+git clone https://github.com/AuthorGramProject/AuthorBot.git
 cd AuthorBot
 bash install.sh
 ```
@@ -180,6 +183,16 @@ AuthorBot не повинен:
 Докладніше: [SECURITY.md](SECURITY.md).
 
 ---
+
+## Перевірки
+
+```bash
+python -m pip check
+python scripts/selfcheck.py
+python scripts/runtimecheck.py
+```
+
+CI перевіряє Python 3.10 і 3.11 з основними та додатковими залежностями, імпорти всіх основних і вбудованих модулів, регресійні сценарії та Docker-образ. Зображення в Telegram завантажуються з файлів репозиторію; вебінтерфейс віддає їх локально, незалежно від доступності приватного GitHub.
 
 ## Розробка модулів
 

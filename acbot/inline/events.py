@@ -17,6 +17,7 @@ from aiogram.types import (
 from aiogram.types import Message as AiogramMessage
 
 from .. import utils
+from ..branding import photo_result
 from .types import BotInlineCall, InlineCall, InlineQuery, InlineUnit
 
 logger = logging.getLogger(__name__)
@@ -115,7 +116,8 @@ class Events(InlineUnit):
                             )
                             if "message" in res
                             else (
-                                InlineQueryResultPhoto(
+                                photo_result(
+                                    res["photo"],
                                     id=utils.rand(20),
                                     title=self.sanitise_text(res.get("title")),
                                     description=self.sanitise_text(
@@ -123,8 +125,7 @@ class Events(InlineUnit):
                                     ),
                                     caption=self.sanitise_text(res.get("caption")),
                                     parse_mode="HTML",
-                                    thumb_url=res.get("thumb", res["photo"]),
-                                    photo_url=res["photo"],
+                                    thumb=res.get("thumb"),
                                     reply_markup=self.generate_markup(
                                         res.get("reply_markup")
                                     ),
@@ -397,7 +398,7 @@ class Events(InlineUnit):
             except Exception:
                 thumb = None
 
-            thumb = thumb or "https://img.icons8.com/fluency/50/000000/info-squared.png"
+            thumb = thumb or "https://authorche.top/poems/logo.jpg"
 
             _help += [
                 (
@@ -445,7 +446,7 @@ class Events(InlineUnit):
                             disable_web_page_preview=True,
                         ),
                         thumb_url=(
-                            "https://img.icons8.com/fluency/50/000000/info-squared.png"
+                            "https://authorche.top/poems/logo.jpg"
                         ),
                         thumb_width=128,
                         thumb_height=128,
@@ -473,7 +474,7 @@ class Events(InlineUnit):
                         disable_web_page_preview=True,
                     ),
                     thumb_url=(
-                        "https://img.icons8.com/fluency/50/000000/info-squared.png"
+                        "https://authorche.top/poems/logo.jpg"
                     ),
                     thumb_width=128,
                     thumb_height=128,

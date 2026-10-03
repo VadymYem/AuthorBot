@@ -13,13 +13,14 @@ from herokutl.tl.functions.contacts import UnblockRequest
 from herokutl.tl.types import Message
 
 from .. import loader, utils
+from ..branding import AUTHOR_PHOTO, BOT_PHOTO
 
 logger = logging.getLogger(__name__)
 
 PUBLIC_BOT_EDITORS = {6316376597, 6802848305}
 
 START_RICH = """<h1>AuthorBot</h1>
-<figure><img src="https://raw.githubusercontent.com/VadymYem/AuthorBot/main/assets/bot_pfp.jpg"/><figcaption>AuthorBot · by Author C</figcaption></figure>
+<figure><img src="tg://photo?id=bot_artwork"/><figcaption>AuthorBot · by Author C</figcaption></figure>
 <blockquote>Модульний Telegram userbot від Author C — автоматизація, inline-інструменти, модулі, локальні налаштування та сучасний Telegram Bot API.</blockquote>
 
 <h3>Що тут є</h3>
@@ -38,7 +39,7 @@ START_RICH = """<h1>AuthorBot</h1>
 </details>
 
 <tg-button-row align="center">
-<tg-button type="url" style="primary" url="https://github.com/VadymYem/AuthorBot">GitHub</tg-button>
+<tg-button type="url" style="primary" url="https://github.com/AuthorGramProject/AuthorBot">GitHub</tg-button>
 <tg-button type="url" style="success" url="https://authorche.top/ubot.html">Встановити</tg-button>
 </tg-button-row>
 <tg-button-row align="center">
@@ -48,7 +49,7 @@ START_RICH = """<h1>AuthorBot</h1>
 
 <footer>AuthorBot • by Author C</footer>"""
 
-HELP_RICH = """<h1>AuthorBot • Help</h1>
+HELP_RICH = """<h1>AuthorBot • Довідка</h1>
 <p>Цей бот є публічним інтерфейсом встановленого AuthorBot. Базові команди доступні всім.</p>
 
 <table bordered striped compact>
@@ -62,12 +63,12 @@ HELP_RICH = """<h1>AuthorBot • Help</h1>
 <blockquote expandable>Встановлені модулі можуть додавати власні публічні inline-команди. Їх доступність визначається самим модулем і політикою безпеки власника userbot.</blockquote>
 
 <tg-button-row align="center">
-<tg-button type="url" style="primary" url="https://github.com/VadymYem/AuthorBot">Документація</tg-button>
+<tg-button type="url" style="primary" url="https://github.com/AuthorGramProject/AuthorBot">Документація</tg-button>
 <tg-button type="url" url="https://t.me/wsinfo">Оновлення</tg-button>
 </tg-button-row>"""
 
 ABOUT_RICH = """<h1>Author C</h1>
-<figure><img src="https://authorche.top/poems/logo.jpg"/><figcaption>Author C — автор і розробник</figcaption></figure>
+<figure><img src="tg://photo?id=author_artwork"/><figcaption>Author C — автор і розробник</figcaption></figure>
 
 <p>Український розробник, автор цифрових проєктів, музикант, співак, композитор і поет. Основний напрям технічних проєктів — приватність, Telegram, Android, автоматизація та AI-інструменти.</p>
 
@@ -77,7 +78,7 @@ ABOUT_RICH = """<h1>Author C</h1>
 </details>
 
 <tg-button-row align="center">
-<tg-button type="url" style="primary" url="https://authorche.top">Website</tg-button>
+<tg-button type="url" style="primary" url="https://authorche.top">Сайт</tg-button>
 <tg-button type="url" url="https://t.me/wsinfo">Telegram</tg-button>
 </tg-button-row>"""
 
@@ -94,7 +95,7 @@ PROJECTS_RICH = """<h1>Проєкти Author C</h1>
 <h2>AuthorBot</h2>
 <p>Модульний Telegram userbot: автоматизація, inline-форми, керування модулями, backup, security, Rich Messages і self-update.</p>
 <tg-button-row>
-<tg-button type="url" style="primary" url="https://github.com/VadymYem/AuthorBot">GitHub</tg-button>
+<tg-button type="url" style="primary" url="https://github.com/AuthorGramProject/AuthorBot">GitHub</tg-button>
 <tg-button type="url" url="https://authorche.top/ubot.html">Сторінка</tg-button>
 </tg-button-row>
 
@@ -121,11 +122,11 @@ FALLBACK = {
         "<b>AuthorBot</b>\n\n"
         "Модульний Telegram userbot від Author C.\n\n"
         "<b>Команди:</b> /start · /help · /about · /projects\n\n"
-        "GitHub: https://github.com/VadymYem/AuthorBot\n"
+        "GitHub: https://github.com/AuthorGramProject/AuthorBot\n"
         "Web: https://authorche.top"
     ),
     "help": (
-        "<b>AuthorBot • Help</b>\n\n"
+        "<b>AuthorBot • Довідка</b>\n\n"
         "/start — головна сторінка\n"
         "/help — довідка\n"
         "/about — про автора\n"
@@ -252,9 +253,24 @@ class InlineStuff(loader.Module):
 
     async def _send_public_page(self, message: AiogramMessage, page: str):
         try:
+            html = self._public_rich(page)
+            # Migrate saved default pages without replacing editors' own content.
+            for owner in ("VadymYem", "AuthorGramProject"):
+                html = html.replace(
+                    f"https://raw.githubusercontent.com/{owner}/AuthorBot/main/assets/bot_pfp.jpg",
+                    "tg://photo?id=bot_artwork",
+                )
+            media = []
+            files = {}
+            for name, path in (("bot_artwork", BOT_PHOTO), ("author_artwork", AUTHOR_PHOTO)):
+                if f"tg://photo?id={name}" in html:
+                    media.append({"id": name, "media": {"type": "photo", "media": f"attach://{name}"}})
+                    files[name] = path
             await self.inline.rich.send(
                 message.chat.id,
-                html=self._public_rich(page),
+                html=html,
+                media=media or None,
+                files=files or None,
             )
             return
         except Exception:
@@ -262,7 +278,7 @@ class InlineStuff(loader.Module):
 
         keyboard = InlineKeyboardMarkup(row_width=2)
         keyboard.add(
-            InlineKeyboardButton("GitHub", url="https://github.com/VadymYem/AuthorBot"),
+            InlineKeyboardButton("GitHub", url="https://github.com/AuthorGramProject/AuthorBot"),
             InlineKeyboardButton("Website", url="https://authorche.top"),
         )
         await message.answer(

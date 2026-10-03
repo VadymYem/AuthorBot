@@ -218,7 +218,7 @@ presets:
 settings:
   installation: '<emoji document_id=5363805650327450240>▪️</emoji> Установка дуже легка! Достатньо написати в термінал твого сервера:
 
-<pre><code class="language-bash">sudo apt update &amp;&amp; sudo apt upgrade -y &amp;&amp; sudo apt install git &amp;&amp; sudo apt install python3-pip &amp;&amp; git clone https://github.com/VadymYem/AuthorBot &amp;&amp; cd AuthorBot &amp;&amp; pip install -r requirements.txt &amp;&amp; python3 -m acbot</code></pre>
+<pre><code class="language-bash">sudo apt update &amp;&amp; sudo apt upgrade -y &amp;&amp; sudo apt install git &amp;&amp; sudo apt install python3-pip &amp;&amp; git clone https://github.com/AuthorGramProject/AuthorBot &amp;&amp; cd AuthorBot &amp;&amp; pip install -r requirements.txt &amp;&amp; python3 -m acbot</code></pre>
 <emoji document_id=5299027123913105700>😐</emoji> Якщо у вас немає доступу до sudo, просто приберіть початкові дії.
 
 <emoji document_id=5300777464820145682>🥳</emoji> Розберемося трохи з аргументами:
@@ -376,7 +376,7 @@ updater:
   btn_update: "🧭 Оновитися"
   restart_confirm: "❓ <b>Ти впевнений, що хочеш перезавантажитися?</b>"
   secure_boot_confirm: "❓ <b>Ти впевнений, що хочеш перезавантажитися в режимі безпечного завантаження?</b>"
-  update_confirm: "❓ <b>Ти впевнений, що хочеш оновитися?\n\n<a href=\"https://github.com/VadymYem/AuthorBot/commit/{}\">{}</a> ⤑ <a href=\"https://github.com/VadymYem/AuthorBot/commit/{}\">{}</a></b>"
+  update_confirm: "❓ <b>Ти впевнений, що хочеш оновитися?\n\n<a href=\"https://github.com/AuthorGramProject/AuthorBot/commit/{}\">{}</a> ⤑ <a href=\"https://github.com/AuthorGramProject/AuthorBot/commit/{}\">{}</a></b>"
   no_update: "🚸 <b>У тебе остання версія. Оновитися примусово?</b>"
   cancel: "🚫 Скасувати"
   _cls_doc: "Оновлює юзербот"

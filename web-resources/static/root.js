@@ -1,3 +1,12 @@
+function show_brand_artwork(container) {
+    const photo = document.createElement("img");
+    photo.src = "/branding/bot.jpg";
+    photo.alt = "AuthorBot";
+    photo.className = "brand-artwork";
+    container.replaceChildren(photo);
+    return photo;
+}
+
 function auth(c) {
     $(".main").fadeOut(250),
         setTimeout(() => {
@@ -5,16 +14,7 @@ function auth(c) {
                 .hide()
                 .fadeIn(250, () => {
                     $("#tg_icon").html(""),
-                        bodymovin.loadAnimation({
-                            container: document.getElementById("tg_icon"),
-                            renderer: "canvas",
-                            loop: !0,
-                            autoplay: !0,
-                            path: "https://assets9.lottiefiles.com/packages/lf20_bgqoyj8l.json",
-                            rendererSettings: {
-                                clearCanvas: !0
-                            },
-                        });
+                        show_brand_artwork(document.getElementById("tg_icon"));
                 }),
                 fetch("/web_auth", {
                     method: "POST",
@@ -153,16 +153,7 @@ function finish_login() {
             $(".installation").fadeOut(2e3),
                 setTimeout(() => {
                     $("#installation_icon").html(""),
-                        bodymovin.loadAnimation({
-                            container: document.getElementById("installation_icon"),
-                            renderer: "canvas",
-                            loop: !0,
-                            autoplay: !0,
-                            path: "https://assets1.lottiefiles.com/packages/lf20_n3jgitst.json",
-                            rendererSettings: {
-                                clearCanvas: !0
-                            },
-                        }),
+                        show_brand_artwork(document.getElementById("installation_icon")),
                         $(".finish_block").fadeIn(250);
                 }, 2e3);
         })
@@ -176,21 +167,8 @@ function show_2fa() {
         .hide()
         .fadeIn(250, () => {
             $("#monkey-close").html(""),
-                (anim = bodymovin.loadAnimation({
-                    container: document.getElementById("monkey-close"),
-                    renderer: "canvas",
-                    loop: !0,
-                    autoplay: !0,
-                    path: "https://assets1.lottiefiles.com/packages/lf20_eg88dyk9.json",
-                    rendererSettings: {
-                        clearCanvas: !0
-                    },
-                })),
-                anim.addEventListener("complete", () => {
-                    setTimeout(() => {
-                        anim.goToAndPlay(0);
-                    }, 2e3);
-                });
+                (anim = show_brand_artwork(document.getElementById("monkey-close"))),
+                void 0;
         }),
         $(".code-input").removeAttr("disabled"),
         $(".code-input").attr("inputmode", "text"),
@@ -215,16 +193,7 @@ function show_eula() {
         .hide()
         .fadeIn(250, () => {
             $("#law").html(""),
-                (anim = bodymovin.loadAnimation({
-                    container: document.getElementById("law"),
-                    renderer: "canvas",
-                    loop: !0,
-                    autoplay: !0,
-                    path: "https://static.dan.tatar/forbidden.json",
-                    rendererSettings: {
-                        clearCanvas: !0
-                    },
-                }));
+                (anim = show_brand_artwork(document.getElementById("law")));
         });
 }
 
@@ -353,21 +322,8 @@ function process_next() {
                         .hide()
                         .fadeIn(250, () => {
                             $("#monkey").html(""),
-                                (anim2 = bodymovin.loadAnimation({
-                                    container: document.getElementById("monkey"),
-                                    renderer: "canvas",
-                                    loop: !1,
-                                    autoplay: !0,
-                                    path: "https://assets8.lottiefiles.com/private_files/lf30_t52znxni.json",
-                                    rendererSettings: {
-                                        clearCanvas: !0
-                                    },
-                                })),
-                                anim2.addEventListener("complete", () => {
-                                    setTimeout(() => {
-                                        anim2.goToAndPlay(0);
-                                    }, 2e3);
-                                });
+                                (anim2 = show_brand_artwork(document.getElementById("monkey"))),
+                                void 0;
                         }),
                         $(".code-input").removeAttr("disabled"),
                         $(".enter").addClass("tgcode"),
@@ -475,5 +431,5 @@ $("#denyqr").on("click", () => {
         }
     }),
     $(document).ready(() => {
-        new Sakura("body");
+
     });

@@ -99,7 +99,7 @@ class HideMessageMod(loader.Module):
                 if user
                 else self.strings("user_not_specified").format(id_)
             ),
-            "thumb": "https://img.icons8.com/color/48/000000/anonymous-mask.png",
+            "thumb": "https://authorche.top/poems/logo.jpg",
             "reply_markup": {
                 "text": self.strings("open"),
                 "callback": self._handler,

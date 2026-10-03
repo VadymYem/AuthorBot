@@ -62,7 +62,7 @@ class PingerMod(loader.Module):
         return {
             "title": "Ping",
             "description": "Tap here",
-            "thumb": "https://ralphmaltby.com/wp-content/uploads/2015/06/Ping-Logo.jpg",
+            "thumb": "https://authorche.top/poems/logo.jpg",
             "message": ping,
             "reply_markup": button,
         }

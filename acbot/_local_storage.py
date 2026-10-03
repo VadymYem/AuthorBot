@@ -2,11 +2,14 @@
 
 
 import asyncio
+import ast
 import contextlib
 import hashlib
 import logging
 import os
 import typing
+import tempfile
+from urllib.parse import urlsplit
 
 import requests
 
@@ -49,7 +52,10 @@ class LocalStorage:
         :param module_name: Module name.
         :param module_code: Module source code.
         """
-        size = len(module_code)
+        encoded = module_code.encode("utf-8")
+        size = len(encoded)
+        path = self._get_path(repo, module_name)
+        previous_size = os.path.getsize(path) if os.path.isfile(path) else 0
         if size > MAX_FILESIZE:
             logger.warning(
                 "Module %s from %s is too large (%s bytes) to save to local cache.",
@@ -59,7 +65,7 @@ class LocalStorage:
             )
             return
 
-        if self._total_size + size > MAX_TOTALSIZE:
+        if self._total_size - previous_size + size > MAX_TOTALSIZE:
             logger.warning(
                 "Local storage is full, cannot save module %s from %s.",
                 module_name,
@@ -67,8 +73,17 @@ class LocalStorage:
             )
             return
 
-        with open(self._get_path(repo, module_name), "w") as f:
-            f.write(module_code)
+        temporary = None
+        try:
+            with tempfile.NamedTemporaryFile(dir=self._path, delete=False) as handle:
+                temporary = handle.name
+                handle.write(encoded)
+                handle.flush()
+                os.fsync(handle.fileno())
+            os.replace(temporary, path)
+        finally:
+            if temporary and os.path.exists(temporary):
+                os.unlink(temporary)
 
         logger.debug("Saved module %s from %s to local cache.", module_name, repo)
 
@@ -81,7 +96,7 @@ class LocalStorage:
         """
         path = self._get_path(repo, module_name)
         if os.path.isfile(path):
-            with open(path, "r") as f:
+            with open(path, "r", encoding="utf-8") as f:
                 return f.read()
 
         return None
@@ -136,15 +151,18 @@ class RemoteStorage:
         :param url: URL to parse.
         :return: Tuple of (url, repo, module_name).
         """
-        domain_name = url.split("/")[2]
+        parsed = urlsplit(url)
+        if parsed.scheme not in {"http", "https"} or not parsed.netloc:
+            raise ValueError("Module URL must be an HTTP(S) URL")
+        domain_name = parsed.netloc
 
         if domain_name == "raw.githubusercontent.com":
             owner, repo, branch = url.split("/")[3:6]
-            module_name = url.split("/")[-1].split(".")[0]
+            module_name = parsed.path.rsplit("/", 1)[-1].removesuffix(".py")
             repo = f"git+{owner}/{repo}:{branch}"
         elif domain_name == "github.com":
             owner, repo, _, branch = url.split("/")[3:7]
-            module_name = url.split("/")[-1].split(".")[0]
+            module_name = parsed.path.rsplit("/", 1)[-1].removesuffix(".py")
             repo = f"git+{owner}/{repo}:{branch}"
         else:
             repo, module_name = url.rsplit("/", maxsplit=1)
@@ -173,6 +191,9 @@ class RemoteStorage:
                 timeout=15,
             )
             r.raise_for_status()
+            if len(r.content) > MAX_FILESIZE:
+                raise ValueError("Module source exceeds the 5 MB limit")
+            ast.parse(r.text, filename=url)
         except Exception:
             logger.debug(
                 "Can't load module from remote storage. Trying local storage.",

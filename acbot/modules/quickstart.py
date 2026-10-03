@@ -6,7 +6,8 @@
 import logging
 import os
 
-from .. import loader, main, translations, utils
+from .. import loader, translations, utils
+from ..branding import BOT_PHOTO
 from ..inline.types import BotInlineCall
 
 try:
@@ -99,7 +100,7 @@ class Quickstart(loader.Module):
             return
 
         try:
-            with open(main.BASE_PATH / "assets" / "bot_pfp.jpg", "rb") as avatar:
+            with BOT_PHOTO.open("rb") as avatar:
                 await self.inline.bot.send_photo(self._client.tg_id, photo=avatar)
         except Exception:
             logger.debug("Unable to send quickstart avatar", exc_info=True)

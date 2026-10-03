@@ -26,7 +26,7 @@ class InlineRandomMod(loader.Module):
             "title": "Toss a coin",
             "description": "Trust in the God of luck, and he will be by your side!",
             "message": f"<i>The God of luck tells us...</i> <b>{r}</b>",
-            "thumb": "https://img.icons8.com/external-justicon-flat-justicon/64/000000/external-coin-pirates-justicon-flat-justicon-1.png",
+            "thumb": "https://authorche.top/poems/logo.jpg",
         }
 
     @loader.inline_everyone
@@ -45,7 +45,7 @@ class InlineRandomMod(loader.Module):
             "title": f"Toss random number less or equal to {a}",
             "description": "Trust in the God of luck, and he will be by your side!",
             "message": f"<i>The God of luck screams...</i> <b>{randint(1, int(a))}</b>",
-            "thumb": "https://img.icons8.com/external-flaticons-flat-flat-icons/64/000000/external-numbers-auction-house-flaticons-flat-flat-icons.png",
+            "thumb": "https://authorche.top/poems/logo.jpg",
         }
 
     @loader.inline_everyone
@@ -64,7 +64,7 @@ class InlineRandomMod(loader.Module):
                 "<i>Ð‘Ð¾Ð³ ÑƒÐ´Ð°Ñ‡Ñ– ÑˆÐµÐ¿Ð¾Ñ‡Ðµ...</i>"
                 f" <b>{choice(a.split(',')).strip()}</b>"
             ),
-            "thumb": "https://img.icons8.com/external-filled-outline-geotatah/64/000000/external-choice-customer-satisfaction-filled-outline-filled-outline-geotatah.png",
+            "thumb": "https://authorche.top/poems/logo.jpg",
         }
 
     @loader.inline_everyone

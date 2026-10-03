@@ -129,7 +129,11 @@ VALID_PIP_PACKAGES = re.compile(
     re.MULTILINE,
 )
 
-USER_INSTALL = "PIP_TARGET" not in os.environ and "VIRTUAL_ENV" not in os.environ
+USER_INSTALL = (
+    sys.prefix == sys.base_prefix
+    and "PIP_TARGET" not in os.environ
+    and "VIRTUAL_ENV" not in os.environ
+)
 
 native_import = builtins.__import__
 
@@ -162,6 +166,7 @@ class InfiniteLoop:
         self._wait_before = wait_before
         self._stop_clause = stop_clause
         self.autostart = autostart
+        self._wait_for_stop = asyncio.Event()
 
     def _stop(self, *args, **kwargs):
         self._wait_for_stop.set()
@@ -172,16 +177,16 @@ class InfiniteLoop:
                 self.module_instance.allmodules.client.tg_id
             )
 
-        if self._task:
+        if self._task and not self._task.done():
             logger.debug("Stopped loop for method %s", self.func)
             self._wait_for_stop = asyncio.Event()
             self.status = False
             self._task.add_done_callback(self._stop)
             self._task.cancel()
-            return asyncio.ensure_future(self._wait_for_stop.wait())
+            return self._task.get_loop().create_task(self._wait_for_stop.wait())
 
         logger.debug("Loop is not running")
-        return asyncio.ensure_future(stop_placeholder())
+        return stop_placeholder()
 
     def start(self, *args, **kwargs):
         with contextlib.suppress(AttributeError):
@@ -189,49 +194,54 @@ class InfiniteLoop:
                 self.module_instance.allmodules.client.tg_id
             )
 
-        if not self._task:
+        if not self._task or self._task.done():
             logger.debug("Started loop for method %s", self.func)
+            self._wait_for_stop = asyncio.Event()
             self._task = asyncio.ensure_future(self.actual_loop(*args, **kwargs))
         else:
             logger.debug("Attempted to start already running loop")
 
     async def actual_loop(self, *args, **kwargs):
-        # Wait for loader to set attribute
-        while not self.module_instance:
-            await asyncio.sleep(0.01)
+        try:
+            # Wait for loader to set attribute
+            while not self.module_instance:
+                await asyncio.sleep(0.01)
 
-        if isinstance(self._stop_clause, str) and self._stop_clause:
-            self.module_instance.set(self._stop_clause, True)
+            if isinstance(self._stop_clause, str) and self._stop_clause:
+                self.module_instance.set(self._stop_clause, True)
 
-        self.status = True
+            self.status = True
 
-        while self.status:
-            if self._wait_before:
-                await asyncio.sleep(self.interval)
+            while self.status:
+                if self._wait_before:
+                    await asyncio.sleep(self.interval)
 
-            if (
-                isinstance(self._stop_clause, str)
-                and self._stop_clause
-                and not self.module_instance.get(self._stop_clause, False)
-            ):
-                break
+                if (
+                    isinstance(self._stop_clause, str)
+                    and self._stop_clause
+                    and not self.module_instance.get(self._stop_clause, False)
+                ):
+                    break
 
-            try:
-                await self.func(self.module_instance, *args, **kwargs)
-            except StopLoop:
-                break
-            except Exception:
-                logger.exception("Error running loop!")
+                try:
+                    await self.func(self.module_instance, *args, **kwargs)
+                except StopLoop:
+                    break
+                except Exception:
+                    logger.exception("Error running loop!")
 
-            if not self._wait_before:
-                await asyncio.sleep(self.interval)
+                if not self._wait_before:
+                    await asyncio.sleep(self.interval)
 
-        self._wait_for_stop.set()
-
-        self.status = False
+        finally:
+            self.status = False
+            self._wait_for_stop.set()
 
     def __del__(self):
-        self.stop()
+        # Object finalizers may run after the event loop has already closed.
+        with contextlib.suppress(RuntimeError):
+            if self._task and not self._task.done():
+                self._task.cancel()
 
 
 def loop(

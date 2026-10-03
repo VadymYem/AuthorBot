@@ -3,6 +3,7 @@ import copy
 import logging
 import os
 import random
+import re
 import time
 import traceback
 import typing
@@ -26,6 +27,7 @@ from herokutl.extensions.html import CUSTOM_EMOJIS
 from herokutl.tl.types import Message
 
 from .. import utils
+from ..branding import photo_result
 from ..types import AuthorBotReplyMarkup
 from .types import InlineMessage, InlineUnit
 
@@ -155,7 +157,10 @@ class Form(InlineUnit):
             )
             return False
 
-        if photo and (not isinstance(photo, str) or not utils.check_url(photo)):
+        if photo and (
+            not isinstance(photo, str)
+            or not (utils.check_url(photo) or re.fullmatch(r"[A-Za-z0-9_-]{20,}", photo))
+        ):
             logger.error(
                 "Invalid type for `photo`. Expected `str` with URL, got `%s`",
                 type(photo),
@@ -432,16 +437,13 @@ class Form(InlineUnit):
             if "photo" in form:
                 await inline_query.answer(
                     [
-                        InlineQueryResultPhoto(
+                        photo_result(
+                            form["photo"],
                             id=utils.rand(20),
                             title="AuthorBot",
                             description="AuthorBot",
                             caption=form.get("text"),
                             parse_mode="HTML",
-                            photo_url=form["photo"],
-                            thumb_url=(
-                                "https://img.icons8.com/cotton/452/moon-satellite.png"
-                            ),
                             reply_markup=self.generate_markup(
                                 form["uid"],
                             ),
@@ -459,7 +461,7 @@ class Form(InlineUnit):
                             parse_mode="HTML",
                             gif_url=form["gif"],
                             thumb_url=(
-                                "https://img.icons8.com/cotton/452/moon-satellite.png"
+                                "https://authorche.top/poems/logo.jpg"
                             ),
                             reply_markup=self.generate_markup(
                                 form["uid"],
@@ -479,7 +481,7 @@ class Form(InlineUnit):
                             parse_mode="HTML",
                             video_url=form["video"],
                             thumb_url=(
-                                "https://img.icons8.com/cotton/452/moon-satellite.png"
+                                "https://authorche.top/poems/logo.jpg"
                             ),
                             mime_type="video/mp4",
                             reply_markup=self.generate_markup(

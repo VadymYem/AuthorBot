@@ -26,4 +26,6 @@ ruamel-yaml = "==0.17.21"
 certifi = ">=2024.8.30"
 redis = ">=5.0,<7"
 
+pydub = "==0.25.1"
+
 [dev-packages]

@@ -24,12 +24,14 @@ import inspect
 import logging
 import os
 import secrets
+from pathlib import Path
 
 import aiohttp_jinja2
 import jinja2
 from aiohttp import web
 
 from ..database import Database
+from ..branding import BOT_PHOTO
 from ..loader import Modules
 from ..tl_cache import CustomTelegramClient
 from . import proxypass, root
@@ -68,9 +70,9 @@ class Web(root.Web):
                 except (ValueError, UnicodeDecodeError):
                     username = password = ""
 
-                if hmac.compare_digest(username, self._setup_web_user) and hmac.compare_digest(
-                    password,
-                    self._setup_web_password,
+                if hmac.compare_digest(username.encode("utf-8"), self._setup_web_user.encode("utf-8")) and hmac.compare_digest(
+                    password.encode("utf-8"),
+                    self._setup_web_password.encode("utf-8"),
                 ):
                     return await handler(request)
 
@@ -85,16 +87,18 @@ class Web(root.Web):
 
         self.app = web.Application(middlewares=[web_basic_auth])
         self.proxypasser = proxypass.ProxyPasser()
+        resources = Path(__file__).resolve().parents[2] / "web-resources"
         aiohttp_jinja2.setup(
             self.app,
             filters={"getdoc": inspect.getdoc, "ascii": ascii},
-            loader=jinja2.FileSystemLoader("web-resources"),
+            loader=jinja2.FileSystemLoader(str(resources)),
         )
         self.app["static_root_url"] = "/static"
 
         super().__init__(**kwargs)
         self.app.router.add_get("/favicon.ico", self.favicon)
-        self.app.router.add_static("/static/", "web-resources/static")
+        self.app.router.add_get("/branding/bot.jpg", self.favicon)
+        self.app.router.add_static("/static/", str(resources / "static"))
 
     async def start_if_ready(
         self,
@@ -170,7 +174,4 @@ class Web(root.Web):
 
     @staticmethod
     async def favicon(_):
-        return web.Response(
-            status=301,
-            headers={"Location": "https://raw.githubusercontent.com/VadymYem/AuthorBot/main/assets/bot_pfp.jpg"},
-        )
+        return web.FileResponse(BOT_PHOTO, headers={"Cache-Control": "public, max-age=3600"})

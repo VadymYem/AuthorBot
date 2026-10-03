@@ -39,7 +39,7 @@ class UpdaterMod(loader.Module):
         self.config = loader.ModuleConfig(
             loader.ConfigValue(
                 "GIT_ORIGIN_URL",
-                "https://github.com/VadymYem/AuthorBot",
+                "https://github.com/AuthorGramProject/AuthorBot",
                 lambda: self.strings("origin_cfg_doc"),
                 validator=loader.validators.Link(),
             )
@@ -255,6 +255,8 @@ class UpdaterMod(loader.Module):
                     "core update remains valid"
                 )
 
+        subprocess.run([sys.executable, "-m", "pip", "check"], check=True)
+
     def _rollback_update(self):
         """Restore the pre-update commit after a failed dependency step."""
         previous = self._pre_update_commit
@@ -340,7 +342,7 @@ class UpdaterMod(loader.Module):
                 msg_obj = await utils.answer(msg_obj, self.strings("installing"))
 
             if req_update:
-                self.req_common()
+                await utils.run_sync(self.req_common)
 
             self._pre_update_commit = None
             await self.restart_common(msg_obj)
@@ -363,6 +365,9 @@ class UpdaterMod(loader.Module):
         )
 
     async def client_ready(self):
+        legacy_origin = self.config["GIT_ORIGIN_URL"].rstrip("/").removesuffix(".git")
+        if legacy_origin == "https://github.com/VadymYem/AuthorBot":
+            self.config["GIT_ORIGIN_URL"] = "https://github.com/AuthorGramProject/AuthorBot"
         if self.get("selfupdatemsg") is not None:
             try:
                 await self.update_complete()

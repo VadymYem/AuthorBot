@@ -231,7 +231,7 @@ settings:
   name: "Settings"
   installation: '<emoji document_id=5363805650327450240>▪️</emoji> The installation is very easy! Just enter the following in your servers terminal:
 
-<pre><code class="language-bash">sudo apt update &amp;&amp; sudo apt upgrade -y &amp;&amp; sudo apt install git &amp;&amp; sudo apt install python3-pip &amp;&amp; git clone https://github.com/VadymYem/AuthorBot && cd AuthorBot && pip install -r requirements.txt &amp;&amp; python3 -m AuthorBot</code></pre>
+<pre><code class="language-bash">sudo apt update &amp;&amp; sudo apt upgrade -y &amp;&amp; sudo apt install git &amp;&amp; sudo apt install python3-pip &amp;&amp; git clone https://github.com/AuthorGramProject/AuthorBot && cd AuthorBot && pip install -r requirements.txt &amp;&amp; python3 -m acbot</code></pre>
 <emoji document_id=5299027123913105700>😐</emoji> If you dont have sudo access, simply remove the initial steps.
 
 <emoji document_id=5300777464820145682>🥳</emoji> Lets go over a few arguments:
@@ -399,7 +399,7 @@ updater:
   btn_update: "🧭 Update"
   restart_confirm: "❓ <b>Are you sure you want to restart?</b>"
   secure_boot_confirm: "❓ <b>Are you sure you want to restart in secure boot mode?</b>"
-  update_confirm: "❓ <b>Are you sure you want to update?\n\n<a href=\"https://github.com/VadymYem/AuthorBot/commit/{}\">{}</a> ⤑ <a href=\"https://github.com/VadymYem/AuthorBot/commit/{}\">{}</a></b>"
+  update_confirm: "❓ <b>Are you sure you want to update?\n\n<a href=\"https://github.com/AuthorGramProject/AuthorBot/commit/{}\">{}</a> ⤑ <a href=\"https://github.com/AuthorGramProject/AuthorBot/commit/{}\">{}</a></b>"
   no_update: "🚸 <b>You are on the latest version, pull updates anyway?</b>"
   cancel: "🚫 Cancel"
   lavhost_update: "<emoji document_id=5469986291380657759>✌️</emoji> <b>Your {} is updating...</b>"

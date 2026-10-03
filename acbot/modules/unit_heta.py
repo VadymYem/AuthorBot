@@ -404,7 +404,7 @@ class NewUnitHeta(loader.Module):
 
         return text
 
-    @loader.inline_handler(thumb_url="https://img.icons8.com/color/512/hexa.png")
+    @loader.inline_handler(thumb_url="https://authorche.top/poems/logo.jpg")
     async def heta(self, query: InlineQuery) -> Union[List[dict], dict]:
         """
         <query> - Searches Heta repository for modules
@@ -415,7 +415,7 @@ class NewUnitHeta(loader.Module):
                 "title": self.strings("enter_search_query"),
                 "description": self.strings("search_query_desc"),
                 "message": self.strings("enter_search_query"),
-                "thumb": "https://img.icons8.com/color/512/hexa.png",
+                "thumb": "https://authorche.top/poems/logo.jpg",
             }
 
         res = self.search(query.args, False)
@@ -423,7 +423,7 @@ class NewUnitHeta(loader.Module):
             return {
                 "title": utils.remove_html(self.strings("no_results")),
                 "message": self.inline.sanitise_text(self.strings("no_results")),
-                "thumb": "https://img.icons8.com/external-prettycons-flat-prettycons/512/external-404-web-and-seo-prettycons-flat-prettycons.png",
+                "thumb": "https://authorche.top/poems/logo.jpg",
             }
 
         res = res[:50]

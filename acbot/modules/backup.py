@@ -9,6 +9,8 @@ import datetime
 import io
 import json
 import logging
+from ..branding import BOT_PHOTO
+from ..branding import bot_photo
 import os
 import time
 import zipfile
@@ -34,7 +36,7 @@ class AuthorBotBackupMod(loader.Module):
         if not self.get("period"):
             await self.inline.bot.send_photo(
                 self.tg_id,
-                photo="https://raw.githubusercontent.com/VadymYem/AuthorBot/main/assets/bot_pfp.jpg",
+                photo=bot_photo(),
                 caption=self.strings("period"),
                 reply_markup=self.inline.generate_markup(
                     utils.chunks(
@@ -66,7 +68,7 @@ class AuthorBotBackupMod(loader.Module):
             "📼 Your database backups will appear here",
             silent=True,
             archive=True,
-            avatar="https://raw.githubusercontent.com/VadymYem/AuthorBot/main/assets/bot_pfp.jpg",
+            avatar=BOT_PHOTO.read_bytes(),
             _folder="acbot",
             invite_bot=True,
         )

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-REPO_URL="${AUTHORBOT_REPO_URL:-https://github.com/VadymYem/AuthorBot.git}"
+REPO_URL="${AUTHORBOT_REPO_URL:-https://github.com/AuthorGramProject/AuthorBot.git}"
 APP_DIR="${AUTHORBOT_DIR:-$HOME/AuthorBot}"
 EXTERNAL_PORT="${EXTERNAL_PORT:-8085}"
 BIND_ADDRESS="${BIND_ADDRESS:-127.0.0.1}"
@@ -16,6 +16,7 @@ docker compose version >/dev/null 2>&1 || fail "Docker Compose v2 plugin is requ
 
 if [ -d "$APP_DIR/.git" ]; then
   info "Updating AuthorBot checkout..."
+  git -C "$APP_DIR" remote set-url origin "$REPO_URL"
   git -C "$APP_DIR" fetch --prune origin
   git -C "$APP_DIR" reset --hard origin/main
 elif [ -e "$APP_DIR" ]; then

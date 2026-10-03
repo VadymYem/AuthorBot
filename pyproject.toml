@@ -4,7 +4,7 @@ preview = true
 
 [tool.poetry]
 name = "acbot"
-version = "1.10.6"
+version = "1.10.7"
 description = "Modular Telegram userbot by Author C"
 authors = ["Author C <https://authorche.top>"]
 license = "AGPL-3.0-only"
@@ -30,6 +30,7 @@ rsa = "4.9"
 ruamel-yaml = "0.17.21"
 certifi = ">=2024.8.30"
 redis = ">=5.0,<7"
+pydub = "0.25.1"
 
 [build-system]
 requires = ["poetry-core>=1.8.0"]

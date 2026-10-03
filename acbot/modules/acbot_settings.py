@@ -742,7 +742,7 @@ class SettingsMod(loader.Module):
                     "text": self.strings("web_btn"),
                     "url": await main.acbot.web.get_url(proxy_pass=False),
                 },
-                gif="https://t.me/hikari_assets/28",
+                photo=await self.inline.brand_photo(),
             )
             return
 
@@ -763,7 +763,7 @@ class SettingsMod(loader.Module):
                         },
                         {"text": self.strings("btn_no"), "action": "close"},
                     ],
-                    gif="https://i.gifer.com/embedded/download/Z5tS.gif",
+                    photo=await self.inline.brand_photo(),
                 ):
                     raise Exception
             except Exception:
@@ -796,18 +796,14 @@ class SettingsMod(loader.Module):
             await form.edit(
                 self.strings("opening_tunnel"),
                 reply_markup={"text": "⏳ Wait...", "data": "empty"},
-                gif=(
-                    "https://i.gifer.com/origin/e4/e43e1b221fd960003dc27d2f2f1b8ce1.gif"
-                ),
+                photo=await self.inline.brand_photo(),
             )
         else:
             form = await self.inline.form(
                 self.strings("opening_tunnel"),
                 message=message,
                 reply_markup={"text": "⏳ Wait...", "data": "empty"},
-                gif=(
-                    "https://i.gifer.com/origin/e4/e43e1b221fd960003dc27d2f2f1b8ce1.gif"
-                ),
+                photo=await self.inline.brand_photo(),
             )
 
         url = await main.acbot.web.get_url(proxy_pass=True)
@@ -815,7 +811,7 @@ class SettingsMod(loader.Module):
         await form.edit(
             self.strings("tunnel_opened"),
             reply_markup={"text": self.strings("web_btn"), "url": url},
-            gif="https://t.me/hikari_assets/48",
+            photo=await self.inline.brand_photo(),
         )
 
     def _get_all_IDM(self, module: str):

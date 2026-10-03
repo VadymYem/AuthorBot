@@ -1,0 +1,56 @@
+/* Quiet, locally served AuthorBot visual identity. */
+body {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    color: #e8e9e2;
+    background: #0c1412;
+}
+.bg { background: #0c1412; }
+.bg_inner {
+    background: #21372c;
+    opacity: .35;
+    filter: blur(140px);
+    border-radius: 0;
+}
+.red_state .bg_inner { background: #432a29; }
+.blur {
+    background: rgba(16, 26, 22, .94);
+    border: 1px solid rgba(222, 228, 210, .12);
+    box-shadow: none;
+}
+.title, .description { font-family: inherit; }
+.title { font-size: 30px; font-weight: 400; }
+.description { font-size: 16px; line-height: 1.6; }
+.acbot_label {
+    background: transparent;
+    color: #e8e9e2;
+    font-family: inherit;
+    font-size: 28px;
+    font-weight: 300;
+    padding: 0;
+}
+.label_inner { align-items: center; gap: 8px; }
+.moon { height: 48px; width: 48px; }
+.button, .enter {
+    background: #21372c;
+    border: 1px solid #415247;
+    border-radius: 10px;
+    box-shadow: none;
+    color: #e8e9e2;
+}
+.button:hover, .enter:active { background: #2c4436; }
+.code-input:focus { border-color: #a7b6a0; }
+.brand-artwork {
+    display: block;
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin: 24px auto;
+}
+#monkey, #monkey-close, #law { height: auto; }
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+.lights { display: none; }
+.qr-loading-artwork { width: 100px; height: 100px; border-radius: 8px; }

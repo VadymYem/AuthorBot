@@ -8,6 +8,7 @@ import contextlib
 import copy
 import json
 import logging
+from .branding import BOT_PHOTO
 import os
 import time
 
@@ -147,7 +148,7 @@ class Database(dict):
                 "assets",
                 "🌆 Your assets will be stored here",
                 archive=True,
-                avatar="https://raw.githubusercontent.com/VadymYem/AuthorBot/main/assets/bot_pfp.jpg",
+                avatar=BOT_PHOTO.read_bytes(),
             )
         except ChannelsTooMuchError:
             self._assets = None

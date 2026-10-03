@@ -6,6 +6,7 @@
 import asyncio
 import inspect
 import logging
+from ..branding import BOT_PHOTO
 import os
 import random
 import time
@@ -388,7 +389,7 @@ class TestMod(loader.Module):
             "Your logs will appear in this chat",
             silent=True,
             invite_bot=True,
-            avatar="https://raw.githubusercontent.com/VadymYem/AuthorBot/main/assets/bot_pfp.jpg",
+            avatar=BOT_PHOTO.read_bytes(),
         )
 
         self.logchat = int(f"-100{chat.id}")

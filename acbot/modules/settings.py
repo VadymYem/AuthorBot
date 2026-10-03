@@ -9,6 +9,7 @@ from herokutl.extensions.html import CUSTOM_EMOJIS
 from herokutl.tl.types import Message
 
 from .. import loader, main, utils, version
+from ..branding import BOT_PHOTO
 from ..inline.types import InlineCall
 import random
 
@@ -255,7 +256,7 @@ class CoreMod(loader.Module):
 
         await self.client.send_file(
             message.peer_id,
-            "https://raw.githubusercontent.com/VadymYem/AuthorBot/main/assets/acbot_pfp.png",
+            str(BOT_PHOTO),
             caption=self.strings["installation"].format('{}', prefix=self.get_prefix()), reply_to=getattr(message, "reply_to_msg_id", None),)
     
         await message.delete()

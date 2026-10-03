@@ -24,6 +24,7 @@ import contextlib
 import importlib
 import json
 import logging
+from .branding import bot_photo
 import os
 import random
 import signal
@@ -186,7 +187,10 @@ def generate_random_system_version():
 try:
     import uvloop
 
-    uvloop.install()
+    try:
+        asyncio.get_running_loop()
+    except RuntimeError:
+        uvloop.install()
 except Exception:
     pass
 
@@ -411,7 +415,11 @@ class AuthorBot:
         with contextlib.suppress(OSError):
             os.chmod(BASE_PATH, 0o700)
 
-        self.loop = asyncio.get_event_loop()
+        try:
+            self.loop = asyncio.get_event_loop()
+        except RuntimeError:
+            self.loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(self.loop)
 
         self.clients = SuperList()
         self.ready = asyncio.Event()
@@ -860,10 +868,10 @@ class AuthorBot:
 
             await client.acbot_inline.bot.send_photo(
                 logging.getLogger().handlers[0].get_logid_by_client(client.tg_id),
-                "https://raw.githubusercontent.com/VadymYem/AuthorBot/main/assets/bot_pfp.jpg",
+                bot_photo(),
                 caption=(
                     "✍️ <b>AuthorBot {} started!</b>\n\n🌳 <b>GitHub commit SHA: <a"
-                    ' href="https://github.com/VadymYem/AuthorBot/commit/{}">{}</a></b>\n✊'
+                    ' href="https://github.com/AuthorGramProject/AuthorBot/commit/{}">{}</a></b>\n✊'
                     " <b>Update status: {}</b>\n<b>{}</b>".format(
                         ".".join(list(map(str, list(__version__)))),
                         build,

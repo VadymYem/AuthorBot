@@ -5,8 +5,11 @@ without a disruptive framework migration.
 """
 
 import json
+import contextlib
 import logging
+import re
 import typing
+from pathlib import Path
 
 import requests
 
@@ -27,8 +30,12 @@ class RichBotAPI:
     def _jsonable(value: typing.Any) -> typing.Any:
         if value is None:
             return None
+        if isinstance(value, dict):
+            return {key: RichBotAPI._jsonable(item) for key, item in value.items()}
+        if isinstance(value, (list, tuple)):
+            return [RichBotAPI._jsonable(item) for item in value]
         if hasattr(value, "to_python"):
-            return value.to_python()
+            return RichBotAPI._jsonable(value.to_python())
         if hasattr(value, "to_json"):
             try:
                 return json.loads(value.to_json())
@@ -36,28 +43,43 @@ class RichBotAPI:
                 pass
         return value
 
-    def _request_sync(self, method: str, payload: dict) -> typing.Any:
+    def _request_sync(self, method: str, payload: dict, files: dict = None) -> typing.Any:
         # Never log the URL: it contains the bot token.
         url = f"https://api.telegram.org/bot{self._token}/{method}"
         try:
-            response = requests.post(url, json=payload, timeout=30)
+            with contextlib.ExitStack() as stack:
+                if files:
+                    uploads = {
+                        key: (Path(path).name, stack.enter_context(Path(path).open("rb")))
+                        for key, path in files.items()
+                    }
+                    data = {key: json.dumps(value, ensure_ascii=False) for key, value in payload.items()}
+                    # Plain strings must not gain JSON quotation marks in form fields.
+                    data.update({key: value for key, value in payload.items() if isinstance(value, str)})
+                    response = requests.post(url, data=data, files=uploads, timeout=30)
+                else:
+                    response = requests.post(url, json=payload, timeout=30)
             data = response.json()
-        except (requests.RequestException, ValueError) as exc:
+        except (requests.RequestException, ValueError, OSError):
             raise RichMessageError("Telegram Bot API request failed") from None
 
+        if not isinstance(data, dict):
+            raise RichMessageError("Telegram Bot API returned an invalid response")
         if not response.ok or not data.get("ok"):
             description = str(data.get("description", "Telegram rejected the request"))
-            raise RichMessageError(description[:500])
+            raise RichMessageError(description.replace(self._token, "[redacted]")[:500])
 
         return data.get("result")
 
-    async def request(self, method: str, **payload) -> typing.Any:
+    async def request(self, method: str, *, _files: dict = None, **payload) -> typing.Any:
+        if not re.fullmatch(r"[A-Za-z][A-Za-z0-9]*", method):
+            raise ValueError("Invalid Bot API method name")
         payload = {
             key: self._jsonable(value)
             for key, value in payload.items()
             if value is not None
         }
-        return await utils.run_sync(self._request_sync, method, payload)
+        return await utils.run_sync(self._request_sync, method, payload, _files)
 
     async def send(
         self,
@@ -70,6 +92,7 @@ class RichBotAPI:
         reply_markup: typing.Any = None,
         disable_notification: bool = False,
         protect_content: bool = False,
+        files: typing.Optional[dict] = None,
     ) -> typing.Any:
         rich_message = {
             key: value
@@ -86,6 +109,7 @@ class RichBotAPI:
 
         return await self.request(
             "sendRichMessage",
+            _files=files,
             chat_id=chat_id,
             rich_message=rich_message,
             reply_markup=reply_markup,

@@ -29,6 +29,7 @@ RUN python -m pip install --upgrade pip setuptools wheel \
 COPY . .
 
 RUN python scripts/selfcheck.py \
+    && python scripts/runtimecheck.py \
     && mkdir -p /data \
     && chmod 700 /data
 

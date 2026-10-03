@@ -4,6 +4,7 @@
 # 🔑 https://www.gnu.org/licenses/agpl-3.0.html
 import asyncio
 import logging
+from ..branding import bot_photo
 
 from .. import loader, utils
 from ..inline.types import BotInlineMessage, InlineCall
@@ -109,13 +110,13 @@ class Presets(loader.Module):
         if self.get("sent"):
             return
 
-        self.set("sent", True)
         await self._menu()
+        self.set("sent", True)
 
     async def _menu(self):
         await self.inline.bot.send_photo(
             self._client.tg_id,
-            'https://raw.githubusercontent.com/VadymYem/AuthorBot/main/assets/bot_pfp.jpg',
+            bot_photo(),
             caption=self.strings('welcome'),
             reply_markup=self.inline.generate_markup(self._markup),
         )
@@ -129,7 +130,8 @@ class Presets(loader.Module):
             self.inline.bot_id,
             self.strings("installing").format(preset),
         )
-        for i, module in enumerate(PRESETS[preset]):
+        failed = []
+        for i, module in enumerate(PRESETS[preset], start=1):
             await m.edit(
                 self.strings("installing_module").format(
                     preset,
@@ -139,16 +141,24 @@ class Presets(loader.Module):
                 )
             )
             try:
-                await self.lookup("loader").download_and_install(module, None)
+                if not await self.lookup("loader").download_and_install(module, None):
+                    failed.append(module)
             except Exception:
                 logger.exception("Failed to install module %s", module)
+                failed.append(module)
 
             await asyncio.sleep(1)
 
         if self.lookup("loader").fully_loaded:
             self.lookup("loader").update_modules_in_db()
 
-        await m.edit(self.strings("installed").format(preset))
+        if failed:
+            await m.edit(
+                "<b>Не вдалося встановити модулі:</b>\n"
+                + "\n".join(f"<code>{utils.escape_html(link)}</code>" for link in failed)
+            )
+        else:
+            await m.edit(self.strings("installed").format(preset))
         await self._menu()
 
     def _is_installed(self, link: str) -> bool:
@@ -206,7 +216,7 @@ class Presets(loader.Module):
     async def presets(self, message: Message):
         await self.inline.form(
             message=message,
-            photo='https://raw.githubusercontent.com/VadymYem/AuthorBot/main/assets/bot_pfp.jpg',
+            photo=await self.inline.brand_photo(),
             text=self.strings('welcome').replace('/presets', self.get_prefix() + 'presets'),
             reply_markup=self._markup,
         )
