@@ -223,11 +223,7 @@ class TokenObtainment(InlineUnit):
 
                     try:
                         await fw_protect()
-                        from .. import main
-
-                        m = await conv.send_file(
-                            main.BASE_PATH / "assets" / "bot_pfp.jpg"
-                        )
+                        m = await conv.send_file(BOT_PHOTO)
                         r = await conv.get_response()
 
                         logger.debug(">> <Photo>")
