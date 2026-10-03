@@ -220,7 +220,7 @@ class NekoSpy(loader.Module):
             "Архів видалених та змінених повідомлень (Spy)",
             silent=True,
             invite_bot=True,
-            avatar="https://authorche.top/poems/logo.jpg",
+            avatar="https://raw.githubusercontent.com/VadymYem/AuthorBot/main/assets/bot_pfp.jpg",
             _folder="acbot",
         )
 

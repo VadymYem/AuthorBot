@@ -99,7 +99,7 @@ class HideMessageMod(loader.Module):
                 if user
                 else self.strings("user_not_specified").format(id_)
             ),
-            "thumb": "https://authorche.top/poems/logo.jpg",
+            "thumb": "https://raw.githubusercontent.com/VadymYem/AuthorBot/main/assets/bot_pfp.jpg",
             "reply_markup": {
                 "text": self.strings("open"),
                 "callback": self._handler,

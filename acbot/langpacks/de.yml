@@ -685,8 +685,13 @@ InlineRandom:
   coin_title: Münze werfen
   number_title: Zufallszahl · 1–{}
   choice_title: Eine Auswahl treffen
-  person_title: Eine erfundene Person
+  person_title: Porträt
   _cls_doc: Wirf eine Münze, erzeuge Zufallszahlen und wähle zwischen deinen Optionen.
+  person_source_doc: Direkte öffentliche JPEG/PNG-Bildadresse. {seed} erzeugt einen Zufallswert; leer deaktiviert den Dienst.
+  person_setup: "✦ <b>AuthorBot · Porträts</b>\nDer bisherige Porträtdienst wurde geschlossen. Trage eine gültige JPEG/PNG-Bildadresse unter <code>person_photo_url</code> in der InlineRandom-Konfiguration\
+    \ ein."
+  person_unavailable: "✦ <b>Der Porträtdienst ist nicht erreichbar oder hat ein ungültiges Bild geliefert.</b>\nVersuche es später oder ändere person_photo_url in der InlineRandom-Konfiguration."
+  _ihandle_doc_person: Ein Porträt vom konfigurierten Bilddienst senden.
 LongRead:
   no_text: ✦ <b>Füge den Text hinzu, den du verbergen möchtest.</b>
   longread: "✦ <b>AuthorBot · eine Nachricht für dich</b>\n<i>Öffne die Schaltfläche unten, um sie zu lesen.</i>"

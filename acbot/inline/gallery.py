@@ -668,7 +668,7 @@ class Gallery(InlineUnit):
                         ext = None
 
                     args = {
-                        "thumb_url": "https://authorche.top/poems/logo.jpg",
+                        "thumb_url": "https://raw.githubusercontent.com/VadymYem/AuthorBot/main/assets/bot_pfp.jpg",
                         "caption": self._get_caption(unit["uid"], index=0),
                         "parse_mode": "HTML",
                         "reply_markup": self._gallery_markup(unit["uid"]),

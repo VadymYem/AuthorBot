@@ -71,7 +71,7 @@ class LongReadMod(loader.Module):
         return {
             "title": self.strings("title"),
             "description": "AuthorBot · by AuthorChe",
-            "thumb": "https://authorche.top/poems/logo.jpg",
+            "thumb": "https://raw.githubusercontent.com/VadymYem/AuthorBot/main/assets/bot_pfp.jpg",
             "message": self.strings("longread"),
             "reply_markup": {
                 "text": self.strings("read"),

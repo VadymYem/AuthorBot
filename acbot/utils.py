@@ -390,7 +390,7 @@ async def answer_file(
         >>> await utils.answer_file(message, "test.txt")
         >>> await utils.answer_file(
             message,
-            "https://authorche.top/poems/logo.jpg",
+            "https://raw.githubusercontent.com/VadymYem/AuthorBot/main/assets/bot_pfp.jpg",
             "This is the cool module, check it out!",
         )
     """

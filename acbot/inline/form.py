@@ -493,7 +493,7 @@ class Form(InlineUnit):
                             parse_mode="HTML",
                             gif_url=form["gif"],
                             thumb_url=(
-                                "https://authorche.top/poems/logo.jpg"
+                                "https://raw.githubusercontent.com/VadymYem/AuthorBot/main/assets/bot_pfp.jpg"
                             ),
                             reply_markup=self.generate_markup(
                                 form["uid"],
@@ -513,7 +513,7 @@ class Form(InlineUnit):
                             parse_mode="HTML",
                             video_url=form["video"],
                             thumb_url=(
-                                "https://authorche.top/poems/logo.jpg"
+                                "https://raw.githubusercontent.com/VadymYem/AuthorBot/main/assets/bot_pfp.jpg"
                             ),
                             mime_type="video/mp4",
                             reply_markup=self.generate_markup(

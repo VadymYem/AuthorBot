@@ -5,7 +5,10 @@
 # -*- coding: utf-8 -*-
 
 from random import choice, randint
+import asyncio
 import re
+
+import aiohttp
 
 from .. import loader, utils
 from ..inline.types import InlineQuery
@@ -17,6 +20,14 @@ class InlineRandomMod(loader.Module):
 
     strings = {"name": "InlineRandom"}
 
+    def __init__(self):
+        self.config = loader.ModuleConfig(
+            loader.ConfigValue(
+                "person_photo_url", "", lambda: self.strings("person_source_doc"),
+                validator=loader.validators.String(),
+            ),
+        )
+
     @loader.inline_everyone
     async def coin_inline_handler(self, query: InlineQuery) -> dict:
         """Heads or tails?"""
@@ -27,7 +38,7 @@ class InlineRandomMod(loader.Module):
             "title": self.strings("coin_title"),
             "description": "AuthorBot · by AuthorChe",
             "message": f"<b>🪙 {self.strings('coin_title')}</b>\n\n{r}",
-            "thumb": "https://authorche.top/poems/logo.jpg",
+            "thumb": "https://raw.githubusercontent.com/VadymYem/AuthorBot/main/assets/bot_pfp.jpg",
         }
 
     @loader.inline_everyone
@@ -46,7 +57,7 @@ class InlineRandomMod(loader.Module):
             "title": self.strings("number_title").format(a),
             "description": "AuthorBot · by AuthorChe",
             "message": f"<b>🎲 {self.strings('number_title').format(a)}</b>\n\n<code>{randint(1, int(a))}</code>",
-            "thumb": "https://authorche.top/poems/logo.jpg",
+            "thumb": "https://raw.githubusercontent.com/VadymYem/AuthorBot/main/assets/bot_pfp.jpg",
         }
 
     @loader.inline_everyone
@@ -67,14 +78,26 @@ class InlineRandomMod(loader.Module):
                 f"<b>✦ {self.strings('choice_title')}</b>\n\n"
                 f"<b>{utils.escape_html(choice(items))}</b>"
             ),
-            "thumb": "https://authorche.top/poems/logo.jpg",
+            "thumb": "https://raw.githubusercontent.com/VadymYem/AuthorBot/main/assets/bot_pfp.jpg",
         }
 
     @loader.inline_everyone
     async def person_inline_handler(self, query: InlineQuery) -> dict:
-        """This person doesn't exist"""
-
-        return {
-            "photo": f"https://thispersondoesnotexist.com/image?id={utils.rand(10)}",
-            "title": self.strings("person_title"),
-        }
+        """Send a portrait from the configured image service."""
+        url = self.config["person_photo_url"].replace("{seed}", utils.rand(10))
+        if not url:
+            return {"title": self.strings("person_title"), "message": self.strings("person_setup")}
+        if not url.startswith(("https://", "http://")) or not utils.check_url(url):
+            return {"title": self.strings("person_title"), "message": self.strings("person_unavailable")}
+        try:
+            async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=12)) as session:
+                async with session.get(url) as response:
+                    response.raise_for_status()
+                    # Inline photos must be actual JPEG/PNG images, not HTML
+                    # pages, redirects to a parked domain or a retired API.
+                    header = await response.content.readexactly(8)
+                    if not header.startswith((b"\xff\xd8\xff", b"\x89PNG\r\n\x1a\n")):
+                        raise ValueError("not an image")
+        except (aiohttp.ClientError, asyncio.TimeoutError, asyncio.IncompleteReadError, ValueError):
+            return {"title": self.strings("person_title"), "message": self.strings("person_unavailable")}
+        return {"photo": url, "title": self.strings("person_title")}

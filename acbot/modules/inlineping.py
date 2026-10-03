@@ -62,7 +62,7 @@ class PingerMod(loader.Module):
         return {
             "title": "Ping",
             "description": "Tap here",
-            "thumb": "https://authorche.top/poems/logo.jpg",
+            "thumb": "https://raw.githubusercontent.com/VadymYem/AuthorBot/main/assets/bot_pfp.jpg",
             "message": ping,
             "reply_markup": button,
         }

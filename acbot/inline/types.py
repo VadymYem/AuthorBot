@@ -227,7 +227,7 @@ class InlineQuery(AiogramInlineQuery):
                     "Bad request. You need to pass right arguments, follow module's"
                     " documentation"
                 ),
-                "https://authorche.top/poems/logo.jpg",
+                "https://raw.githubusercontent.com/VadymYem/AuthorBot/main/assets/bot_pfp.jpg",
             ),
             cache_time=0,
         )
@@ -237,7 +237,7 @@ class InlineQuery(AiogramInlineQuery):
             self._get_res(
                 "🚫 403",
                 "You have no permissions to access this result",
-                "https://authorche.top/poems/logo.jpg",
+                "https://raw.githubusercontent.com/VadymYem/AuthorBot/main/assets/bot_pfp.jpg",
             ),
             cache_time=0,
         )
@@ -247,7 +247,7 @@ class InlineQuery(AiogramInlineQuery):
             self._get_res(
                 "🚫 404",
                 "No results found",
-                "https://authorche.top/poems/logo.jpg",
+                "https://raw.githubusercontent.com/VadymYem/AuthorBot/main/assets/bot_pfp.jpg",
             ),
             cache_time=0,
         )
@@ -257,7 +257,7 @@ class InlineQuery(AiogramInlineQuery):
             self._get_res(
                 "🚫 426",
                 "You need to update AuthorBot before sending this request",
-                "https://authorche.top/poems/logo.jpg",
+                "https://raw.githubusercontent.com/VadymYem/AuthorBot/main/assets/bot_pfp.jpg",
             ),
             cache_time=0,
         )
@@ -267,7 +267,7 @@ class InlineQuery(AiogramInlineQuery):
             self._get_res(
                 "🚫 500",
                 "Internal userbot error while processing request. More info in logs",
-                "https://authorche.top/poems/logo.jpg",
+                "https://raw.githubusercontent.com/VadymYem/AuthorBot/main/assets/bot_pfp.jpg",
             ),
             cache_time=0,
         )

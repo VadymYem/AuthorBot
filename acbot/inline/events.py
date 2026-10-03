@@ -398,7 +398,7 @@ class Events(InlineUnit):
             except Exception:
                 thumb = None
 
-            thumb = thumb or "https://authorche.top/poems/logo.jpg"
+            thumb = thumb or "https://raw.githubusercontent.com/VadymYem/AuthorBot/main/assets/bot_pfp.jpg"
 
             _help += [
                 (
@@ -446,7 +446,7 @@ class Events(InlineUnit):
                             disable_web_page_preview=True,
                         ),
                         thumb_url=(
-                            "https://authorche.top/poems/logo.jpg"
+                            "https://raw.githubusercontent.com/VadymYem/AuthorBot/main/assets/bot_pfp.jpg"
                         ),
                         thumb_width=128,
                         thumb_height=128,
@@ -474,7 +474,7 @@ class Events(InlineUnit):
                         disable_web_page_preview=True,
                     ),
                     thumb_url=(
-                        "https://authorche.top/poems/logo.jpg"
+                        "https://raw.githubusercontent.com/VadymYem/AuthorBot/main/assets/bot_pfp.jpg"
                     ),
                     thumb_width=128,
                     thumb_height=128,

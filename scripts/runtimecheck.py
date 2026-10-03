@@ -228,6 +228,36 @@ class RuntimeTests(unittest.IsolatedAsyncioTestCase):
         await longread._handler(call, "<b>Hello & goodbye</b>")
         call.edit.assert_awaited_once_with("&lt;b&gt;Hello &amp; goodbye&lt;/b&gt;")
 
+    async def test_portrait_service_is_optional_and_rejects_html_or_timeout(self):
+        from acbot.modules.InlineRandom import InlineRandomMod
+        mod = InlineRandomMod()
+        self._module_strings(mod, "ua")
+        query = SimpleNamespace(args="")
+        with patch("acbot.modules.InlineRandom.aiohttp.ClientSession") as factory:
+            result = await mod.person_inline_handler(query)
+        self.assertIn("person_photo_url", result["message"])
+        self.assertNotIn("photo", result)
+        factory.assert_not_called()
+        mod.config["person_photo_url"] = "https://images.example.org/portrait?seed={seed}"
+        response = AsyncMock()
+        response.__aenter__.return_value = response
+        response.raise_for_status = Mock()
+        response.content = SimpleNamespace(readexactly=AsyncMock(return_value=b"\xff\xd8\xff" + b"x" * 5))
+        session = AsyncMock()
+        session.__aenter__.return_value = session
+        session.get = Mock(return_value=response)
+        with patch("acbot.modules.InlineRandom.aiohttp.ClientSession", return_value=session):
+            result = await mod.person_inline_handler(query)
+            self.assertIn("photo", result)
+            self.assertNotIn("{seed}", result["photo"])
+            response.content.readexactly.return_value = b"<html>\n "
+            result = await mod.person_inline_handler(query)
+            self.assertNotIn("photo", result)
+            self.assertIn("недоступний", result["message"])
+            response.content.readexactly.side_effect = asyncio.TimeoutError()
+            result = await mod.person_inline_handler(query)
+            self.assertNotIn("photo", result)
+
     async def test_info_command_and_inline_use_only_existing_buttons(self):
         from acbot.modules.info import acbotInfoMod
         mod = acbotInfoMod()

@@ -685,8 +685,12 @@ InlineRandom:
   coin_title: コインを投げる
   number_title: ランダムな数 · 1–{}
   choice_title: 候補から選ぶ
-  person_title: 架空の人物
+  person_title: ポートレート
   _cls_doc: コインを投げたり、乱数を生成したり、候補から選んだりできます。
+  person_source_doc: 公開されている JPEG/PNG 画像の直接 URL。{seed} はランダムな値です。空欄で無効にします。
+  person_setup: "✦ <b>AuthorBot · ポートレート</b>\n以前のポートレートサービスは終了しました。InlineRandom の設定で <code>person_photo_url</code> に有効な JPEG/PNG 画像の URL を指定してください。"
+  person_unavailable: "✦ <b>ポートレートサービスを利用できないか、無効な画像が返されました。</b>\n後で再試行するか、InlineRandom の設定で person_photo_url を変更してください。"
+  _ihandle_doc_person: 設定した画像サービスからポートレートを送信します。
 LongRead:
   no_text: ✦ <b>隠したいテキストを追加してください。</b>
   longread: "✦ <b>AuthorBot · あなたへのメッセージ</b>\n<i>下のボタンを開いて読んでください。</i>"

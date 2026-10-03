@@ -714,8 +714,12 @@ InlineRandom:
   coin_title: Flip a coin
   number_title: Random number · 1–{}
   choice_title: Make a choice
-  person_title: An imaginary person
+  person_title: Portrait
   _cls_doc: Flip coins, generate numbers and choose between your options.
+  person_source_doc: Direct public JPEG/PNG image URL. Use {seed} for a random token; leave empty to disable.
+  person_setup: "✦ <b>AuthorBot · portraits</b>\nThe former portrait service has closed. Set a working JPEG/PNG image URL in <code>person_photo_url</code> through the InlineRandom configuration."
+  person_unavailable: "✦ <b>The portrait service is unavailable or returned an invalid image.</b>\nTry later or change person_photo_url in the InlineRandom configuration."
+  _ihandle_doc_person: Send a portrait from the configured image service.
 LongRead:
   no_text: ✦ <b>Add the text you want to hide.</b>
   longread: "✦ <b>AuthorBot · a message for you</b>\n<i>Open the button below to read it.</i>"
