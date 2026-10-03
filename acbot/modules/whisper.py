@@ -11,6 +11,7 @@
 # scope: acbot_min 1.6.2
 # requires: pydub ffmpeg requests
 
+import io
 import os
 import logging
 from herokutl.tl.types import Message
@@ -171,43 +172,50 @@ class WhisperMod(loader.Module):
         )
 
     async def _process_audio(self, file_path: str) -> str:
-        """Process audio file and return transcription"""
-        file_extension = os.path.splitext(file_path)[1].lower()
-        
-        try:
-            # Hugging Face API now prefers raw bytes for audio files
-            # Converting to MP3/Opus first ensures compatibility and smaller size
-            audio = AudioSegment.from_file(file_path, format=file_extension.lstrip('.'))
-            
-            # Export to memory as MP3
-            temp_file = "temp_audio_whisper.mp3"
-            audio.export(temp_file, format="mp3")
-            
-            with open(temp_file, "rb") as f:
-                audio_bytes = f.read()
-            
-            os.remove(temp_file)
+        """Process one audio file and return its transcription."""
+        file_extension = os.path.splitext(file_path)[1].lower().lstrip(".")
 
-            # Updated endpoint and method (sending raw data instead of json)
-            response = await utils.run_sync(
-                requests.post,
-                url="https://api-inference.huggingface.co/models/openai/whisper-large-v3-turbo",
-                headers={
-                    "Authorization": f"Bearer {self.config['hf_api_key']}",
-                    "Content-Type": "audio/mpeg" # Specifying content type for the bytes
-                },
-                data=audio_bytes, # Sending raw bytes
+        try:
+            audio = await utils.run_sync(
+                AudioSegment.from_file,
+                file_path,
+                format=file_extension or None,
             )
 
-            if response.status_code != 200:
-                error_msg = response.json().get('error', 'Unknown error')
-                raise Exception(f"API Error ({response.status_code}): {error_msg}")
+            buffer = io.BytesIO()
+            await utils.run_sync(audio.export, buffer, format="mp3")
+            audio_bytes = buffer.getvalue()
 
-            return response.json()['text']
-            
-        except Exception as e:
+            response = await utils.run_sync(
+                requests.post,
+                "https://api-inference.huggingface.co/models/openai/whisper-large-v3-turbo",
+                headers={
+                    "Authorization": f"Bearer {self.config['hf_api_key']}",
+                    "Content-Type": "audio/mpeg",
+                },
+                data=audio_bytes,
+                timeout=90,
+            )
+
+            try:
+                payload = response.json()
+            except ValueError:
+                payload = {}
+
+            if not response.ok:
+                error_msg = payload.get("error") or response.text[:300] or "Unknown error"
+                raise RuntimeError(
+                    f"Hugging Face API error ({response.status_code}): {error_msg}"
+                )
+
+            text = payload.get("text")
+            if not isinstance(text, str) or not text.strip():
+                raise RuntimeError("Hugging Face returned no transcription")
+
+            return text.strip()
+        except Exception:
             logging.exception("Audio processing error")
-            raise e
+            raise
 
     @loader.command(ru_doc="Распознать речь из голосового/видео сообщения в реплае")
     async def whisper(self, message: Message):

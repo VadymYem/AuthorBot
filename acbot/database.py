@@ -24,7 +24,7 @@ import typing
 from herokutl.errors.rpcerrorlist import ChannelsTooMuchError
 from herokutl.tl.types import Message, User
 
-from . import main, utils
+from . import utils
 from .pointers import (
     BaseSerializingMiddlewareDict,
     BaseSerializingMiddlewareList,
@@ -107,6 +107,8 @@ class Database(dict):
 
     async def redis_init(self) -> bool:
         """Initialize Redis. Local JSON remains the durable fallback."""
+        from . import main
+
         redis_uri = os.environ.get("REDIS_URL") or main.get_config_key("redis_uri")
         if not redis_uri:
             return False
@@ -130,7 +132,9 @@ class Database(dict):
         return True
 
     async def init(self):
-        """Asynchronous initialization unit"""
+        """Asynchronous initialization unit."""
+        from . import main
+
         if os.environ.get("REDIS_URL") or main.get_config_key("redis_uri"):
             await self.redis_init()
 

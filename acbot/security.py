@@ -26,7 +26,7 @@ from herokutl.tl.functions.messages import GetFullChatRequest
 from herokutl.tl.types import ChatParticipantAdmin, ChatParticipantCreator, Message
 from herokutl.utils import get_display_name
 
-from . import main, utils
+from . import utils
 from .database import Database
 from .tl_cache import CustomTelegramClient
 from .types import Command
@@ -444,7 +444,7 @@ class SecurityManager:
         if user_id in self._owner:
             return True
 
-        if user_id in self._db.get(main.__name__, "blacklist_users", []):
+        if user_id in self._db.get("acbot.main", "blacklist_users", []):
             return False
 
         if message is None:  # In case of checking inline query security map
