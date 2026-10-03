@@ -16,10 +16,11 @@ from herokutl.tl.types import Message
 from herokutl.utils import get_display_name
 
 from .. import utils
-from ..branding import BOT_PHOTO, bot_photo
+from ..branding import BOT_PHOTO, bot_photo, personal_bot_name
 from ..database import Database
 from ..tl_cache import CustomTelegramClient
 from ..translations import Translator
+from ..public_pages import bot_commands
 from .bot_pm import BotPM
 from .events import Events
 from .form import Form
@@ -107,7 +108,7 @@ class InlineManager(
         while True:
             for unit_id, unit in self._units.copy().items():
                 if (unit.get("ttl") or (time.time() + self._markup_ttl)) < time.time():
-                    del self._units[unit_id]
+                    await self._unload_unit(unit_id)
 
             await asyncio.sleep(5)
 
@@ -153,25 +154,29 @@ class InlineManager(
         # Configure the public-facing companion bot through the current Bot API.
         # Failure here must never prevent the userbot itself from starting.
         try:
+            await self.rich.request("setMyName", name=personal_bot_name(self._name))
+        except Exception as exc:
+            logger.warning("Unable to update personal bot name (%s)", type(exc).__name__)
+        try:
             await self.rich.request(
                 "setMyCommands",
-                commands=[
-                    {"command": "start", "description": "Open AuthorBot"},
-                    {"command": "help", "description": "Show public commands"},
-                    {"command": "about", "description": "About Author C"},
-                    {"command": "projects", "description": "Author C projects"},
-                ],
+                commands=bot_commands(),
             )
+            for language in ("ua", "ru", "de", "ja"):
+                await self.rich.request(
+                    "setMyCommands", commands=bot_commands(language),
+                    language_code="uk" if language == "ua" else language,
+                )
             await self.rich.request(
                 "setMyDescription",
                 description=(
                     "AuthorBot companion interface — modules, automation, inline tools "
-                    "and Telegram Rich Messages by Author C."
+                    "and Telegram Rich Messages by AuthorChe."
                 ),
             )
             await self.rich.request(
                 "setMyShortDescription",
-                short_description="AuthorBot • modular Telegram userbot by Author C",
+                short_description="AuthorBot • modular Telegram userbot by AuthorChe",
             )
         except Exception:
             logger.warning("Unable to update public bot profile", exc_info=True)

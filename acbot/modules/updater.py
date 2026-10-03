@@ -19,7 +19,7 @@ from herokutl.tl.functions.messages import (
     GetDialogFiltersRequest,
     UpdateDialogFilterRequest,
 )
-from herokutl.tl.types import DialogFilter, Message
+from herokutl.tl.types import DialogFilter, Message, TextWithEntities
 
 from .. import loader, main, utils, version
 from .._internal import restart
@@ -377,21 +377,26 @@ class UpdaterMod(loader.Module):
             except Exception:
                 logger.exception("Failed to complete update!")
 
-        if self.get("do_not_create", False):
+        if self.get("do_not_create", False) and self.get("folder_schema_version") == 2:
             return
 
         try:
-            await self._add_folder()
+            if await self._add_folder():
+                self.set("do_not_create", True)
+                self.set("folder_schema_version", 2)
         except Exception:
             logger.exception("Failed to add folder!")
 
-        self.set("do_not_create", True)
-
     async def _add_folder(self):
-        folders = await self._client(GetDialogFiltersRequest())
+        result = await self._client(GetDialogFiltersRequest())
+        folders = getattr(result, "filters", result)
 
-        if any(getattr(folder, "title", None) == "acbot" for folder in folders):
-            return
+        if any(
+            getattr(getattr(folder, "title", None), "text", getattr(folder, "title", None))
+            in {"acbot", "AuthorBot"}
+            for folder in folders
+        ):
+            return True
 
         try:
             folder_id = (
@@ -410,7 +415,7 @@ class UpdaterMod(loader.Module):
                     folder_id,
                     DialogFilter(
                         folder_id,
-                        title="acbot",
+                        title=TextWithEntities(text="AuthorBot", entities=[]),
                         pinned_peers=(
                             [
                                 await self._client.get_input_entity(
@@ -466,13 +471,10 @@ class UpdaterMod(loader.Module):
                     ),
                 )
             )
-        except Exception:
-            logger.critical(
-                "Can't create AuthorBot folder. Possible reasons are:\n"
-                "- User reached the limit of folders in Telegram\n"
-                "- User got floodwait\n"
-                "Ignoring error and adding folder addition to ignore list"
-            )
+        except Exception as exc:
+            logger.warning("Telegram folder creation skipped (%s)", type(exc).__name__)
+            return False
+        return True
 
     async def update_complete(self):
         logger.debug("Self update successful! Edit message")

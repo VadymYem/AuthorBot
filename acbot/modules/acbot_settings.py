@@ -1,7 +1,7 @@
-# © Dan G. && AuthorChe
-#  
+# © Dan G. && AuthorChe
+#
 # You can redistribute it and/or modify it under the terms of the GNU AGPLv3
-#  https://www.gnu.org/licenses/agpl-3.0.html
+#  https://www.gnu.org/licenses/agpl-3.0.html
 # -*- coding: utf-8 -*-
 
 import logging
@@ -415,7 +415,7 @@ class SettingsMod(loader.Module):
                 continue
 
             users += [
-                'â–«ï¸ <b><a href="tg://user?id={}">{}</a></b>'.format(
+                '▫️ <b><a href="tg://user?id={}">{}</a></b>'.format(
                     user_id,
                     utils.escape_html(get_display_name(user)),
                 )
@@ -449,7 +449,7 @@ class SettingsMod(loader.Module):
                 continue
 
             chats += [
-                'â–«ï¸ <b><a href="{}">{}</a></b>'.format(
+                '▫️ <b><a href="{}">{}</a></b>'.format(
                     utils.get_entity_url(chat_entity),
                     utils.escape_html(get_display_name(chat_entity)),
                 )

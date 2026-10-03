@@ -54,7 +54,7 @@ class LongReadMod(loader.Module):
             self.strings("longread"),
             message,
             reply_markup={
-                "text": "📖 Прочитати",
+                "text": self.strings("read"),
                 "callback": self._handler,
                 "args": (args,),
             },
@@ -69,12 +69,12 @@ class LongReadMod(loader.Module):
             return await query.e400()
 
         return {
-            "title": "Сховати текст під гарну кнопочку",
-            "description": "ℹ This will create button-spoiler",
+            "title": self.strings("title"),
+            "description": "AuthorBot · by AuthorChe",
             "thumb": "https://authorche.top/poems/logo.jpg",
             "message": self.strings("longread"),
             "reply_markup": {
-                "text": "📖 Прочитати",
+                "text": self.strings("read"),
                 "callback": self._handler,
                 "args": (text,),
                 "disable_security": True,
@@ -83,5 +83,5 @@ class LongReadMod(loader.Module):
 
     async def _handler(self, call: InlineCall, text: str):
         """Process button presses"""
-        await call.edit(text)
+        await call.edit(utils.escape_html(text))
         await call.answer()

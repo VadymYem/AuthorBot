@@ -1,7 +1,7 @@
 #!/data/data/com.termux/files/usr/bin/bash
 set -u
 clear 2>/dev/null || true
-frames=('Author Bot' 'Author Bot •' 'Author Bot • by AuthorChe')
+frames=('AuthorBot' 'AuthorBot •' 'AuthorBot • by AuthorChe')
 for frame in "${frames[@]}"; do
   printf '\r\033[1;35m%-40s\033[0m' "$frame"
   sleep 0.10

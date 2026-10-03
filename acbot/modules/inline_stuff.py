@@ -2,6 +2,7 @@
 # 🌐 https://authorche.top
 # You can redistribute it and/or modify it under the terms of the GNU AGPLv3.
 
+import hashlib
 import logging
 import re
 import string
@@ -12,143 +13,23 @@ from herokutl.errors.rpcerrorlist import YouBlockedUserError
 from herokutl.tl.functions.contacts import UnblockRequest
 from herokutl.tl.types import Message
 
-from .. import loader, utils
+from .. import loader, translations, utils
+from ..public_pages import PAGES, rich_page, fallback_page, text as page_text
 from ..branding import AUTHOR_PHOTO, BOT_PHOTO
 
 logger = logging.getLogger(__name__)
 
 PUBLIC_BOT_EDITORS = {6316376597, 6802848305}
 
-START_RICH = """<h1>AuthorBot</h1>
-<figure><img src="tg://photo?id=bot_artwork"/><figcaption>AuthorBot · by Author C</figcaption></figure>
-<blockquote>Модульний Telegram userbot від Author C — автоматизація, inline-інструменти, модулі, локальні налаштування та сучасний Telegram Bot API.</blockquote>
+START_RICH = rich_page("start", "ua")
+HELP_RICH = rich_page("help", "ua")
+ABOUT_RICH = rich_page("about", "ua")
+AUTHOR_RICH = rich_page("author", "ua")
+PROJECTS_RICH = rich_page("projects", "ua")
+FALLBACK = {page: fallback_page(page, "ua") for page in PAGES}
 
-<h3>Що тут є</h3>
-<ul>
-<li><b>Модульна система</b> — встановлення та оновлення функцій без переписування ядра.</li>
-<li><b>Inline UI</b> — кнопки, форми, списки, галереї та керування прямо в Telegram.</li>
-<li><b>Rich Messages</b> — заголовки, таблиці, details-блоки, цитати, медіа та rich-кнопки.</li>
-<li><b>Приватність</b> — API-ключі й сесії не публікуються та не виводяться в стартових повідомленнях.</li>
-</ul>
-
-<details><summary>Публічні команди</summary>
-<code>/start</code> — головна сторінка
-<code>/help</code> — довідка
-<code>/about</code> — про автора
-<code>/projects</code> — проєкти Author C
-</details>
-
-<tg-button-row align="center">
-<tg-button type="url" style="primary" url="https://github.com/VadymYem/AuthorBot">GitHub</tg-button>
-<tg-button type="url" style="success" url="https://authorche.top/ubot.html">Встановити</tg-button>
-</tg-button-row>
-<tg-button-row align="center">
-<tg-button type="url" url="https://t.me/wsinfo">Telegram</tg-button>
-<tg-button type="url" url="https://authorche.top">authorche.top</tg-button>
-</tg-button-row>
-
-<footer>AuthorBot • by Author C</footer>"""
-
-HELP_RICH = """<h1>AuthorBot • Довідка</h1>
-<p>Цей бот є публічним інтерфейсом встановленого AuthorBot. Базові команди доступні всім.</p>
-
-<table bordered striped compact>
-<tr><th>Команда</th><th>Дія</th></tr>
-<tr><td><code>/start</code></td><td>Головна сторінка</td></tr>
-<tr><td><code>/help</code></td><td>Ця довідка</td></tr>
-<tr><td><code>/about</code></td><td>Інформація про Author C</td></tr>
-<tr><td><code>/projects</code></td><td>Проєкти та посилання</td></tr>
-</table>
-
-<blockquote expandable>Встановлені модулі можуть додавати власні публічні inline-команди. Їх доступність визначається самим модулем і політикою безпеки власника userbot.</blockquote>
-
-<tg-button-row align="center">
-<tg-button type="url" style="primary" url="https://github.com/VadymYem/AuthorBot">Документація</tg-button>
-<tg-button type="url" url="https://t.me/wsinfo">Оновлення</tg-button>
-</tg-button-row>"""
-
-ABOUT_RICH = """<h1>Author C</h1>
-<figure><img src="tg://photo?id=author_artwork"/><figcaption>Author C — автор і розробник</figcaption></figure>
-
-<p>Український розробник, автор цифрових проєктів, музикант, співак, композитор і поет. Основний напрям технічних проєктів — приватність, Telegram, Android, автоматизація та AI-інструменти.</p>
-
-<details open><summary>Ресурси</summary>
-<a href="https://authorche.top">authorche.top</a>
-<a href="https://t.me/wsinfo">Telegram / wsinfo</a>
-</details>
-
-<tg-button-row align="center">
-<tg-button type="url" style="primary" url="https://authorche.top">Сайт</tg-button>
-<tg-button type="url" url="https://t.me/wsinfo">Telegram</tg-button>
-</tg-button-row>"""
-
-PROJECTS_RICH = """<h1>Проєкти Author C</h1>
-<blockquote>Добірка основних активних продуктів і експериментальних платформ.</blockquote>
-
-<h2>AuthorGram</h2>
-<p>Telegram-клієнт для Android із фокусом на приватність, розширені налаштування, мультимедіа та гнучке керування інтерфейсом.</p>
-<tg-button-row>
-<tg-button type="url" style="success" url="https://play.google.com/store/apps/details?id=toss.authorgram.apk">Google Play</tg-button>
-<tg-button type="url" url="https://t.me/authorgram_apk">Telegram</tg-button>
-</tg-button-row>
-
-<h2>AuthorBot</h2>
-<p>Модульний Telegram userbot: автоматизація, inline-форми, керування модулями, backup, security, Rich Messages і self-update.</p>
-<tg-button-row>
-<tg-button type="url" style="primary" url="https://github.com/VadymYem/AuthorBot">GitHub</tg-button>
-<tg-button type="url" url="https://authorche.top/ubot.html">Сторінка</tg-button>
-</tg-button-row>
-
-<h2>Jarvis | AuthorAi</h2>
-<p>Android AI-agent із локальними GGUF-моделями, voice/live режимом, інструментами, файлами, офлайн-базами знань та керуванням пристроєм.</p>
-
-<h2>Goose | AuthorBrowser</h2>
-<p>Android-браузер із розширеними медіа-можливостями, блокуванням реклами, фоновим відтворенням та інтеграціями.</p>
-
-<h2>Author AI</h2>
-<p>Серверна AI-платформа та набір інтеграцій для агентних сценаріїв, інструментів і автоматизацій.</p>
-
-<details><summary>Більше про проєкти</summary>
-Новини, релізи та експерименти публікуються на <a href="https://t.me/wsinfo">t.me/wsinfo</a> і <a href="https://authorche.top">authorche.top</a>.
-</details>
-
-<tg-button-row align="center">
-<tg-button type="url" style="primary" url="https://authorche.top">Усі ресурси</tg-button>
-<tg-button type="url" url="https://t.me/wsinfo">Новини</tg-button>
-</tg-button-row>"""
-
-FALLBACK = {
-    "start": (
-        "<b>AuthorBot</b>\n\n"
-        "Модульний Telegram userbot від Author C.\n\n"
-        "<b>Команди:</b> /start · /help · /about · /projects\n\n"
-        "GitHub: https://github.com/VadymYem/AuthorBot\n"
-        "Web: https://authorche.top"
-    ),
-    "help": (
-        "<b>AuthorBot • Довідка</b>\n\n"
-        "/start — головна сторінка\n"
-        "/help — довідка\n"
-        "/about — про автора\n"
-        "/projects — проєкти\n\n"
-        "Встановлені модулі можуть додавати власні публічні команди."
-    ),
-    "about": (
-        "<b>Author C</b>\n\n"
-        "Український розробник, автор цифрових проєктів, музикант, співак, композитор і поет.\n\n"
-        "https://authorche.top\nhttps://t.me/wsinfo"
-    ),
-    "projects": (
-        "<b>Проєкти Author C</b>\n\n"
-        "• AuthorGram — Telegram-клієнт для Android\n"
-        "• AuthorBot — модульний Telegram userbot\n"
-        "• Jarvis | AuthorAi — Android AI-agent\n"
-        "• Goose | AuthorBrowser — Android-браузер\n"
-        "• Author AI — AI-платформа та інтеграції\n\n"
-        "https://authorche.top"
-    ),
-}
-
+# Recognize exact previously saved factory pages; keep editors' custom HTML.
+LEGACY_DEFAULTS = {'start': ['795c39e88d1f3837292cd831dbb0b63888aa37437526368236c732287234296a', '301ff20507692d24e772e7c9d3964c95ea9ec7cce802ca4ae6f9a2ca0bd4dec9'], 'help': ['b1087188e17a8e08a9fa133d7b72cf565c8985662c4dda9c9268262de0fca120', 'aa0a8742372f45cb8a1e518d1593c8d892280569fec503b1963093e7ec38d8bb'], 'about': ['fce248080d03251a8ea6a9b353e01849bd658f6a6cad636f4397a9222d4cd7e4', '3c8d8853678acf7bf512a343d9b06b0a9977b5921b4b2199d1b673f2f494053f'], 'projects': ['ed29ac332306fba0037e1f9a7ca2d50dd880ba6f47c7a15af3dc29d6af3a539d', 'f28afe004ddc0c40a65ea7ab0a9e1fa54424b79696a1c4c81a425e743313c255']}
 
 @loader.tds
 class InlineStuff(loader.Module):
@@ -242,18 +123,27 @@ class InlineStuff(loader.Module):
         self._db.set("acbot.inline", "bot_token", None)
         await utils.answer(message, self.strings("bot_updated"))
 
-    def _public_rich(self, page: str) -> str:
-        defaults = {
-            "start": START_RICH,
-            "help": HELP_RICH,
-            "about": ABOUT_RICH,
-            "projects": PROJECTS_RICH,
-        }
-        return self.get(f"public_{page}_rich", defaults[page]) or defaults[page]
+    def _language(self, message=None, requested=""):
+        if requested and translations.normalize_language(requested) in translations.SUPPORTED_LANGUAGES:
+            return translations.normalize_language(requested)
+        visitor = getattr(getattr(message, "from_user", None), "language_code", None)
+        if visitor:
+            language = translations.normalize_language(visitor)
+            return language if language in translations.SUPPORTED_LANGUAGES else "en"
+        languages = self._db.get(translations.__name__, "lang", "ua").split()
+        return next((translations.normalize_language(lang) for lang in languages
+                     if translations.normalize_language(lang) in translations.SUPPORTED_LANGUAGES), "en")
 
-    async def _send_public_page(self, message: AiogramMessage, page: str):
+    def _public_rich(self, page: str, language: str = "ua") -> str:
+        saved = self.get(f"public_{page}_rich", None)
+        if saved and hashlib.sha256(saved.encode()).hexdigest() not in LEGACY_DEFAULTS.get(page, ()):
+            return saved.replace("Author C", "AuthorChe")
+        return rich_page(page, language, prefix=self.get_prefix())
+
+    async def _send_public_page(self, message: AiogramMessage, page: str, requested: str = ""):
+        language = self._language(message, requested)
         try:
-            html = self._public_rich(page)
+            html = self._public_rich(page, language)
             # Migrate saved default pages without replacing editors' own content.
             for owner in ("VadymYem", "AuthorGramProject"):
                 html = html.replace(
@@ -273,16 +163,16 @@ class InlineStuff(loader.Module):
                 files=files or None,
             )
             return
-        except Exception:
-            logger.warning("Rich message failed for public page %s", page, exc_info=True)
+        except Exception as exc:
+            logger.warning("Rich page %s unavailable (%s); using classic message", page, type(exc).__name__)
 
         keyboard = InlineKeyboardMarkup(row_width=2)
         keyboard.add(
             InlineKeyboardButton("GitHub", url="https://github.com/VadymYem/AuthorBot"),
-            InlineKeyboardButton("Website", url="https://authorche.top"),
+            InlineKeyboardButton("authorche.top", url="https://authorche.top"),
         )
         await message.answer(
-            FALLBACK[page],
+            fallback_page(page, language, prefix=self.get_prefix()),
             reply_markup=keyboard,
             disable_web_page_preview=True,
         )
@@ -299,12 +189,7 @@ class InlineStuff(loader.Module):
             return
 
         if value.lower() == "reset":
-            self.set(f"public_{page}_rich", {
-                "start": START_RICH,
-                "help": HELP_RICH,
-                "about": ABOUT_RICH,
-                "projects": PROJECTS_RICH,
-            }[page])
+            self.set(f"public_{page}_rich", None)
             await message.answer(f"✅ Сторінку <code>{page}</code> скинуто до стандартної.")
             return
 
@@ -322,18 +207,20 @@ class InlineStuff(loader.Module):
         command = command.split("@", maxsplit=1)[0].lower()
 
         if command == "/start" and args.strip().lower() == "acbot init":
-            await message.answer("✅ <b>AuthorBot inline interface is ready.</b>")
+            await message.answer(page_text("ready", self._language(message)))
             return
 
         public_pages = {
             "/start": "start",
             "/help": "help",
             "/about": "about",
-            "/aboutauthor": "about",
+            "/author": "author",
+            "/автор": "author",
+            "/aboutauthor": "author",
             "/projects": "projects",
         }
         if command in public_pages:
-            await self._send_public_page(message, public_pages[command])
+            await self._send_public_page(message, public_pages[command], args.strip())
             return
 
         admin_pages = {
@@ -341,6 +228,26 @@ class InlineStuff(loader.Module):
             "/sethelp": "help",
             "/setabout": "about",
             "/setprojects": "projects",
+            "/setauthor": "author",
         }
         if command in admin_pages:
             await self._set_public_page(message, admin_pages[command], args)
+
+    @loader.command()
+    async def author(self, message: Message):
+        """— open the AuthorChe Rich Message page in your private inline-bot chat."""
+        language = self._language()
+        try:
+            await self.inline.rich.send(
+                self._client.tg_id, html=rich_page("author", language),
+                media=[{"id": "author_artwork", "media": {"type": "photo", "media": "attach://author_artwork"}}],
+                files={"author_artwork": AUTHOR_PHOTO},
+            )
+        except Exception:
+            await self.inline.bot.send_message(self._client.tg_id, fallback_page("author", language), disable_web_page_preview=True)
+        await utils.answer(message, page_text("sent_author", language))
+
+    @loader.command()
+    async def автор(self, message: Message):
+        """— відкрити Rich Message сторінку AuthorChe у приватному чаті з inline-ботом."""
+        await self.author(message)

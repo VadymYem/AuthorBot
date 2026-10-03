@@ -2,6 +2,7 @@ import asyncio
 import contextlib
 import functools
 import io
+import inspect
 import itertools
 import logging
 import os
@@ -221,7 +222,10 @@ class Utils(InlineUnit):
         with contextlib.suppress(Exception):
             await call.answer()
 
-        deleted = await call.delete()
+        try:
+            deleted = await call.delete()
+        except Exception:
+            deleted = False
         if deleted:
             return True
 
@@ -229,6 +233,7 @@ class Utils(InlineUnit):
         # Fall back to removing the keyboard, then unload the unit so dead
         # callbacks are never left behind.
         message = getattr(call, "message", None)
+        detached = False
         if getattr(message, "chat", None) and getattr(message, "message_id", None):
             with contextlib.suppress(Exception):
                 await self.bot.edit_message_reply_markup(
@@ -236,13 +241,23 @@ class Utils(InlineUnit):
                     message_id=message.message_id,
                     reply_markup=None,
                 )
+                detached = True
+        elif getattr(call, "inline_message_id", None):
+            with contextlib.suppress(Exception):
+                await self.bot.edit_message_reply_markup(
+                    inline_message_id=call.inline_message_id, reply_markup=None,
+                )
+                detached = True
 
         unit_id = getattr(call, "unit_id", None)
-        if unit_id:
+        if detached and unit_id:
             with contextlib.suppress(Exception):
                 await self._unload_unit(unit_id)
 
-        logger.warning("Close action could not delete the message; markup was detached")
+        if detached:
+            logger.debug("Message cannot be deleted; its controls were closed")
+            return True
+        logger.warning("Unable to close message; controls remain available for retry")
         return False
 
     async def _unload_unit_handler(self, call: InlineCall):
@@ -575,55 +590,62 @@ class Utils(InlineUnit):
         message_id: typing.Optional[int] = None,
     ) -> bool:
         """Params `self`, `unit_id` are for internal use only, do not try to pass them"""
-        if getattr(getattr(call, "message", None), "chat", None):
-            try:
-                await self.bot.delete_message(
-                    chat_id=call.message.chat.id,
-                    message_id=call.message.message_id,
-                )
-            except Exception:
-                return False
+        if not unit_id:
+            unit_id = getattr(call, "unit_id", None)
+        unit = self._units.get(unit_id, {})
+        source = getattr(call, "message", None)
+        if getattr(source, "chat", None):
+            chat_id, message_id = source.chat.id, source.message_id
+        elif not (chat_id is not None and message_id is not None):
+            chat_id, message_id = unit.get("chat"), unit.get("message_id")
 
+        async def finished():
+            if unit_id:
+                await self._unload_unit(unit_id)
             return True
 
-        if chat_id and message_id:
+        if chat_id is not None and message_id is not None:
             try:
                 await self.bot.delete_message(chat_id=chat_id, message_id=message_id)
+                return await finished()
+            except Exception as exc:
+                if "message to delete not found" in str(exc).lower():
+                    return await finished()
+            # Inline messages are sent by the account. MTProto can delete them
+            # even when Bot API has no permission or its deletion window expired.
+            try:
+                await self._client.delete_messages(chat_id, [message_id])
+                return await finished()
             except Exception:
-                return False
-
-            return True
-
-        if not unit_id and hasattr(call, "unit_id") and call.unit_id:
-            unit_id = call.unit_id
+                pass
 
         try:
             message_id, peer, _, _ = resolve_inline_message_id(
-                self._units[unit_id]["inline_message_id"]
+                unit.get("inline_message_id") or getattr(call, "inline_message_id", None)
             )
 
             await self._client.delete_messages(peer, [message_id])
-            await self._unload_unit(unit_id)
+            return await finished()
         except Exception:
             return False
-
-        return True
 
     async def _unload_unit(self, unit_id: str) -> bool:
         """Params `self`, `unit_id` are for internal use only, do not try to pass them"""
-        try:
-            if "on_unload" in self._units[unit_id] and callable(
-                self._units[unit_id]["on_unload"]
-            ):
-                self._units[unit_id]["on_unload"]()
-
-            if unit_id in self._units:
-                del self._units[unit_id]
-            else:
-                return False
-        except Exception:
+        unit = self._units.pop(unit_id, None)
+        if unit is None:
             return False
-
+        for row in unit.get("buttons", []):
+            for button in row:
+                if key := button.get("_callback_data"):
+                    self._custom_map.pop(key, None)
+        if callable(unit.get("on_unload")):
+            try:
+                result = unit["on_unload"]()
+                if inspect.isawaitable(result):
+                    await result
+            except Exception:
+                # A module's cleanup error must not keep already closed controls.
+                logger.debug("Inline unit cleanup failed", exc_info=True)
         return True
 
     def build_pagination(

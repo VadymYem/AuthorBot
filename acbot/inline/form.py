@@ -74,10 +74,12 @@ class Form(InlineUnit):
         location: typing.Optional[str] = None,
         audio: typing.Optional[typing.Union[dict, str]] = None,
         silent: bool = False,
+        rich_html: typing.Optional[str] = None,
     ) -> typing.Union[InlineMessage, bool]:
         """
         Send inline form to chat
         :param text: Content of inline form. HTML markdown supported
+        :param rich_html: Native Rich Message HTML, with `text` as the classic fallback
         :param message: Where to send inline. Can be either `Message` or `int`
         :param reply_markup: List of buttons to insert in markup. List of dicts with keys: text, callback
         :param force_me: Either this form buttons must be pressed only by owner scope or no
@@ -118,6 +120,10 @@ class Form(InlineUnit):
                 "Invalid type for `text`. Expected `str`, got `%s`",
                 type(text),
             )
+            return False
+
+        if rich_html is not None and not isinstance(rich_html, str):
+            logger.error("Invalid type for `rich_html`. Expected `str`")
             return False
 
         text = self.sanitise_text(text)
@@ -309,6 +315,7 @@ class Form(InlineUnit):
         self._units[unit_id] = {
             "type": "form",
             "text": text,
+            **({"rich_html": rich_html} if rich_html is not None else {}),
             "buttons": reply_markup,
             "caller": message,
             "chat": None,
@@ -344,11 +351,13 @@ class Form(InlineUnit):
         try:
             m = await self._invoke_unit(unit_id, message)
         except ChatSendInlineForbiddenError:
+            await self._unload_unit(unit_id)
             await answer(self.translator.getkey("inline.inline403"))
+            return False
         except Exception:
             logger.exception("Can't send form")
 
-            del self._units[unit_id]
+            await self._unload_unit(unit_id)
             await answer(
                 self.translator.getkey("inline.invoke_failed_logs").format(
                     utils.escape_html(
@@ -378,7 +387,14 @@ class Form(InlineUnit):
         msg = InlineMessage(self, unit_id, inline_message_id)
 
         if not isinstance(base_reply_markup, Placeholder):
-            await msg.edit(text, reply_markup=base_reply_markup)
+            if rich_html is not None and not self._units[unit_id].get("rich_fallback"):
+                await self.bot.edit_message_reply_markup(
+                    inline_message_id=inline_message_id,
+                    reply_markup=self.generate_markup(base_reply_markup),
+                )
+                self._units[unit_id]["buttons"] = base_reply_markup or []
+            else:
+                await msg.edit(text, reply_markup=base_reply_markup)
 
         return msg
 
@@ -433,6 +449,22 @@ class Form(InlineUnit):
             return
 
         form = self._units[inline_query.query]
+        if "rich_html" in form:
+            try:
+                await self.rich.request(
+                    "answerInlineQuery", inline_query_id=inline_query.id,
+                    results=[{
+                        "type": "article", "id": utils.rand(20), "title": "AuthorBot",
+                        "input_message_content": {"rich_message": {"html": form["rich_html"]}},
+                        "reply_markup": self.generate_markup(form["uid"]),
+                    }], cache_time=0, is_personal=True,
+                )
+                form.pop("rich_fallback", None)
+                return
+            except Exception:
+                # Keep the same controls and classic content on older clients.
+                form["rich_fallback"] = True
+                logger.debug("Inline Rich Message unavailable; using classic form")
         try:
             if "photo" in form:
                 await inline_query.answer(

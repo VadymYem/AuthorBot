@@ -33,6 +33,7 @@ ui_cleanup() {
 }
 
 ui_link() {
+  if [ "${UI_TTY:-0}" = 1 ]; then printf '%*s' "$(( (UI_WIDTH - ${#2}) / 2 ))" ''; fi
   printf '\033]8;;%s\033\\%s\033]8;;\033\\\n' "$1" "$2"
 }
 
@@ -63,9 +64,11 @@ ui_init() {
     read -r rows columns <<< "$size" || true
     if [[ "${columns:-}" =~ ^[0-9]+$ ]] && [ "$columns" -ge 28 ]; then UI_WIDTH="$columns"; fi
     [ "$UI_WIDTH" -le 60 ] || UI_WIDTH=60
-    printf '\033[2J\033[H\033[?25l'
+    clear 2>/dev/null || printf '\033[2J\033[H'
+    printf '\033[?25l'
     ui_logo
-    printf '\n\033[1;38;2;230;188;116mAuthorBot\033[0m \033[2mby AuthorChe\033[0m\n\n'
+    printf '\n%*s' "$(( (UI_WIDTH - 22) / 2 ))" ''
+    printf '\033[1;38;2;230;188;116mAuthorBot\033[0m \033[2mby AuthorChe\033[0m\n\n'
     printf '\033[38;2;124;177;173m'
     ui_link 'https://authorche.top' 'authorche.top'
     printf '\033[0m'

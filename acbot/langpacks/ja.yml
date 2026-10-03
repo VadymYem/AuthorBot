@@ -1,0 +1,697 @@
+# Core translations adapted from Heroku (AGPL-3.0).
+# © Dan Gazizullin and Codrago; AuthorBot texts and branding © AuthorChe.
+# Source revision: 87d855ff50a404484c84f8ca4237d5c27c137b45
+security:
+  name: Security
+  invalid_name: <emoji document_id=5210952531676504517>🚫</emoji> <b>無効なセキュリティグループ名です</b>
+  no_command: 🚫 <b>コマンド</b> <code>{}</code> <b>は見つかりませんでした！</b>
+  permissions: 🔐 <b>ここでは</b> <code>{}{}</code> <b>の権限を設定できます</b>
+  close_menu: 🙈 メニューを閉じる
+  global: 🔐 <b>ここではグローバルバウンディングマスクを設定できます。ここで除外された権限は、すべての場所で除外されます！</b>
+  owner: 😎 所有者 (Owner)
+  group_owner: 🧛‍♂️ グループ所有者
+  group_admin_add_admins: 🧑‍⚖️ 管理者 (メンバー追加)
+  group_admin_change_info: 🧑‍⚖️ 管理者 (情報変更)
+  group_admin_ban_users: 🧑‍⚖️ 管理者 (Ban)
+  group_admin_delete_messages: 🧑‍⚖️ 管理者 (メッセージ削除)
+  group_admin_pin_messages: 🧑‍⚖️ 管理者 (ピン留め)
+  group_admin_invite_users: 🧑‍⚖️ 管理者 (招待)
+  group_admin: 🧑‍⚖️ 管理者 (すべて)
+  group_member: 👥 グループ内
+  pm: 🤙 PM (個人チャット)
+  everyone: 🌍 全員 (インライン)
+  owner_list: "<emoji document_id=5386399931378440814>\U0001F60E</emoji> <b>グループ</b> <code>owner</code> <b>のユーザー:</b>\n\n<blockquote expandable>{}</blockquote>"
+  no_owner: <emoji document_id=5386399931378440814>😎</emoji> <b>グループ</b> <code>owner</code> <b>にユーザーはいません</b>
+  owner_added: <emoji document_id=5386399931378440814>😎</emoji> <b><a href="tg://user?id={}">{}</a> をグループ</b> <code>owner</code> <b>に追加しました</b>
+  owner_removed: <emoji document_id=5386399931378440814>😎</emoji> <b><a href="tg://user?id={}">{}</a> をグループ</b> <code>owner</code> <b>から削除しました</b>
+  no_user: <emoji document_id=5210952531676504517>🚫</emoji> <b>許可するユーザーを指定してください</b>
+  not_a_user: <emoji document_id=5447644880824181073>⚠️</emoji> <b>指定されたエンティティはユーザーではありません</b>
+  li: <emoji document_id=4974307891025543730>▫️</emoji> <b><a href="tg://user?id={}">{}</a></b>
+  warning: "⚠️ <b>本当に <a href=\"tg://user?id={}\">{}</a> をグループ</b> <code>{}</code> <b>に追加しますか？\nこの操作により、個人情報が開示されたり、このユーザーにユーザーボットへの完全または部分的なアクセス権が付与される可能性があります</b>"
+  cancel: 🚫 キャンセル
+  confirm: 👑 確認
+  enable_nonick_btn: 🔰 有効にする
+  self: <emoji document_id=5447644880824181073>⚠️</emoji> <b>自分自身を昇格/降格させることはできません！</b>
+  suggest_nonick: 🔰 <i>このユーザーに対して NoNick を有効にしますか？</i>
+  user_nn: 🔰 <b><a href="tg://user?id={}">{}</a> の NoNick を有効にしました</b>
+  what: <emoji document_id=5210952531676504517>🚫</emoji> <b>最初の引数としてターゲットのタイプを指定する必要があります（</b><code>user</code> <b>または</b> <code>chat</code><b>）</b>
+  no_target: <emoji document_id=5210952531676504517>🚫</emoji> <b>セキュリティルールのターゲットを指定していません</b>
+  no_rule: <emoji document_id=5210952531676504517>🚫</emoji> <b>ルール（モジュールまたはコマンド）を指定していません</b>
+  confirm_rule: 🔐 <b>{} <a href='{}'>{}</a> に {}</b> <code>{}</code> <b>の使用許可を {} 与えてもよろしいですか？</b>
+  rule_added: 🔐 <b>{} <a href='{}'>{}</a> に {}</b> <code>{}</code> <b>の使用許可を {} 与えました</b>
+  confirm_btn: 👑 確認
+  cancel_btn: 🚫 キャンセル
+  multiple_rules: "\U0001F510 <b>セキュリティルールを一意に特定できません。意図したものを選択してください:</b>\n\n{}"
+  rules: "<emoji document_id=5472308992514464048>\U0001F510</emoji> <b>ターゲットセキュリティルール:</b>\n\n<blockquote expandable>{}</blockquote>"
+  no_rules: <emoji document_id=5210952531676504517>🚫</emoji> <b>ターゲットセキュリティルールはありません</b>
+  owner_target: <emoji document_id=5447644880824181073>⚠️</emoji> <b>このユーザーは所有者であるため、ターゲットセキュリティによる昇格はできません</b>
+  rules_removed: <emoji document_id=5472308992514464048>🔐</emoji> <b><a href="{}">{}</a> のターゲットセキュリティルールを削除しました</b>
+  rule_removed: <emoji document_id=5472308992514464048>🔐</emoji> <b><a href="{}">{}</a> のターゲットセキュリティルール（</b><code>{}</code><b>）を削除しました</b>
+  chat_inline: ⚠️ <b>チャット用のインラインコマンドルールは作成できません！</b>
+  for: '期間:'
+  forever: 無期限
+  user: ユーザー
+  chat: チャット
+  command: コマンド
+  module: モジュール
+  inline: インラインコマンド
+  day: 日
+  days: 日
+  hour: 時間
+  hours: 時間
+  minute: 分
+  minutes: 分
+  second: 秒
+  seconds: 秒
+  _cmd_doc_inlinesec: '[command] - インラインコマンドのセキュリティ設定を構成します'
+  _cmd_doc_owneradd: '[-f|--force] [-n|--nonick] <user> - ユーザーを `owner` に追加します'
+  _cmd_doc_ownerlist: '`owner` グループのユーザーを一覧表示します'
+  _cmd_doc_ownerrm: <user> - ユーザーを `owner` から削除します
+  _cmd_doc_security: '[command] - コマンドのセキュリティ設定を構成します'
+  _cmd_doc_tsec: "<\"user\"/\"chat\"/\"sgroup\"> [target user or chat] [rule (command/module)] [time] - 新しいターゲットセキュリティルールを追加します\n例: .tsec user ban 1d, .tsec chat weather 1h, .tsec user HikariChat"
+  _cmd_doc_tsecclr: "<\"user\"/\"chat\"/\"sgroup\"> - ターゲットセキュリティルールをクリアします\n例: .tsecclr user, .tsecclr chat"
+  _cmd_doc_tsecrm: "<\"user\"/\"chat\"/\"sgroup\"> <rule - command or module> - ターゲットセキュリティルールを削除します\n例: .tsecrm user ban, .tsecrm chat HikariChat"
+  _cls_doc: セキュリティ設定を制御します
+  until: '期限:'
+  sgroup: セキュリティグループ
+  sgroup_info: "<emoji document_id=5870704313440932932>\U0001F512</emoji> <b>セキュリティグループ</b> <code>{}</code> <b>情報:</b>\n\n{}\n{}"
+  created_sgroup: <emoji document_id=5870704313440932932>🔒</emoji> <b>セキュリティグループ</b> <code>{}</code> <b>を作成しました</b>
+  sgroup_already_exists: <emoji document_id=5210952531676504517>🚫</emoji> <b>セキュリティグループ</b> <code>{}</code> <b>は既に存在します</b>
+  no_args: <emoji document_id=5210952531676504517>🚫</emoji> <b>引数が指定されていません</b>
+  sgroup_not_found: <emoji document_id=5210952531676504517>🚫</emoji> <b>セキュリティグループ</b> <code>{}</code> <b>が見つかりません</b>
+  no_users: <emoji document_id=5870772616305839506>👥</emoji> <b>ユーザーがいません</b>
+  users_list: "<emoji document_id=5870772616305839506>\U0001F465</emoji> <b>ユーザー:</b>\n{}\n"
+  no_permissions: <emoji document_id=5870450390679425417>🗒</emoji> <b>権限がありません</b>
+  permissions_list: "<emoji document_id=5870450390679425417>\U0001F5D2</emoji> <b>権限:</b>\n{}\n"
+  sgroup_li: <emoji document_id=4974264756668990388>▫️</emoji> <code>{}</code> · <b>{} ユーザー</b> · <b>{} ルール</b>
+  sgroups_list: "<emoji document_id=5870704313440932932>\U0001F512</emoji> <b>セキュリティグループ:</b>\n\n{}"
+  deleted_sgroup: <emoji document_id=5870704313440932932>🔒</emoji> <b>セキュリティグループ</b> <code>{}</code> <b>を削除しました</b>
+  user_already_in_sgroup: <emoji document_id=5210952531676504517>🚫</emoji> <b>ユーザー</b> <code>{}</code> <b>は既にセキュリティグループ</b> <code>{}</code> <b>に存在します</b>
+  user_added_to_sgroup: <emoji document_id=5870704313440932932>🔒</emoji> <b>ユーザー</b> <code>{}</code> <b>をセキュリティグループ</b> <code>{}</code> <b>に追加しました</b>
+  user_not_in_sgroup: <emoji document_id=5210952531676504517>🚫</emoji> <b>ユーザー</b> <code>{}</code> <b>はセキュリティグループ</b> <code>{}</code> <b>に存在しません</b>
+  user_removed_from_sgroup: <emoji document_id=5870704313440932932>🔒</emoji> <b>ユーザー</b> <code>{}</code> <b>をセキュリティグループ</b> <code>{}</code> <b>から削除しました</b>
+  _cmd_doc_delsgroup: <name> - セキュリティグループを削除します
+  _cmd_doc_sgroup: <name> - セキュリティグループの情報を表示します
+  _cmd_doc_sgroups: セキュリティグループを一覧表示します
+  _cmd_doc_newsgroup: <name> - 新しいセキュリティグループを作成します
+  _cmd_doc_sgroupadd: <name> [user or reply] - ユーザーをセキュリティグループに追加します
+  _cmd_doc_sgroupdel: <name> [user or reply] - ユーザーをセキュリティグループから削除します
+acbot_settings:
+  name: Settings
+  watchers: "<emoji document_id=5424885441100782420>\U0001F440</emoji> <b>ウォッチャー:</b>\n\n<blockquote expandable><b>{}</b></blockquote>"
+  no_args: <emoji document_id=5210952531676504517>🚫</emoji> <b>引数が指定されていません</b>
+  invoke404: <emoji document_id=5210952531676504517>🚫</emoji> <b>内部デバッグメソッド</b> <code>{}</code> <b>が見つからないため、呼び出せません</b>
+  module404: <emoji document_id=5210952531676504517>🚫</emoji> <b>モジュール</b> <code>{}</code> <b>は見つかりません</b>
+  invoke: "<emoji document_id=5215519585150706301>\U0001F44D</emoji> <b>内部デバッグメソッド</b> <code>{}</code> <b>を呼び出しました</b>\n\n<emoji document_id=5784891605601225888>\U0001F535</emoji> <b>結果:\n{}</b>"
+  invoking: <emoji document_id=5213452215527677338>⏳</emoji> <b>内部デバッグメソッド</b> <code>{}</code> <b>(対象:</b> <code>{}</code><b>) を呼び出しています...</b>
+  mod404: <emoji document_id=5210952531676504517>🚫</emoji> <b>ウォッチャー {} が見つかりません</b>
+  disabled: <emoji document_id=5424885441100782420>👀</emoji> <b>ウォッチャー {} は<u>無効化</u>されました</b>
+  enabled: <emoji document_id=5424885441100782420>👀</emoji> <b>ウォッチャー {} は<u>有効化</u>されました</b>
+  args: <emoji document_id=5210952531676504517>🚫</emoji> <b>ウォッチャー名を指定する必要があります</b>
+  user_nn: <emoji document_id=5469791106591890404>🪄</emoji> <b>このユーザーの NoNick は {} になりました</b>
+  no_cmd: <emoji document_id=5469791106591890404>🪄</emoji> <b>NoNick を切り替えるコマンドを指定してください</b>
+  cmd_nn: <emoji document_id=5469791106591890404>🪄</emoji> <b></b> <code>{}</code> <b>の NoNick は {} になりました</b>
+  cmd404: <emoji document_id=5469791106591890404>🪄</emoji> <b>コマンドが見つかりません</b>
+  inline_settings: ⚙️ <b>ここでは AuthorBot の設定を行えます</b>
+  confirm_update: 🧭 <b>アップデートすることを確認してください。ユーザーボットは再起動されます</b>
+  confirm_restart: 🔄 <b>再起動することを確認してください</b>
+  suggest_fs: ✅ Suggest FS for modules
+  do_not_suggest_fs: 🚫 Suggest FS for modules
+  use_fs: ✅ Always use FS for modules
+  do_not_use_fs: 🚫 Always use FS for modules
+  btn_restart: 🔄 再起動
+  btn_update: 🧭 アップデート
+  close_menu: 😌 メニューを閉じる
+  custom_emojis: ✅ Custom emojis
+  no_custom_emojis: 🚫 Custom emojis
+  suggest_subscribe: ✅ チャンネル登録を提案する
+  do_not_suggest_subscribe: 🚫 チャンネル登録を提案する
+  private_not_allowed: <emoji document_id=5210952531676504517>🚫</emoji> <b>このコマンドはチャットで実行する必要があります</b>
+  nonick_warning: 警告！デフォルトのプレフィックスで NoNick を有効にしました！AuthorBot チャットでミュートされる可能性があります。プレフィックスを変更するか、NoNick を無効にしてください！
+  reply_required: <emoji document_id=5210952531676504517>🚫</emoji> <b>NoNick に追加するユーザーのメッセージに返信してください</b>
+  deauth_confirm: "⚠️ <b>この操作を行うと、AuthorBot はこのアカウントから完全に削除され、元に戻すことはできません！</b>\n\n<i>- AuthorBot チャットは削除されます\n- セッションは終了および削除されます\n- AuthorBot インラインボットは削除されます</i>"
+  deauth_confirm_step2: ⚠️ <b>本当に AuthorBot を削除してもよろしいですか？</b>
+  deauth_yes: 削除します
+  deauth_no_1: 削除しません
+  deauth_no_2: わかりません
+  deauth_no_3: 答えるのが難しいです
+  deauth_cancel: 🚫 キャンセル
+  deauth_confirm_btn: 😢 削除
+  uninstall: 😢 <b>AuthorBot をアンインストールしています...</b>
+  uninstalled: 😢 <b>AuthorBot をアンインストールしました。</b>
+  cmd_nn_list: "<emoji document_id=5469791106591890404>\U0001FA84</emoji> <b>NoNick は以下のコマンドで有効になっています:</b>\n\n<blockquote expandable>{}</blockquote>"
+  user_nn_list: "<emoji document_id=5469791106591890404>\U0001FA84</emoji> <b>NoNick は以下のユーザーに対して有効になっています:</b>\n\n<blockquote expandable>{}</blockquote>"
+  chat_nn_list: "<emoji document_id=5469791106591890404>\U0001FA84</emoji> <b>NoNick は以下のチャットで有効になっています:</b>\n\n<blockquote expandable>{}</blockquote>"
+  nothing: <emoji document_id=5427052514094619126>🤷‍♀️</emoji> <b>表示するものがありません...</b>
+  privacy_leak: ⚠️ <b>This command gives access to your web interface. It's not recommended to run it in public group chats. Consider using it in <a href='tg://openmessage?user_id={}'>Saved messages</a>. Type</b> <code>{}proxypass force_insecure</code> <b>to ignore this warning</b>
+  privacy_leak_nowarn: ⚠️ <b>This command gives access to your web interface. It's not recommended to run it in public group chats. Consider using it in <a href='tg://openmessage?user_id={}'>Saved messages</a>.</b>
+  opening_tunnel: 🔁 <b>Opening tunnel to web interface...</b>
+  tunnel_opened: 🎉 <b>Tunnel opened. This link is valid for about 1 hour</b>
+  web_btn: 🌍 Web interface
+  btn_yes: 🚸 とにかく開く
+  btn_no: 🔻 キャンセル
+  lavhost_web: "✌️ <b>This link leads to your web interface on lavHost</b>\n\n<i>\U0001F4A1 You'll need to authorize using lavHost credentials, specified on registration</i>"
+  disable_debugger: ✅ Debugger enabled
+  enable_debugger: 🚫 Debugger disabled
+  _cmd_doc_invoke: <module or `core` for built-in methods> <method> - デバッグ専用です。開発者でない場合は使用しないでください
+  _cmd_doc_nonickchat: 特定のチャットでニックネームなしを許可します
+  _cmd_doc_nonickchats: NoNick チャットのリストを返します
+  _cmd_doc_nonickcmd: <command> - 特定のコマンドをニックネームなしで実行することを許可します
+  _cmd_doc_nonickcmds: NoNick コマンドのリストを返します
+  _cmd_doc_nonickuser: 特定のユーザーに対してニックネームなしを許可します
+  _cmd_doc_nonickusers: NoNick ユーザーのリストを返します
+  _cmd_doc_settings: 設定メニューを表示します
+  _cmd_doc_uninstall_acbot: Uninstall AuthorBot
+  _cmd_doc_watcherbl: <module> - 現在のチャットでウォッチャーを切り替えます
+  _cmd_doc_watcher: "<module> - グローバルなウォッチャールールを切り替えます\n引数:\n[-c - チャットのみ]\n[-p - PMのみ]\n[-o - 送信のみ]\n[-i - 受信のみ]"
+  _cmd_doc_watchers: 現在のウォッチャーを一覧表示します
+  _cmd_doc_weburl: Opens web tunnel to your web interface
+  _cls_doc: AuthorBot Userbot の詳細設定
+  core_protection_already_removed: <emoji document_id=6003424016977628379>🔒</emoji> <b>コア保護は既に解除されています</b>
+  core_protection_confirm: "⚠️ <b>よくお読みください！</b>\n\nコア保護を解除することで、それが何であり、何のためにあるのかを理解していることを確認したことになります。一般的な使用シナリオでは、<b>必要ありません</b>。開発者でない場合、<b>必要ありません</b>。確信が持てない場合、<b>必要ありません</b>。\n\n<b>本当にコア保護を解除しますか？</b>"
+  core_protection_btn: 🔓 コア保護を解除
+  core_protection_removed: 🔓 <b>コア保護が正常に解除されました</b>
+terminal:
+  name: Terminal
+  fw_protect: コマンドの編集間に待機する秒数
+  what_to_kill: <emoji document_id=5210952531676504517>🚫</emoji> <b>終了する端末コマンドに返信してください</b>
+  kill_fail: <emoji document_id=5210952531676504517>🚫</emoji> <b>プロセスをキルできませんでした</b>
+  killed: <emoji document_id=5210952531676504517>🚫</emoji> <b>キルしました</b>
+  no_cmd: <emoji document_id=5210952531676504517>🚫</emoji> <b>そのメッセージで実行されているコマンドはありません</b>
+  running: <emoji document_id=5472111548572900003>⌨️</emoji><b> システムコール</b> <code>{}</code>
+  finished: "\n<b>終了コード</b> <code>{}</code>"
+  stdout: "\n<b>\U0001F4FC 標準出力:</b>\n<pre><code class=\"language-stdout\">"
+  stderr: "</code></pre>\n\n<b><emoji document_id=5210952531676504517>\U0001F6AB</emoji> 標準エラー:</b>\n<pre><code class=\"language-stderr\">"
+  end: </code></pre>
+  auth_fail: <emoji document_id=5210952531676504517>🚫</emoji> <b>認証に失敗しました。もう一度お試しください</b>
+  auth_needed: <emoji document_id=5472308992514464048>🔐</emoji><a href="tg://user?id={}"> インタラクティブ認証が必要です</a>
+  auth_msg: <emoji document_id=5472308992514464048>🔐</emoji> <b>このメッセージを編集して、</b><code>{}</code> <b>を実行するための</b> <code>{}</code> <b>のパスワードを入力してください</b>
+  auth_locked: <emoji document_id=5210952531676504517>🚫</emoji> <b>認証に失敗しました。後でもう一度お試しください</b>
+  auth_ongoing: <emoji document_id=5213452215527677338>⏳</emoji> <b>認証中...</b>
+  done: <emoji document_id=5314250708508220914>✅</emoji> <b>完了</b>
+  _cmd_doc_apt: "'.terminal apt' の短縮形"
+  _cmd_doc_terminal: <command> - bashコマンドを実行します
+  _cmd_doc_terminate: '[-f 強制終了] - 返信で使用し、プロセスにSIGTERMを送信します'
+  _cls_doc: コマンドを実行します
+backup:
+  name: Backup
+  period: "⌚️ <b>ユニット «ALPHA»</b> は定期的なバックアップを作成します。これらの設定は後で変更できます。\n\nバックアップの頻度を選択してください\n\n<b>\U0001F6AB これにより、.lm コマンドでファイルからダウンロードされたモジュールを復元することは不可能になります！注意してください。復元する前に .backupmods を行ってください。</b>"
+  saved: ✅ Backup period saved. You can re-configure it later with .set_backup_period
+  never: ✅ I will not make automatic backups. You can re-configure it later with .set_backup_period
+  invalid_args: 🚫 <b>正しい頻度を時間単位で指定するか、無効にする場合は `0` を指定してください</b>
+  backup_caption: <emoji document_id=5469718869536940860>👆</emoji> <b>これはデータベースのバックアップです。個人情報が含まれているため、誰とも共有しないでください。復元する必要がある場合は、このファイルへの返信として</b> <pre><code class="language-heroku">{prefix}restoredb</code></pre> <b>を使用してください。</b>
+  reply_to_file: <emoji document_id=5210952531676504517>🚫</emoji> <b>.json または .zip ファイルに返信してください</b>
+  db_restored: <emoji document_id=5774134533590880843>🔄</emoji> <b>データベースが更新されました。再起動しています...</b>
+  modules_backup: "<emoji document_id=5431736674147114227>\U0001F5C2</emoji> <b>モジュールバックアップ ({})</b>\n\n<b>以下を使用して復元できます:</b>\n<pre><code class=\"language-heroku\">{}restoremods</code></pre>"
+  mods_restored: <emoji document_id=5774134533590880843>🔄</emoji> <b>モジュールが復元されました。再起動します</b>
+  backup_sent: <emoji document_id=5431736674147114227>🗂</emoji> <b>Backup has been sent to saved messages</b>
+presets:
+  name: Presets
+  _fun_title: 🪩 エンターテイメントモジュール
+  _fun_desc: 楽しいモジュール — アニメーション、スパム、エンターテイメントなど
+  _chat_title: 👥 グループ管理ヘルパー
+  _chat_desc: グループチャットのモデレーションを支援するツールのコレクション — フィルター、ノート、音声認識など
+  _service_title: ⚙️ 便利なモジュール
+  _service_desc: 本当に便利なモジュール — アカウント管理、リンク短縮、検索エンジンなど
+  _downloaders_title: 📥 ダウンローダー
+  _downloaders_desc: さまざまなソース（YouTube、TikTok、Instagram、Spotify、VK Musicなど）からファイルをダウンロード/アップロードするのに役立つツールのコレクション
+  welcome: 👋 <b>こんにちは！チャンネルで無限のモジュールをスクロールするのに疲れましたか？いくつかの既製コレクションを提案させてください。このメニューを再度呼び出す必要がある場合は、このボットに /presets を送信するだけです！</b>
+  preset: "<b>{}:</b>\nℹ️ <i>{}</i>\n\n⚒ <b>このコレクション内のモジュール:</b>\n\n{}"
+  back: 🔙 戻る
+  install: 📦 インストール
+  installing: <emoji document_id=5451732530048802485>⏳</emoji> <b>プリセット</b> <code>{}</code> <b>をインストールしています...</b>
+  installing_module: "<emoji document_id=5451732530048802485>⏳</emoji> <b>プリセット</b> <code>{}</code> <b>({}/{}) をインストールしています...</b>\n\n<emoji document_id=5188377234380954537>\U0001FA90</emoji> <i>モジュール {} をインストール中...</i>"
+  installed: <emoji document_id=5436040291507247633>🎉</emoji> <b>プリセット</b> <code>{}</code> <b>がインストールされました！</b>
+  already_installed: ✅ [インストール済み]
+  _cls_doc: 新しい AuthorBot ユーザーにロードするモジュールのパックを提案します
+settings:
+  name: Settings
+  installation: "<emoji document_id=5363805650327450240>▪️</emoji> The installation is very easy! Just enter the following in your servers terminal:\n<pre><code class=\"language-bash\">sudo apt update &amp;&amp; sudo apt upgrade -y &amp;&amp; sudo apt install git &amp;&amp; sudo apt install python3-pip &amp;&amp; git clone https://github.com/VadymYem/AuthorBot && cd AuthorBot && pip install -r requirements.txt &amp;&amp; python3 -m acbot</code></pre> <emoji document_id=5299027123913105700>\U0001F610</emoji> If you dont have sudo access, simply remove the initial steps.\n<emoji document_id=5300777464820145682>\U0001F973</emoji> Lets go over a few arguments:\n<emoji document_id=5787313834012184077>\U0001F510</emoji> The <code>--root</code> argument allows you to run as a <b>root user</b>.\n<emoji document_id=5785209342986817408>\U0001F30E</emoji> The <code>--no-web</code> argument enables login to your account <b>directly in the terminal, rather than through a link</b> <code>{}.lhr.life</code>.\nIt completely safe and will help you upgrade to AuthorBot automatically"
+  too_many_args: <emoji document_id=5210952531676504517>🚫</emoji> <b>引数が多すぎます</b>
+  blacklisted: <emoji document_id=5197474765387864959>👍</emoji> <b>チャット {} をユーザーボットのブラックリストに追加しました</b>
+  unblacklisted: <emoji document_id=5197474765387864959>👍</emoji> <b>チャット {} をユーザーボットのブラックリストから削除しました</b>
+  user_blacklisted: <emoji document_id=5197474765387864959>👍</emoji> <b>ユーザー {} をユーザーボットのブラックリストに追加しました</b>
+  user_unblacklisted: <emoji document_id=5197474765387864959>👍</emoji> <b>ユーザー {} をユーザーボットのブラックリストから削除しました</b>
+  what_prefix: <emoji document_id=5382187118216879236>❓</emoji> <b>プレフィックスを何に設定しますか？</b>
+  prefix_incorrect: <emoji document_id=5210952531676504517>🚫</emoji> <b>プレフィックスの長さは1文字である必要があります</b>
+  prefix_set: "{} <b>コマンドプレフィックスが更新されました。元に戻すには以下のコマンドを使用してください:</b>\n<pre><code class=\"language-heroku\">{newprefix}setprefix {oldprefix}</code></pre>"
+  alias_created: <emoji document_id=5197474765387864959>👍</emoji> <b>エイリアスが作成されました。</b> <code>{}</code> <b>でアクセスできます</b>
+  aliases: "<b>\U0001F517 エイリアス:</b>\n"
+  no_command: <emoji document_id=5210952531676504517>🚫</emoji> <b>コマンド</b> <code>{}</code> <b>は存在しません</b>
+  alias_args: <emoji document_id=5210952531676504517>🚫</emoji> <b>コマンドとそのエイリアスを指定する必要があります</b>
+  delalias_args: <emoji document_id=5210952531676504517>🚫</emoji> <b>エイリアス名を指定する必要があります</b>
+  alias_removed: <emoji document_id=5197474765387864959>👍</emoji> <b>エイリアス</b> <code>{}</code> <b>を削除しました</b>
+  no_alias: <emoji document_id=5210952531676504517>🚫</emoji> <b>エイリアス</b> <code>{}</code> <b>は存在しません</b>
+  db_cleared: <emoji document_id=5197474765387864959>👍</emoji> <b>データベースをクリアしました</b>
+  acbot: "<emoji document_id=5377437404078546699>\U0001F49C</emoji> <b>Telethon:</b> <i>1.37.0</i>\n\n✍️ <b>Developer: t.me/wsinfo, authorche.top</b>"
+  confirm_cleardb: ⚠️ <b>本当にデータベースをクリアしますか？</b>
+  cleardb_confirm: 🗑 データベースをクリア
+  cancel: 🚫 キャンセル
+  who_to_blacklist: <emoji document_id=5382187118216879236>❓</emoji> <b>誰をブラックリストに追加しますか？</b>
+  who_to_unblacklist: <emoji document_id=5382187118216879236>❓</emoji> <b>誰をブラックリストから削除しますか？</b>
+  _cmd_doc_addalias: コマンドのエイリアスを設定します
+  _cmd_doc_aliases: すべてのエイリアスを表示します
+  _cmd_doc_blacklist: '[chat_id] [module] - ボットの動作を特定の場所でブラックリストに追加します'
+  _cmd_doc_blacklistuser: '[user_id] - このユーザーによるコマンド実行を禁止します'
+  _cmd_doc_cleardb: データベース全体をクリアし、事実上のファクトリーリセットを実行します
+  _cmd_doc_delalias: <alias|-c|--clear> - エイリアスまたはすべてのエイリアスを削除します
+  _cmd_doc_acbot: Get version
+  _cmd_doc_setprefix: <prefix> [owner] - コマンドプレフィックスを設定します
+  _cmd_doc_unblacklist: <chat_id> - ボットの動作を特定の場所でブラックリストから削除します
+  _cmd_doc_unblacklistuser: '[user_id] - このユーザーに許可されたコマンドの実行を許可します'
+  _cfg_nonstandart_prefixes: フラグや複数の記号などの非標準プレフィックスを許可します
+  _cls_doc: コアユーザーボット設定を制御します
+config:
+  name: Config
+  choose_core: <emoji document_id=5341715473882955310>⚙️</emoji> <b>カテゴリを選択してください</b>
+  configure: <emoji document_id=5341715473882955310>⚙️</emoji> <b>設定するモジュールを選択してください</b>
+  configure_lib: 📦 <b>設定するライブラリを選択してください</b>
+  configuring_mod: "<emoji document_id=5341715473882955310>⚙️</emoji> <b>モジュール</b> <code>{}</code> <b>の設定オプションを選択してください</b>\n\n<b>現在のオプション:</b>\n\n{}"
+  configuring_lib: "<emoji document_id=5341715473882955310>⚙️</emoji> <b>ライブラリ</b> <code>{}</code> <b>の設定オプションを選択してください</b>\n\n<b>現在のオプション:</b>\n\n{}"
+  configuring_option: "<emoji document_id=5341715473882955310>⚙️</emoji> <b>モジュール</b> <code>{}</code> <b>のオプション</b> <code>{}</code> <b>を設定中</b>\n<i>ℹ️ {}</i>\n\n<b>デフォルト: {}</b>\n\n<b>現在: {}</b>\n\n{}"
+  configuring_option_lib: "<emoji document_id=5431736674147114227>\U0001F4E6</emoji> <b>ライブラリ</b> <code>{}</code> <b>のオプション</b> <code>{}</code> <b>を設定中</b>\n<i>ℹ️ {}</i>\n\n<b>デフォルト: {}</b>\n\n<b>現在: {}</b>\n\n{}"
+  option_saved: "<emoji document_id=5318933532825888187>⚙️</emoji> <b>モジュール</b> <code>{}</code> <b>のオプション</b> <code>{}</code> <b>が保存されました！</b>\n<b>現在: {}</b>"
+  option_saved_lib: "<emoji document_id=5431736674147114227>\U0001F4E6</emoji> <b>ライブラリ</b> <code>{}</code> <b>のオプション</b> <code>{}</code> <b>が保存されました！</b>\n<b>現在: {}</b>"
+  option_reset: "♻️ <b>モジュール</b> <code>{}</code> <b>のオプション</b> <code>{}</code> <b>がデフォルトにリセットされました</b>\n<b>現在: {}</b>"
+  option_reset_lib: "♻️ <b>ライブラリ</b> <code>{}</code> <b>のオプション</b> <code>{}</code> <b>がデフォルトにリセットされました</b>\n<b>現在: {}</b>"
+  args: 🚫 <b>不正な引数が指定されました</b>
+  no_mod: 🚫 <b>モジュールが存在しません</b>
+  no_option: 🚫 <b>設定オプションが存在しません</b>
+  validation_error: "\U0001F6AB <b>不正な設定値を入力しました。\nエラー: {}</b>"
+  try_again: 🔁 再試行
+  typehint: 🕵️ <b>{eng_art} {} である必要があります</b>
+  set: 設定
+  set_default_btn: ♻️ デフォルトにリセット
+  enter_value_btn: ✍️ 値を入力
+  enter_value_desc: ✍️ このオプションの新しい設定値を入力してください
+  add_item_desc: ✍️ 追加するアイテムを入力してください
+  remove_item_desc: ✍️ 削除するアイテムを入力してください
+  back_btn: 👈 戻る
+  close_btn: 🔻 閉じる
+  add_item_btn: ➕ アイテム追加
+  remove_item_btn: ➖ アイテム削除
+  show_hidden: 🚸 値を表示
+  hide_value: 🔒 値を隠す
+  builtin: 🛰 組み込み
+  external: 🛸 外部
+  libraries: 📦 ライブラリ
+  _cmd_doc_config: モジュールを設定します
+  _cmd_doc_fconfig: <module_name> <property_name> <config_value> - モジュールの設定値を設定します
+  _cls_doc: AuthorBot Userbot 用のインタラクティブな設定ツール
+inline_stuff:
+  name: InlineStuff
+  bot_username_invalid: <emoji document_id=5210952531676504517>🚫</emoji> <b>指定されたボットのユーザー名が無効です。</b> <code>bot</code> <b>で終わり、少なくとも4文字以上である必要があります</b>
+  bot_username_occupied: <emoji document_id=5210952531676504517>🚫</emoji> <b>このユーザー名は既に使用されています</b>
+  bot_updated: <emoji document_id=6318792204118656433>🎉</emoji> <b>設定が正常に保存されました。変更を適用するにはユーザーボットを再起動してください</b>
+  _cmd_doc_ch_acbot_bot: <username> - Change your inline bot username
+  _cls_doc: インライン機能のサポートを提供します
+test:
+  name: Tester
+  set_loglevel: <emoji document_id=5355133243773435190>🚫</emoji> <b>詳細レベルを整数または文字列で指定してください</b>
+  no_logs: <emoji document_id=5355133243773435190>🤷‍♀️</emoji> <b>詳細レベル</b> <code>{}</code> <b>のログはありません。</b>
+  logs_caption: "<emoji document_id=5350594756126721186>\U0001FA90</emoji> <b>詳細レベル</b> <code>{}</code> <b>の AuthorBot ログ</b>\n\n<emoji document_id=5228879218363872764>⚪️</emoji> <b>バージョン: {}.{}.{}</b>{}"
+  suspend_invalid_time: <emoji document_id=5210952531676504517>🚫</emoji> <b>一時停止する時間が無効です</b>
+  suspended: <emoji document_id=5452023368054216810>🥶</emoji> <b>ボットは {} 間一時停止されました</b>
+  results_ping: "<emoji document_id=5920515922505765329>⚡️</emoji> <b>\U0001D67F\U0001D692\U0001D697\U0001D690: </b><code>{}</code><b> \U0001D696\U0001D69C </b>\n<emoji document_id=5900104897885376843>\U0001F553</emoji><b> \U0001D684\U0001D699\U0001D69D\U0001D692\U0001D696\U0001D68E: </b><code>{}</code>"
+  noprem_ping: "⚡️ \U0001D67F\U0001D692\U0001D697\U0001D690: <code>{}</code> \U0001D696\U0001D69C\n\U0001F680 \U0001D684\U0001D699\U0001D69D\U0001D692\U0001D696\U0001D68E: <code>{}</code>"
+  ping_hint: "\n"
+  confidential: ⚠️ <b>ログレベル</b> <code>{}</code> <b>は機密情報を開示する可能性があります。注意してください</b>
+  confidential_text: "⚠️ <b>ログレベル</b> <code>{0}</code> <b>は機密情報を開示する可能性があります。注意してください</b>\n<b>警告を無視するには</b> <code>.logs {0} -f</code> <b>と入力してください</b>"
+  choose_loglevel: 💁‍♂️ <b>ログレベルを選択してください</b>
+  bad_module: <emoji document_id=5355133243773435190>🚫</emoji> <b>モジュールが見つかりません</b>
+  debugging_enabled: "<emoji document_id=5332533929020761310>✅</emoji> <b>モジュール</b> <code>{0}</code> <b>のデバッグモードが有効になりました</b>\n<i>`debug_modules` ディレクトリに移動し、`{0}.py` という名前のファイルを編集して、変更をリアルタイムで確認してください</i>"
+  debugging_disabled: <emoji document_id=5332533929020761310>✅</emoji> <b>デバッグが無効になりました</b>
+  send_anyway: 📤 とにかく送信
+  cancel: 🚫 キャンセル
+  logs_cleared: 🗑 <b>ログをクリアしました</b>
+  _cmd_doc_clearlogs: ログをクリアします
+  _cmd_doc_debugmod: "[module] - 開発者向け: デバッグ用にモジュールを開きます\n変更をリアルタイムで追跡できます"
+  _cmd_doc_dump: 返信で使用してメッセージのダンプを取得します
+  _cmd_doc_logs: <level> [-f] - ログをダンプします
+  _cmd_doc_ping: ユーザーボットの Ping をテストします
+  _cmd_doc_suspend: <time> - ボットを N 秒間一時停止します
+  _cls_doc: ユーザーボットのセルフテストに基づいた操作を実行します
+update_notifier:
+  name: UpdateNotifier
+  update_required: "\U0001F195 <b>Update available!</b>\n\nNew version released.\n\U0001F52E <b><s>{}</s> -> {}</b>\n\n{}"
+  more: "\n<i><b>\U0001F3A5 And {} more...</b></i>"
+  _cfg_doc_disable_notifications: Disable update notifications
+  latest_disabled: Notifications about the latest update have been suppressed
+  update: 🔄 Update
+  ignore: 🚫 Ignore
+  changelog: <emoji document_id=5434144690511290129>📰</emoji> <b>Changelog of the last major update:</b><pre><code class="language-acbot">{}</code></pre>
+  _cls_doc: Tracks latest releases, and notifies you, if update is required
+updater:
+  name: Updater
+  source: <emoji document_id=5208634061085492935>📖</emoji> <b>ソースコードは</b> <a href='{}'>こちら</a> <b>からお読みください</b>
+  restarting_caption: <emoji document_id=5328274090262275771>🕗</emoji> <b>Your AuthorBot is restarting...</b>
+  downloading: <emoji document_id=5208622108191506906>🕗</emoji> <b>更新をダウンロードしています...</b>
+  installing: <emoji document_id=5208622108191506906>🕗</emoji> <b>更新をインストールしています...</b>
+  update_failed: "❌ <b>Update failed and was rolled back safely.</b>\n<i>The previous AuthorBot version was preserved. Check logs before retrying.</i>"
+  success: "<emoji document_id=5208661316947955396>⏱</emoji> <b>再起動に成功しました！ {}</b>\n<i>まだモジュールを読み込んでいます...</i>\n<i>再起動に {}秒かかりました</i>"
+  origin_cfg_doc: 更新元のGitオリジンURL
+  btn_restart: 🔄 再起動
+  btn_update: 🧭 アップデート
+  restart_confirm: <emoji document_id=5382187118216879236>❓</emoji> <b>本当に再起動しますか？</b>
+  secure_boot_confirm: <emoji document_id=5382187118216879236>❓</emoji> <b>本当にセキュアブートモードで再起動しますか？</b>
+  update_confirm: "<emoji document_id=5382187118216879236>❓</emoji> <b>本当にアップデートしますか？\n\n<a href=\"https://github.com/VadymYem/AuthorBot/commit/{}\">{}</a> ⤑ <a href=\"https://github.com/VadymYem/AuthorBot/commit/{}\">{}</a></b>"
+  no_update: <emoji document_id=5465496001856950230>🌟</emoji> <b>最新バージョンですが、とにかくアップデートを取得しますか？</b>
+  cancel: 🚫 キャンセル
+  lavhost_update: <emoji document_id=5469986291380657759>✌️</emoji> <b>Your {} is updating...</b>
+  full_success: "<emoji document_id=6028215594707324419>\U0001F44D</emoji> <b>ユーザーボットが完全に読み込まれました！ {}</b>\n<i>完全な再起動に {}秒かかりました</i>"
+  secure_boot_complete: "<emoji document_id=5472308992514464048>\U0001F510</emoji> <b>セキュアブートが完了しました！ {}</b>\n<i>再起動に {}秒かかりました</i>"
+  _cmd_doc_restart: ユーザーボットを再起動します
+  _cmd_doc_source: このプロジェクトのソースコードへのリンク
+  _cmd_doc_update: ユーザーボットの更新をダウンロードします
+  _cls_doc: 自動更新し、最新の AuthorBot リリースを追跡し、更新が必要な場合に通知します
+api_protection:
+  name: APILimiter
+  warning: "⚠️ <b>警告！</b>\n\nあなたのアカウントは設定で指定されたリクエスト制限を超えました。Telegram API フラッドを防ぐため、ユーザーボットは {} 秒間<b>完全に凍結</b>されました。詳細情報は添付ファイルに記載されています。\n\n<code>{prefix}support</code> グループで助けを求めることをお勧めします！\n\nこれが意図された動作であると思う場合は、ユーザーボットのロックが解除されるまで待ち、次回同様の操作を行う際は <code>{prefix}suspend_api_protect</code> &lt;秒数&gt; を使用してください"
+  args_invalid: <emoji document_id=5210952531676504517>🚫</emoji> <b>引数が無効です</b>
+  suspended_for: <emoji document_id=5458450833857322148>👌</emoji> <b>API フラッド保護は {} 秒間無効になります</b>
+  on: <emoji document_id=5458450833857322148>👌</emoji> <b>保護が有効になりました</b>
+  off: <emoji document_id=5458450833857322148>👌</emoji> <b>保護が無効になりました</b>
+  u_sure: <emoji document_id=5312383351217201533>⚠️</emoji> <b>よろしいですか？</b>
+  _cfg_time_sample: ボットがリクエストをカウントする時間サンプル
+  _cfg_threshold: 保護をトリガーするリクエストのしきい値
+  _cfg_local_floodwait: リクエスト制限を超えた場合、この時間だけユーザーボットを凍結します
+  _cfg_forbidden_methods: 外部モジュール全体で指定されたメソッドの実行を禁止します
+  btn_no: 🚫 いいえ
+  btn_yes: ✅ はい
+  web_pin: 🔓 <b>Click the button below to show Werkzeug debug PIN. Do not give it to anyone.</b>
+  web_pin_btn: 🐞 Show Werkzeug PIN
+  proxied_url: 🌐 プロキシURL
+  local_url: 🏠 ローカルURL
+  debugger_disabled: <emoji document_id=5210952531676504517>🚫</emoji> <b>Web debugger is disabled, url is not available</b>
+  _cmd_doc_api_fw_protection: API レートリミッターを切り替えます
+  _cmd_doc_debugger: Show the Werkzeug PIN
+  _cmd_doc_suspend_api_protect: <time in seconds> - API レートリミッターを n 秒間一時停止します
+  _cls_doc: ユーザーボットが Telegram API をスパムするのを防ぎます
+help:
+  name: Help
+  undoc: 🦥 ドキュメントなし
+  all_header: <b>{} 個のモジュールが利用可能、{} 個が非表示:</b>
+  no_mod: 🚫 <b>非表示にするモジュールを指定してください</b>
+  hidden_shown: "<b>{} 個のモジュールが非表示、{} 個のモジュールが表示中:</b>\n{}\n{}"
+  partial_load: <emoji document_id=5355133243773435190>☝️</emoji> <b>ユーザーボットが完全に読み込まれていないため、一部のモジュールは表示されません</b>
+  not_exact: <emoji document_id=5355133243773435190>☝️</emoji> <b>完全一致が発生しなかったため、最も近い結果が表示されています</b>
+  request_join: AuthorBot サポートチャットへのリンクをリクエストしました
+  core_notice: <emoji document_id=5355133243773435190>☝️</emoji> <b>これはコアモジュールです。アンロードや置換はできません</b>
+  rich_title: ヘルプ
+  rich_modules: モジュール
+  rich_close: 閉じる
+  rich_service: サービスモジュール：バックグラウンドまたは他のモジュールを通じて動作します。
+  rich_summary: モジュール {} 個 · 非表示 {} 個 · 接頭辞 <code>{}</code>
+  rich_hint: 下のモジュールを選ぶと、コマンドと説明を確認できます。help &lt;コマンド&gt; でツールのヘルプを直接開けます。
+
+info:
+  name: Info
+  owner: Owner
+  version: Version
+  build: Build
+  prefix: Prefix
+  uptime: Uptime
+  branch: Branch
+  cpu_usage: CPU usage
+  ram_usage: RAM usage
+  send_info: ユーザーボット情報を送信
+  description: ℹ これにより機密情報が侵害されることはありません
+  up-to-date: <b>最新</b>
+  update_required: <emoji document_id=5424728541650494040>😕</emoji> <b>Update required</b> <code>.update</code>
+  setinfo_no_args: <emoji document_id=5370881342659631698>😢</emoji> <b>You need to specify text to change info to</b>
+  setinfo_success: <emoji document_id=5436040291507247633>🎉</emoji> <b>Info changed successfully</b>
+  _cfg_cst_msg: Custom message for info. May contain {me}, {version}, {build}, {prefix}, {platform}, {upd}, {uptime}, {cpu_usage}, {ram_usage}, {branch} keywords
+  _cfg_cst_btn: 情報のカスタムボタン。ボタンを削除するには空のままにしてください
+  _cfg_banner: 画像バナーのURL
+  desc: "<emoji document_id=5188377234380954537>\U0001FA90</emoji> <b>ユーザーボットとは？</b>\n\n<emoji document_id=5472238129849048175>\U0001F60E</emoji> ユーザーボットとは、Telegram API と対話して<b>ユーザーに代わって自動化されたタスクを実行するサードパーティのプログラム</b>のことです。これらのユーザーボットは、<b>メッセージの送信、チャンネルへの参加、メディアのダウンロードなど</b>、さまざまなタスクを自動化するために使用できます。\n\n<emoji document_id=5474667187258006816>\U0001F60E</emoji> ユーザーボットは、ボットアカウントではなく<b>ユーザーのアカウントで実行される</b>ため、通常の Telegram ボットとは異なります。つまり、ユーザーボットはより多くの機能にアクセスでき、実行できるアクションの柔軟性が高くなります。\n\n<emoji document_id=5472267631979405211>\U0001F6AB</emoji> ただし、<b>ユーザーボットは Telegram によって公式にサポートされていない</b>ことに注意してください。使用するとプラットフォームの利用規約に違反する可能性があります。そのため、<b>ユーザーはユーザーボットを使用する際に注意が必要であり</b>、悪意のある目的で使用されていないことを確認する必要があります。\n\n"
+  _cmd_doc_info: ユーザーボット情報を送信します
+  _cmd_doc_acbotinfo: Send userbot info
+  _cmd_doc_setinfo: <text> - .info のテキストを変更します
+  _ihandle_doc_info: ユーザーボット情報を送信します
+  _cls_doc: ユーザーボット情報を表示します
+loader:
+  name: Loader
+  loadmod_pm_timeout: Please, wait for 10 seconds before confirming this action
+  loadmod_not_allowed_fresh_pm: "<emoji document_id=5447644880824181073>⚠️</emoji> <b><u>Read this carefully!</u></b> <emoji document_id=5447644880824181073>⚠️</emoji>\n\n<b>You are attempting to load a module in personal messages with a user you do not know.</b> Modules, not verified by the developer, might cause a lot of trouble, from <b>messing with your account to account deletion or session comprometation</b>. If you know this user and <b><u>100%</u></b> trust him, wait a few days and try again."
+  loadmod_confirm_pm_message: <emoji document_id=5451732530048802485>⏳</emoji> <i>Waiting for your confirmation...</i>
+  link: "<emoji document_id=5280658777148760247>\U0001F310</emoji> <b><a href=\"{url}\">Link</a> of</b> <code>{class_name}</code>\n\n<emoji document_id=5188377234380954537>✍️</emoji> <code>{prefix}dlm {url}</code>\n\n{not_exact}"
+  file: "<emoji document_id=5256113064821926998>\U0001F4C1</emoji> <b>{class_name} のファイル</b>\n\n<emoji document_id=5134452506935427991>\U0001FA90</emoji> <b>インストールするには、このメッセージに返信して {prefix}lm</b>\n\n{not_exact}"
+  not_exact: <emoji document_id=5355133243773435190>⚠️</emoji> <i>完全一致が見つからなかったため、最も近い結果が表示されています</i>
+  args: <emoji document_id=5210952531676504517>❌</emoji> <b>引数を指定する必要があります</b>
+  loadmod_cancelled: <emoji document_id=5210952531676504517>🚫</emoji> <b>Module loading cancelled</b>
+  loadmod_confirm_pm: "⚠️ <b>Warning!</b>\n\nLoading modules from unknown sources is <b><u>very dangerous</u></b> and can lead to <b>account deletion or session comprometation</b>. Make sure that you know this user and <b><u>100%</u></b> trust him.\n\n<b>Do you want to continue with module loading?</b>"
+  loadmod_confirm_pm_yes: ✅ Yes, continue
+  loadmod_confirm_pm_no: 🚫 No, cancel
+  repo_config_doc: モジュールリポジトリへのURL
+  avail_header: <emoji document_id=5440551785284510215>🎢</emoji> <b>リポジトリからのモジュール</b>
+  no_module: <emoji document_id=5210952531676504517>🚫</emoji> <b>モジュールはリポジトリで利用できません。</b>
+  no_file: <emoji document_id=5210952531676504517>🚫</emoji> <b>ファイルが見つかりません</b>
+  provide_module: <emoji document_id=5312383351217201533>⚠️</emoji> <b>読み込むモジュールを提供してください</b>
+  bad_unicode: <emoji document_id=5210952531676504517>🚫</emoji> <b>モジュール内のUnicode形式が無効です</b>
+  load_failed: <emoji document_id=5210952531676504517>🚫</emoji> <b>読み込みに失敗しました。詳細はログを確認してください</b>
+  loaded: <emoji document_id=5188377234380954537>✍️</emoji> <b>Module</b> <code>{}</code>{} <b>loaded {}</b>{}{}{}{}{}{}
+  no_class: <b>どのクラスをアンロードする必要がありますか？</b>
+  unloaded: '{} <b>モジュール {} がアンロードされました。</b>'
+  not_unloaded: <emoji document_id=5253780051471642059>❌</emoji> <b>モジュールはアンロードされませんでした。</b>
+  requirements_failed: <emoji document_id=5210952531676504517>🚫</emoji> <b>要件のインストールに失敗しました</b>
+  requirements_failed_termux: "<emoji document_id=5407025283456835913>\U0001F576</emoji> <b>Requirements installation failed</b>\n<b>The most common reason is that Termux doesn't support many libraries. Don't report it as bug, this can't be solved.</b>"
+  requirements_installing: "<emoji document_id=5873225338984599714>\U0001F680</emoji> <b>要件をインストールしています:\n\n{}</b>"
+  requirements_restart: <emoji document_id=5875145601682771643>🚀</emoji> <b>要件はインストールされましたが、</b> <code>{}</code> <b>を適用するには再起動が必要です</b>
+  all_modules_deleted: <emoji document_id=5784993237412351403>✅</emoji> <b>すべてのモジュールが削除されました</b>
+  undoc: <emoji document_id=5427052514094619126>🤷‍♀️</emoji> ドキュメントなし
+  ihandler: "\n<emoji document_id=5372981976804366741>\U0001F916</emoji> <code>{}</code> {}"
+  inline_init_failed: "<emoji document_id=5287372146039861774>❌</emoji> <b>このモジュールには AuthorBot インライン機能が必要ですが、InlineManager の初期化に失敗しました</b>\n<i>@BotFather から古いボットの1つを削除し、ユーザーボットを再起動してこのモジュールをロードしてください</i>"
+  version_incompatible: "<emoji document_id=5287372146039861774>❌</emoji> <b>このモジュールには AuthorBot {}+ が必要です\n</b> <code>.update</code> <b>で更新してください</b>"
+  ffmpeg_required: <emoji document_id=5287372146039861774>❌</emoji> <b>このモジュールには FFMPEG が必要ですが、インストールされていません</b>
+  developer: "\n\n<emoji document_id=5287454910059654880>\U0001FAF6</emoji> <b>開発者:</b> {}"
+  depends_from: "\n\n<emoji document_id=5341492148468465410>\U0001F4E6</emoji> <b>依存関係:</b> \n{}"
+  by: by
+  module_fs: 💿 <b>再起動後にアンロードされないように、このモジュールをファイルシステムに保存しますか？</b>
+  save: 💿 保存
+  no_save: 🚫 保存しない
+  save_for_all: 💽 常に FS に保存
+  never_save: 🚫 FS に保存しない
+  will_save_fs: 💽 これで、.loadmod で読み込まれたすべてのモジュールがファイルシステムに保存されます
+  add_repo_config_doc: 読み込み元の追加リポジトリ
+  share_link_doc: .dlmod の結果メッセージでモジュールリンクを共有する
+  modlink: "\n\n<emoji document_id=6037284117505116849>\U0001F310</emoji> <b>リンク:</b> <code>{}</code>"
+  blob_link: "\n\n<emoji document_id=5312383351217201533>⚠️</emoji> <b>モジュールのダウンロードに `blob` リンクを使用しないでください。代わりに `raw` に切り替えることを検討してください</b>"
+  suggest_subscribe: "\n\n<emoji document_id=5435957248314579621>⭐️</emoji> <b>このモジュールは {} によって作成されました。このチャンネルに参加して開発者をサポートしますか？</b>"
+  subscribe: 💬 登録する
+  no_subscribe: 🚫 登録しない
+  subscribed: 💬 登録しました
+  not_subscribed: 🚫 今後このチャンネルへの登録を提案しません
+  confirm_clearmodules: ⚠️ <b>本当にすべてのモジュールをクリアしますか？</b>
+  clearmodules: 🗑 モジュールをクリア
+  cancel: 🚫 キャンセル
+  overwrite_module: "<emoji document_id=5287372146039861774>❌</emoji> <b>このモジュールはコアモジュール (</b><code>{}</code><b>) を上書きしようとしました</b>\n\n<emoji document_id=5472146462362048818>\U0001F4A1</emoji><i> バグとして報告しないでください。これはコアモジュールがジャンクなものに置き換えられるのを防ぐセキュリティ対策です</i>"
+  overwrite_command: "<emoji document_id=5287372146039861774>❌</emoji> <b>このモジュールはコアコマンド (</b><code>{}{}</code><b>) を上書きしようとしました</b>\n\n<emoji document_id=5472146462362048818>\U0001F4A1</emoji><i> バグとして報告しないでください。これはコアモジュールのコマンドがジャンクなものに置き換えられるのを防ぐセキュリティ対策です</i>"
+  unload_core: "<emoji document_id=5287372146039861774>❌</emoji> <b>コアモジュール</b> <code>{}</code> <b>はアンロードできません</b>\n\n<emoji document_id=5472146462362048818>\U0001F4A1</emoji><i> バグとして報告しないでください。これはコアモジュールがジャンクなものに置き換えられるのを防ぐセキュリティ対策です</i>"
+  cannot_unload_lib: <emoji document_id=5287372146039861774>❌</emoji> <b>ライブラリはアンロードできません</b>
+  wait_channel_approve: "<emoji document_id=5469741319330996757>\U0001F4AB</emoji> <b>モジュール</b> <code>{}</code> <b>がチャンネル <a href=\"https://t.me/{}\">{}</a> への参加許可を求めています。\n\n<b><emoji document_id=5467666648263564704>❓</emoji> 理由: {}</b>\n\n<i><a href=\"https://t.me/{}\">承認</a>を待っています...</i>"
+  installing: <emoji document_id=5325792861885570739>🕔</emoji> <b>モジュール</b> <code>{}</code> <b>をインストールしています...</b>
+  repo_exists: <emoji document_id=5210952531676504517>🚫</emoji> <b>リポジトリ</b> <code>{}</code> <b>は既に追加されています</b>
+  repo_added: <emoji document_id=5784993237412351403>✅</emoji> <b>リポジトリ</b> <code>{}</code> <b>が追加されました</b>
+  no_repo: <emoji document_id=5210952531676504517>🚫</emoji> <b>追加するリポジトリを指定する必要があります</b>
+  repo_not_exists: <emoji document_id=5210952531676504517>🚫</emoji> <b>リポジトリ</b> <code>{}</code> <b>は追加されていません</b>
+  repo_deleted: <emoji document_id=5784993237412351403>✅</emoji> <b>リポジトリ</b> <code>{}</code> <b>が削除されました</b>
+  _cmd_doc_addrepo: リポジトリをリポジトリリストに追加します
+  _cmd_doc_clearmodules: インストールされているすべてのモジュールを削除します
+  _cmd_doc_delrepo: リポジトリをリポジトリリストから削除します
+  _cmd_doc_dlmod: 公式モジュールリポジトリからモジュールをインストールします
+  _cmd_doc_loadmod: モジュールファイルを読み込みます
+  _cmd_doc_unloadmod: クラス名でモジュールをアンロードします
+  _cls_doc: モジュールを読み込みます
+  basic_auth_doc: モジュールリポジトリの基本認証
+translations:
+  name: Translations
+  lang_saved: '{} <b>言語が保存されました！</b>'
+  pack_saved: <emoji document_id=5197474765387864959>👍</emoji> <b>翻訳パックが保存されました！</b>
+  incorrect_language: <emoji document_id=5210952531676504517>🚫</emoji> <b>正しくない言語が指定されました</b>
+  lang_removed: <emoji document_id=5197474765387864959>👍</emoji> <b>翻訳がデフォルトにリセットされました</b>
+  check_pack: <emoji document_id=5210952531676504517>🚫</emoji> <b>URLのパック形式が無効です</b>
+  check_url: <emoji document_id=5210952531676504517>🚫</emoji> <b>langpackを含む有効なURLを指定する必要があります</b>
+  too_long: <emoji document_id=5341492148468465410>📁</emoji> <b>コマンドの出力が長すぎるため、ファイルで送信されます。</b>
+  choose_language: <emoji document_id=5454219968948229067>🗽</emoji> <b>言語を選択してください</b>
+  not_official: <emoji document_id=5312383351217201533>⚠️</emoji> <b>この言語は公式にサポートされていません</b>
+  requested_join: "\U0001F4AB <b>モジュール</b> <code>{}</code> <b>がチャンネル <a href='https://t.me/{}'>{}</a> への参加をリクエストしました</b>\n\n<b>❓ 理由:</b> <i>{}</i>"
+  fw_error: <emoji document_id=5877458226823302157>🕒</emoji> <b>呼び出し</b> <code>{}</code> <b>により、メソッド</b> <code>{}</code> <b>で {} の FloodWait が発生しました</b>
+  rpc_error: <emoji document_id=5877477244938489129>🚫</emoji> <b>呼び出し</b> <code>{}</code> <b>はRPCエラーにより失敗しました:</b> <code>{}</code>
+  _cmd_doc_dllangpack: '[リンク] - 外部の翻訳パックを追加'
+  _cmd_doc_setlang: '[言語] - デフォルトの言語を変更する'
+  _cls_doc: 内部翻訳を処理します
+eval:
+  name: Evaluator
+  eval: "<tg-emoji emoji-id={}>\U0001F4BB</emoji><b> コード:</b>\n<pre><code class=\"language-{}\">{}</code></pre>\n\n<emoji document_id=5197688912457245639>✅</emoji><b> 結果:</b>\n<pre><code class=\"language-{}\">{}</code></pre>"
+  err: "<tg-emoji emoji-id={}>\U0001F4BB</emoji><b> コード:</b>\n<pre><code class=\"language-{}\">{}</code></pre>\n\n<emoji document_id=5210952531676504517>\U0001F6AB</emoji> <b>エラー:</b>\n<pre><code class=\"language-{}\">{}</code></pre>"
+  compiling: <emoji document_id=5325787248363314644>🫥</emoji> <b>コードをコンパイルしています...</b>
+  no_compiler: <tg-emoji emoji-id={}>💻</emoji> <b>{} コンパイラがシステムにインストールされていません。</b>
+  _cmd_doc_e: Python コードを評価します
+  _cmd_doc_ebf: Brainf*ck コードを評価します
+  _cmd_doc_ec: C コードを評価します
+  _cmd_doc_ecpp: C++ コードを評価します
+  _cmd_doc_enode: Node.js コードを評価します
+  _cmd_doc_ephp: PHP コードを評価します
+  _cmd_doc_eruby: Ruby コードを評価します
+  _cls_doc: さまざまな言語でコードを評価します
+translate:
+  name: Translator
+  no_args: <emoji document_id=5210952531676504517>❌</emoji> <b>引数が指定されていません</b>
+  error: <emoji document_id=5210952531676504517>❌</emoji> <b>テキストを翻訳できません</b>
+  language: ja
+  _cmd_doc_tr: '[language] [text] - テキストを翻訳します'
+  _cls_doc: テキストを翻訳します（当たり前ですが）
+quickstart:
+  name: Quickstart
+  language_saved: 🇯🇵 言語が保存されました！
+  language: 🇯🇵 日本語
+  btn_support: 🥷 サポートチャット
+  _cls_doc: ユーザーボットのインストールについてユーザーに通知します
+
+$validators:
+  boolean: 真偽値
+  positive: 正の
+  digits: （正確に {digits} 桁）
+  integer_min: '{sign}integer greater than {minimum}{digits}'
+  integer_range: '{sign}integer from {minimum} to {maximum}{digits}'
+  integer: '{sign}整数{digits}'
+  integer_max: '{sign}integer less than {maximum}{digits}'
+  choice: '次のいずれか: {possible}'
+  multichoice: '値のリスト（各値は次のいずれかである必要があります: {possible}）'
+  each: ' (それぞれ {each} である必要があります)'
+  fixed_len: ' (正確に {fixed_len} 個)'
+  max_len: ' (最大 {max_len} 個)'
+  len_range: ' ({min_len} から {max_len} 個)'
+  min_len: ' (少なくとも {min_len} 個)'
+  series: 「,」で区切られた{len}値のシリーズ{each}
+  link: リンク
+  string_fixed_len: 長さ {length} の文字列
+  string: 文字列
+  string_max_len: 最大長 {max_len} の文字列
+  string_len_range: 長さ {min_len} から {max_len} の文字列
+  string_min_len: 長さ少なくとも {min_len} の文字列
+  regex: パターン «{regex}» に一致する文字列
+  float_min: '{sign}float greater than {minimum}'
+  float_range: '{sign}float from {minimum} to {maximum}'
+  float: '{sign}浮動小数点数'
+  float_max: '{sign}float less than {maximum}'
+  union: "次のいずれか:\n"
+  empty: 空の値
+  emoji_fixed_len: '{length} 個の絵文字'
+  emoji_len_range: '{min_len} から {max_len} 個の絵文字'
+  emoji_min_len: 少なくとも {min_len} 個の絵文字
+  emoji_max_len: '{max_len} 個以下の絵文字'
+  emoji: 絵文字
+  entity_like: エンティティへのリンク、ユーザー名、または Telegram ID
+$inline:
+  opening_form: ' <b>フォームを開いています...</b>'
+  opening_gallery: ' <b>ギャラリーを開いています...</b>'
+  opening_list: ' <b>リストを開いています...</b>'
+  inline403: <emoji document_id=5210952531676504517>🚫</emoji> <b>このチャットではインラインユニットを送信できません</b>
+  invoke_failed: <emoji document_id=5210952531676504517>🚫</emoji> <b>ユニットの呼び出しに失敗しました！詳細はログを確認してください</b>
+  invoke_failed_logs: "<emoji document_id=5210952531676504517>\U0001F6AB</emoji> <b>ユニットの呼び出しに失敗しました！</b>\n\n<emoji document_id=5226512880362332956>\U0001F4D6</emoji> <b>ログ:</b>\n\n<pre><code class=\"language-logs\">{}</code></pre>"
+  show_inline_cmds: 📄 利用可能なすべてのインラインコマンドを表示
+  no_inline_cmds: 利用可能なコマンドはありません
+  no_inline_cmds_msg: <b>😔 利用可能なインラインコマンドがないか、アクセス権がありません</b>
+  inline_cmds: ℹ️ {} 個の利用可能なコマンドがあります
+  inline_cmds_msg: "<b>ℹ️ 利用可能なインラインコマンド:</b>\n\n{}"
+  run_command: 🏌️ コマンドを実行
+  command_msg: "<b>\U0001FA90 コマンド «{}»</b>\n\n<i>{}</i>"
+  command: 🪐 コマンド «{}»
+  button403: このボタンを押すことは許可されていません！
+  keep_id: ⚠️ ID を削除しないでください！ {}
+
+# AuthorBot public pages and onboarding · © AuthorChe
+$public_pages:
+  start_label: AuthorBotへようこそ
+  help_label: コマンドと使い方
+  about_label: AuthorBotについて
+  author_label: AuthorCheについて
+  projects_label: AuthorCheのプロジェクト
+  install: AuthorBotをインストール
+  welcome_title: ✦ あなたのTelegram。広がる可能性。
+  start_intro: <b>AuthorChe</b>が開発するモジュール型Telegramユーザーボット、<b>AuthorBot</b>へようこそ。自動化、モジュール、Telegram内の操作画面で、日々の作業を自分に合ったツールに変えましょう。
+  welcome_intro: <b>AuthorBotの準備ができました。</b> Telegram内のあなただけのツール環境が起動しています。標準機能を確認し、言語を選んで、必要なモジュールを追加しましょう。小さな一歩から、自分だけの環境へ。
+  possibilities: ✦ あなたの使い方に合わせて
+  feature_modules: <b>モジュール</b> — 機能を追加し、各ツールを個別に設定できます。
+  feature_inline: <b>インラインツール</b> — Telegram内でボタン、フォーム、リスト、ギャラリーを利用できます。
+  feature_rich: <b>Rich Messages</b> — メディア、表、操作ボタンを組み合わせた表現豊かなページ。
+  feature_control: <b>自分で管理</b> — 言語、権限、バックアップ、更新を設定できます。
+  explore: ✦ AuthorBotを見てみよう
+  first_steps: ✦ はじめに使うコマンド
+  step_help: インストール済みのモジュールとコマンドを表示します。
+  step_module: モジュールまたはコマンドのヘルプを読みます。
+  step_install: ソースコードのリンクからモジュールをインストールします。
+  step_file: モジュールのPythonファイルに返信してインストールします。
+  step_language: インターフェースの言語を選びます。
+  step_info: ユーザーボットのバージョンと状態を表示します。
+  choose_language: 下のボタンで言語を選んでください。あとからsetlangで変更できます。
+  help_intro: この補助ボットは、インストール済みAuthorBotの公開インターフェースです。以下のページは誰でも閲覧できます。ユーザーボットのコマンドは所有者のTelegramアカウントから実行します。
+  help_note: モジュールは独自のコマンドやインラインツールを追加できます。利用できる機能は、インストール済みモジュールと所有者の権限設定によって決まります。例では標準のドット接頭辞を使用しています。変更した場合は自分の接頭辞を使ってください。
+  about_tagline: ✦ Telegram内の自分専用ツールキット
+  about_intro: <b>AuthorBotは、いつも使っているTelegramに自動化を届けます。</b> あなたのTelegramアカウントで動作し、モジュール型のコアと操作を補助するボットを組み合わせます。日々のコマンド、メディア作業、自分のアイデアを、設定可能な一つの環境にまとめられます。
+  about_workflow: 必要なツールを見つけ、モジュールをインストールし、日常の使い方に合わせて設定しましょう。すべての引数を覚える代わりにフォームを開いたり、ギャラリーを閲覧したり、リッチなページを公開したりできます。使う機能を残し、必要に応じて環境を広げられます。
+  about_modules_title: 🧩 モジュール型コア
+  about_modules: コアを書き換えずにモジュールを追加、設定、削除できます。独自のPythonモジュールも作成できます。
+  about_inline_title: 🎛 操作しやすい画面
+  about_inline: フォーム、ボタン、リスト、ギャラリーで、Telegram内のコマンドを便利に操作できます。
+  about_rich_title: ✦ Rich Messages
+  about_rich: メディア、中央揃えのタイトルブロック、表、折りたたみセクション、リッチボタンを備えたページ。
+  about_security_title: 🔐 アクセス管理
+  about_security: 所有者権限と個別のセキュリティルールで、コマンドを実行できる相手を設定できます。
+  about_backup_title: 💾 継続して使うために
+  about_backup: 標準のバックアップ、設定の保存、自動更新で、作業環境を維持できます。
+  about_language_title: 🌍 言語
+  about_language: ウクライナ語、英語、ロシア語、ドイツ語、日本語に対応。未翻訳のモジュール文字列は英語で表示します。
+  about_setup_title: AuthorBotの動作環境
+  about_setup: Linuxサーバー、Docker、AndroidのTermuxで利用できます。自動TermuxインストーラーがDebianとPythonを準備し、依存関係を確認して、詳細をログに保存します。
+  about_vision: 便利なコマンドから自分だけのTelegramワークフローへ。あなたとともに成長するツールキット。
+  author_hint: <code>/author</code>でプロジェクトの作者を紹介します。
+  author_tagline: 開発者 · 音楽家 · クリエイター
+  author_intro: <b>AuthorChe</b>は、ウクライナの開発者<b>Vadym Yemelianov</b>の創作・技術ブランドです。音楽家、歌手、作曲家、詩人として活動し、デジタルプロジェクトを制作しています。
+  author_vision: 音楽、言葉、コードは、アイデアを形にするさまざまな方法です。AuthorCheの技術プロジェクトはTelegram、Android、自動化、プライバシー、AIツールを結び、機能と使い心地の両方を大切にしています。
+  author_world: ✦ 一人の作者。さまざまな創作。
+  author_projects: AuthorBot、AuthorGram、Jarvis | AuthorAi、Goose | AuthorBrowser、Author AIは、これらの関心をデジタルツールとして形にしています。<code>/projects</code>や公式サイト、Telegramチャンネルをご覧ください。
+  projects_intro: <b>AuthorChe</b>のデジタルプロジェクトをご紹介します。公式サイトとTelegramチャンネルでニュース、リリース、実験的な取り組みを公開しています。
+  project_gram: <b>AuthorGram</b> — プライバシー、画面設定、マルチメディアに重点を置いたAndroid用Telegramクライアント。
+  project_bot: <b>AuthorBot</b> — 自動化、インラインツール、アクセス管理、バックアップ、Rich Messagesを備えたモジュール型Telegramユーザーボット。
+  project_ai: <b>Jarvis | AuthorAi</b> — ローカルGGUFモデル、音声モード、ツール、ファイル、オフライン知識を扱うAndroid用AIエージェント。
+  project_browser: <b>Goose | AuthorBrowser</b> — メディアツール、広告ブロック、バックグラウンド再生、連携機能を備えたAndroidブラウザー。
+  project_platform: <b>Author AI</b> — エージェント、ツール、自動化の連携に対応するサーバー型AIプラットフォーム。
+  ready: ✅ AuthorBotのインライン画面の準備ができました。
+  sent_author: ✅ AuthorCheの紹介をインラインボットとの個人チャットに送りました。
+  running: 起動中
+  build: ビルド
+  version: バージョン
+  current: 最新です
+  update: 更新があります
+  language_saved: ✅ 言語を保存しました。
+
+Weather:
+  city: "\U0001F324 <b>天気 · 既定の都市</b>\n<code>{}</code>"
+  not_set: 未設定
+  need_city: "\U0001F324 <b>どこの天気を確認しますか？</b>\n<code>{}weather 都市名</code> を使うか、weathercity で都市を保存してください。"
+  unavailable: "\U0001F327 <b>天気サービスを一時的に利用できません。</b>\nしばらくしてから再試行してください。"
+  forecast: 🌤 <b>天気 · {}</b>
+  unavailable_plain: 天気サービスを一時的に利用できません
+  forecast_plain: 天気 · {}
+  _cls_doc: 選択した言語で現在の天気と予報を確認できます。
+  _cmd_doc_weather: '[都市名] — 現在の天気と予報を表示します。'
+  _cmd_doc_weathercity: '[都市名] — 既定の都市を保存、または確認します。'
+  _ihandle_doc_weather: '[都市名] — 天気予報を共有します。'
+InlineRandom:
+  heads: 表
+  tails: 裏
+  coin_title: コインを投げる
+  number_title: ランダムな数 · 1–{}
+  choice_title: 候補から選ぶ
+  person_title: 架空の人物
+  _cls_doc: コインを投げたり、乱数を生成したり、候補から選んだりできます。
+LongRead:
+  no_text: ✦ <b>隠したいテキストを追加してください。</b>
+  longread: "✦ <b>AuthorBot · あなたへのメッセージ</b>\n<i>下のボタンを開いて読んでください。</i>"
+  read: 📖 メッセージを読む
+  title: 隠されたメッセージ
+  _cmd_doc_lr: <テキスト> — テキストを読むボタンの下に隠します。
+  _ihandle_doc_lr: <テキスト> — 隠されたメッセージを共有します。
+  _cls_doc: 長いメッセージを読みやすいボタンの下に隠します。

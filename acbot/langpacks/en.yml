@@ -240,7 +240,7 @@ settings:
 
 <emoji document_id=5785209342986817408>🌎</emoji> The <code>--no-web</code> argument enables login to your account <b>directly in the terminal, rather than through a link</b> <code>{}.lhr.life</code>.
 
-It completely safe and will help you upgrade to Heroku automatically'
+It completely safe and will help you upgrade to AuthorBot automatically'
   too_many_args: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Too many args</b>"
   blacklisted: "<emoji document_id=5197474765387864959>👍</emoji> <b>Chat {} blacklisted from userbot</b>"
   unblacklisted: "<emoji document_id=5197474765387864959>👍</emoji> <b>Chat {} unblacklisted from userbot</b>"
@@ -350,31 +350,6 @@ test:
   _cmd_doc_suspend: "<time> - Suspends the bot for N seconds"
   _cls_doc: "Perform operations based on userbot self-testing"
 
-unit_heta:
-  name: "UnitHeta"
-  no_query: "╭╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╮\n╵\n╵    ❌ <b>𝚈𝚘𝚞 𝚖𝚞𝚜𝚝 𝚠𝚛𝚒𝚝𝚎 𝚚𝚞𝚎𝚛𝚢</b>\n╵\n╰╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╯"
-  no_results: "╭╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╮\n╵\n╵    ❌<b> 𝙽𝚘 𝚛𝚎𝚜𝚞𝚕𝚝𝚜</b>\n╵\n╰╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╯"
-  api_error: "╭╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╮\n╵\n╵   💤 <b>API 𝚒𝚜 𝚜𝚕𝚎𝚎𝚙𝚒𝚗𝚐</b>\n╵\n╰╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╯"
-  result: "🥰 <b>𝚁𝚎𝚜𝚞𝚕𝚝𝚜 𝚏𝚘𝚛</b> <code>{query}</code><b>:</b>\n\n🧳 <code>{name}</code> <b>от</b> <code>{dev}</code>\n👨‍🏫 <i>{cls_doc}</i>\n\n📚 <b>𝙲𝚘𝚖𝚖𝚊𝚗𝚍𝚜:</b>\n{commands}\n\n🔗 <b>𝙳𝚘𝚠𝚗𝚕𝚘𝚊𝚍:</b> <code>{prefix}dlh {mhash}</code>"
-  install: "╭╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╮\n╵\n╵    💦 <b>𝙸𝚗𝚜𝚝𝚊𝚕𝚕</b>\n╵\n╰╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╯"
-  loaded: "╭╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╮\n╵\n╵    ✅ <b>𝙸𝚗𝚜𝚝𝚊𝚕𝚕𝚎𝚍!</b>\n╵\n╰╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╯"
-  not_loaded: "╭╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╮\n╵\n╵    ❌ <b>𝙽𝚘𝚝 𝚒𝚗𝚜𝚝𝚊𝚕𝚕𝚎𝚍! </b>\n╵\n╰╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╯"
-  language: "en"
-  404: "<emoji document_id=5210952531676504517>❌</emoji> <b>Module not found</b>"
-  args: "<emoji document_id=5210952531676504517>❌</emoji> <b>You must specify arguments</b>"
-  _cmd_doc_heta: "<query> - Searches Heta repository for modules"
-  _cmd_doc_ml: "<module name> - Send link to module"
-  _cls_doc: "Manages stuff with @acbotmods_bot"
-  enter_search_query: "🔎 Enter search query"
-  search_query_desc: "Command, module name, description, etc."
-  _ihandle_doc_heta: "Searches Heta repository for modules"
-  enter_hash: "<emoji document_id=5210952531676504517>❌</emoji> <b>You must specify hash</b>"
-  resolving_hash: "<emoji document_id=5325731315004218660>⏳</emoji> <b>Resolving hash...</b>"
-  installing_from_hash: "<emoji document_id=5325731315004218660>⏳</emoji> <b>Installing module</b> <code>{}</code> <b>...</b>"
-  installed: "<emoji document_id=5398001711786762757>✅</emoji> <b>Installed</b> <code>{}</code>"
-  error: "<emoji document_id=5210952531676504517>❌</emoji> <b>Error while installing module</b>"
-  _cmd_doc_dlh: "<hash> - Install module from hash"
-
 update_notifier:
   name: "UpdateNotifier"
   update_required: "🆕 <b>Update available!</b>\n\nNew version released.\n🔮 <b><s>{}</s> -> {}</b>\n\n{}"
@@ -444,6 +419,12 @@ help:
   not_exact: "<emoji document_id=5312383351217201533>☝️</emoji> <b>No exact match occured, so the closest result is shown instead</b>"
   request_join: "You requested link for support chat"
   core_notice: "<emoji document_id=5312383351217201533>☝️</emoji> <b>This is a core module. You can't unload it nor replace</b>"
+  rich_title: Help
+  rich_modules: Modules
+  rich_close: Close
+  rich_service: 'Service module: works in the background or through other modules.'
+  rich_summary: '{} modules · {} hidden · prefix <code>{}</code>'
+  rich_hint: Choose a module below for commands and descriptions. Use help &lt;command&gt; to open a tool directly.
 
 info:
   name: "Info"
@@ -588,14 +569,11 @@ translate:
   _cls_doc: "Translates text (obviously)"
 
 quickstart:
-  name: "Quickstart"
-  base: "✍️ <b>Hello.</b> You've just installed <b>AuthorBot</b> userbot.\n\n❓ <b>Need help?</b> Feel free to join our support bot - @vyfb_bot. We help <b>everyone</b>.\n\n📼 <b>You can find and install modules using </b><code>.heta</code><b> and from channels: @hikarimods_database, @ftgmodulesbyfl1yd, @hikarimods, @blazeftg, @morisummermods, @nalinormods, @AstroModules, @vsecoder_m , @mm_mods, @apodiktum_modules, @shadow_modules, @DorotoroMods, @AuthorBotFTGmods, @nercymods, @sqlmerr_m, @AuroraModules, @famods. If you search by heta simply enter your search query and click ⛩ Install on needed module</b>\n\n💁‍♀️ <b>Quickstart:</b>\n\n1️⃣ <b>Type</b> <code>.help</code> <b>to see modules list</b>\n2️⃣ <b>Type</b> <code>.help &lt;ModuleName/command&gt;</code> <b>to see help of module ModuleName</b>\n3️⃣ <b>Type</b> <code>.dlmod &lt;link&gt;</code> <b>to load module from link</b>\n4️⃣ <b>Type</b> <code>.loadmod</code> <b>with reply to file to install module from it</b>\n5️⃣ <b>Type</b> <code>.unloadmod &lt;ModuleName&gt;</code> <b>to unload module ModuleName</b>\n\n💡 <b>supports modules from Friendly-Telegram and GeekTG, as well as its own ones.</b>"
-  railway: "🚂 <b>Your userbot is installed on Railway</b>. This platform has only <b>500 free hours per month</b>. Once this limit is reached, your <b>will be frozen</b>. Next month <b>you will need to go to https://railway.app and restart it</b>."
-  lavhost: "✌️ <b>Your userbot is installed on lavHost</b>. Make sure to join @lavhost for important notifications and updates. All questions regarding the platform should be asked in @lavhostchat."
-  language_saved: "🇬🇧 Language saved!"
-  language: "🇬🇧 English"
-  btn_support: "🥷 Support chat"
-  _cls_doc: "Notifies user about userbot installation"
+  name: Quickstart
+  language_saved: 🇬🇧 Language saved!
+  language: 🇬🇧 English
+  btn_support: 🥷 Support chat
+  _cls_doc: Notifies user about userbot installation
 
 $validators:
   boolean: "boolean"
@@ -651,3 +629,98 @@ $inline:
   button403: "You are not allowed to press this button!"
   keep_id: "⚠️ Do not remove ID! {}"
 
+
+# AuthorBot public pages and onboarding · © AuthorChe
+$public_pages:
+  start_label: Welcome to AuthorBot
+  help_label: Commands and first steps
+  about_label: Discover AuthorBot
+  projects_label: AuthorChe projects
+  install: Install AuthorBot
+  welcome_title: ✦ Your Telegram. Your possibilities.
+  start_intro: Welcome to <b>AuthorBot</b>, a modular Telegram userbot by <b>AuthorChe</b>. Turn everyday actions into tools that work your way — with automation, modules and an interface right inside Telegram.
+  welcome_intro: <b>AuthorBot is ready.</b> Your personal Telegram workspace is now running. Explore the built-in tools, choose your language and add the modules that suit you. Start small; make it yours.
+  possibilities: ✦ Built around your workflow
+  feature_modules: <b>Modules</b> — add functions and configure each tool independently.
+  feature_inline: <b>Inline tools</b> — buttons, forms, lists and galleries inside Telegram.
+  feature_rich: <b>Rich Messages</b> — expressive pages with media, tables and interactive buttons.
+  feature_control: <b>Your settings</b> — language, permissions, backups and updates under your control.
+  explore: ✦ Explore AuthorBot
+  first_steps: ✦ A few commands to get started
+  step_help: See installed modules and commands.
+  step_module: Read the help for a module or command.
+  step_install: Install a module from its source link.
+  step_file: Reply to a Python module file to install it.
+  step_language: Choose the interface language.
+  step_info: See your userbot version and status.
+  choose_language: Choose your language with the buttons below. You can change it later with setlang.
+  help_intro: This companion bot is the public face of an installed AuthorBot. The pages below are available to everyone; userbot commands are run from the owner's Telegram account.
+  help_note: Modules can add their own commands and inline tools. Their availability depends on the installed modules and the owner's permissions. Examples use the default dot prefix; use your configured prefix if you changed it.
+  about_tagline: ✦ A personal toolkit inside Telegram
+  about_intro: <b>AuthorBot brings automation into the place you already use.</b> It runs with your Telegram account and combines a modular engine with a companion bot for interactive tools. Everyday commands, media workflows and your own ideas can share one configurable workspace.
+  about_workflow: Find a tool, install its module and shape its settings around your routine. Open a form instead of remembering every option, browse a gallery or publish a rich page. Keep the functions you use and extend the userbot as your needs grow.
+  about_modules_title: 🧩 Modular engine
+  about_modules: Install, configure and remove modules without rewriting the core. Extend AuthorBot with your own Python modules.
+  about_inline_title: 🎛 Interactive interface
+  about_inline: Forms, buttons, lists and galleries turn commands into convenient Telegram controls.
+  about_rich_title: ✦ Rich Messages
+  about_rich: Structured pages with media, centered title blocks, tables, expandable sections and rich buttons.
+  about_security_title: 🔐 Access controls
+  about_security: Choose who may run commands with owner permissions and targeted security rules.
+  about_backup_title: 💾 Continuity
+  about_backup: Built-in backups, persistent settings and self-updates help maintain your workspace.
+  about_language_title: 🌍 Languages
+  about_language: Ukrainian, English, Russian, German and Japanese, with English fallback for untranslated module strings.
+  about_setup_title: Where AuthorBot runs
+  about_setup: Use a Linux server, Docker or Android with Termux. The automated Termux installer prepares Debian and Python, checks dependencies and keeps installation details in a log.
+  about_vision: 'A toolkit that grows with you: from a useful command to a Telegram workflow of your own.'
+  author_hint: Discover the person behind the project with <code>/author</code>.
+  author_tagline: Developer · musician · creator
+  author_intro: '<b>AuthorChe</b> is the creative and technical brand of Ukrainian developer <b>Vadym Yemelianov</b>: musician, singer, composer, poet and creator of digital projects.'
+  author_vision: Music, words and code are different ways to bring an idea to life. AuthorChe's technical projects focus on Telegram, Android, automation, privacy and AI tools — with attention to both what a product does and how it feels to use.
+  author_world: ✦ One author. Many ways to create.
+  author_projects: AuthorBot, AuthorGram, Jarvis | AuthorAi, Goose | AuthorBrowser and Author AI bring these interests into digital tools. Open <code>/projects</code> to explore them, or follow the official website and Telegram channel for updates.
+  projects_intro: Explore the digital projects of <b>AuthorChe</b>. The official website and Telegram channel bring together news, releases and experiments.
+  project_gram: <b>AuthorGram</b> — an Android Telegram client focused on privacy, interface settings and multimedia.
+  project_bot: <b>AuthorBot</b> — a modular Telegram userbot with automation, inline tools, access controls, backups and Rich Messages.
+  project_ai: <b>Jarvis | AuthorAi</b> — an Android AI agent with local GGUF models, voice modes, tools, files and offline knowledge.
+  project_browser: <b>Goose | AuthorBrowser</b> — an Android browser with media tools, ad blocking, background playback and integrations.
+  project_platform: <b>Author AI</b> — a server AI platform and integrations for agents, tools and automation.
+  ready: ✅ AuthorBot inline interface is ready.
+  sent_author: ✅ The AuthorChe page is in your private chat with the inline bot.
+  running: RUNNING
+  build: Build
+  version: Version
+  current: Up to date
+  update: Update available
+  language_saved: ✅ Language saved.
+  author_label: Meet AuthorChe
+
+Weather:
+  city: "\U0001F324 <b>Weather · default city</b>\n<code>{}</code>"
+  not_set: not set
+  need_city: "\U0001F324 <b>Where shall we check the weather?</b>\nUse <code>{}weather city</code> or save a city with weathercity."
+  unavailable: "\U0001F327 <b>The weather service is temporarily unavailable.</b>\nPlease try again later."
+  forecast: 🌤 <b>Weather · {}</b>
+  unavailable_plain: Weather service temporarily unavailable
+  forecast_plain: Weather · {}
+  _cls_doc: Current weather and forecasts in your language.
+  _cmd_doc_weather: '[city] — show current weather and forecast.'
+  _cmd_doc_weathercity: '[city] — save or view the default city.'
+  _ihandle_doc_weather: '[city] — share a weather forecast.'
+InlineRandom:
+  heads: Heads
+  tails: Tails
+  coin_title: Flip a coin
+  number_title: Random number · 1–{}
+  choice_title: Make a choice
+  person_title: An imaginary person
+  _cls_doc: Flip coins, generate numbers and choose between your options.
+LongRead:
+  no_text: ✦ <b>Add the text you want to hide.</b>
+  longread: "✦ <b>AuthorBot · a message for you</b>\n<i>Open the button below to read it.</i>"
+  read: 📖 Read the message
+  title: Hidden message
+  _cmd_doc_lr: <text> — hide text behind a reading button.
+  _ihandle_doc_lr: <text> — share a hidden message.
+  _cls_doc: Keep a long message behind a simple reading button.

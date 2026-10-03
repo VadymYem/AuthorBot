@@ -10,14 +10,13 @@ import requests
 from aiogram.types import InlineQueryResultArticle, InputTextMessageContent
 from herokutl.tl.types import Message
 
-from .. import loader, utils
+from .. import loader, translations, utils
 from ..inline.types import InlineQuery
 from ..utils import rand
 
 __version__ = (1, 2, 0)
 
 logger = logging.getLogger(__name__)
-CYRILLIC = re.compile(r"[А-Яа-яІіЇїЄєҐґ]")
 
 
 def escape_ansi(line: str) -> str:
@@ -33,8 +32,12 @@ class WeatherMod(loader.Module):
 
     async def _fetch(self, city: str, compact: bool = False) -> str:
         encoded = quote_plus(city.strip())
-        language = "uk" if CYRILLIC.search(city) else "en"
-        suffix = "?format=3" if compact else f"?m&T&lang={language}"
+        selected = self._db.get(translations.__name__, "lang", "en").split()
+        language = translations.normalize_language(selected[0]) if selected else "en"
+        language = "uk" if language == "ua" else language
+        if language not in {"uk", "en", "ru", "de", "ja"}:
+            language = "en"
+        suffix = f"?format=3&lang={language}" if compact else f"?m&T&lang={language}"
         response = await utils.run_sync(
             requests.get,
             f"https://wttr.in/{encoded}{suffix}",
@@ -53,8 +56,7 @@ class WeatherMod(loader.Module):
         city = self.db.get(self.strings["name"], "city", "")
         await utils.answer(
             message,
-            "<b>🏙 Current city:</b> "
-            f"<code>{utils.escape_html(city or 'Not specified')}</code>",
+            self.strings("city").format(utils.escape_html(city or self.strings("not_set"))),
         )
 
     @loader.command()
@@ -66,21 +68,21 @@ class WeatherMod(loader.Module):
             "",
         )
         if not city:
-            await utils.answer(message, "<b>🏙 Specify a city or set one with .weathercity.</b>")
+            await utils.answer(message, self.strings("need_city").format(utils.escape_html(self.get_prefix())))
             return
 
         try:
             forecast = await self._fetch(city)
         except requests.RequestException as exc:
-            logger.warning("Weather request failed", exc_info=True)
+            logger.warning("Weather service unavailable (%s)", type(exc).__name__)
             await utils.answer(
                 message,
-                f"<b>Weather service error:</b> <code>{utils.escape_html(str(exc))}</code>",
+                self.strings("unavailable"),
             )
             return
 
-        lines = "\n".join(forecast.splitlines()[:7])
-        await utils.answer(message, f"<code>{utils.escape_html(lines)}</code>")
+        lines = "\n".join(forecast.splitlines()[:16])
+        await utils.answer(message, self.strings("forecast").format(utils.escape_html(city)) + f"\n<pre>{utils.escape_html(lines)}</pre>")
 
     async def weather_inline_handler(self, query: InlineQuery) -> None:
         """Переглянути прогноз погоди."""
@@ -92,17 +94,17 @@ class WeatherMod(loader.Module):
             compact = await self._fetch(city, compact=True)
             full = await self._fetch(city)
             description = compact.strip()
-            message_text = "\n".join(full.splitlines()[:7])
+            message_text = "\n".join(full.splitlines()[:16])
         except requests.RequestException:
-            logger.warning("Inline weather request failed", exc_info=True)
-            description = "Weather service is temporarily unavailable"
+            logger.debug("Inline weather service unavailable")
+            description = self.strings("unavailable_plain")
             message_text = description
 
         await query.answer(
             [
                 InlineQueryResultArticle(
                     id=rand(20),
-                    title=f"Forecast for {city}",
+                    title=self.strings("forecast_plain").format(city),
                     description=description,
                     input_message_content=InputTextMessageContent(
                         f"<code>{utils.escape_html(message_text)}</code>",

@@ -12,7 +12,7 @@
 [![Rich Messages](https://img.shields.io/badge/Rich%20Messages-Bot%20API%2010.x-111827)](https://core.telegram.org/bots/api#rich-messages)
 [![Verify](https://github.com/VadymYem/AuthorBot/actions/workflows/verify.yml/badge.svg)](https://github.com/VadymYem/AuthorBot/actions/workflows/verify.yml)
 
-**AuthorBot** — модульний Telegram userbot від **Author C**.  
+**AuthorBot** — модульний Telegram userbot від **AuthorChe**.
 Працює як розширення вашого Telegram-акаунта та окремий inline/public bot-інтерфейс.
 
 [Website](https://authorche.top) · [Installation](https://authorche.top/ubot.html) · [Telegram](https://t.me/wsinfo) · [Module guide](docs/MODULE_DEVELOPMENT.md)
@@ -26,14 +26,14 @@
 | Напрям | Можливості |
 |---|---|
 | **Модулі** | Динамічне встановлення, оновлення, локальний cache, dependency install, aliases |
-| **Inline UI** | Форми, списки, галереї, callback-кнопки, inline queries |
+| **Inline UI** | Форми, списки, галереї, callback-кнопки, inline queries, інтерактивна Rich Message довідка |
 | **Rich Messages** | Rich HTML/Markdown, headings, tables, details, media blocks, rich buttons, streaming drafts |
 | **Безпека** | Owner/security masks, targeted rules, blacklist, API flood protection, без прихованого owner-доступу |
 | **Дані** | Локальна JSON DB з атомарним записом і backup; optional Redis із fallback на диск |
 | **Оновлення** | Fetch + deterministic reset до upstream branch без merge-conflict loop |
 | **Backup** | Backup/restore конфігурації та модулів |
 | **Termux** | Debian Bookworm / Python 3.11 через PRoot, virtualenv, autostart |
-| **Public bot** | `/start`, `/help`, `/about`, `/projects` із Rich Message оформленням |
+| **Public bot** | `/start`, `/help`, `/about`, `/author`, `/projects` із Rich Message оформленням |
 
 ### Основний каталог модулів
 
@@ -44,6 +44,7 @@ https://github.com/hikariatama/host/raw/master
 ```
 
 Додаткові repositories можна налаштовувати через конфіг Loader.
+Вбудований каталог Heta видалено; встановлення модулів через Loader і власні репозиторії залишається доступним.
 
 ---
 
@@ -56,6 +57,7 @@ https://github.com/hikariatama/host/raw/master
   set -e
   termux-wake-lock
   log="$HOME/authorbot-install.log"
+  clear 2>/dev/null || true
   printf 'AuthorBot by AuthorChe · Підготовка встановлення…\n'
   if ! { pkg update -y && pkg install -y curl; } >"$log" 2>&1; then
     printf 'Не вдалося підготувати Termux. Журнал: %s\n' "$log"
@@ -131,7 +133,7 @@ Docker за замовчуванням публікує web UI тільки на
 
 ## Public companion bot
 
-Під час налаштування inline-режиму AuthorBot створює або використовує BotFather-бота. Для автоматично створеного бота використовується ім’я **Author Bot off** і випадковий username формату:
+Під час налаштування inline-режиму AuthorBot створює або використовує BotFather-бота. Для автоматично створеного бота використовується ім’я **AuthorBot of [name]**, де `[name]` — ім’я власника в Telegram, а username має випадковий формат:
 
 ```text
 author_<random>_off_AC_bot
@@ -141,10 +143,23 @@ author_<random>_off_AC_bot
 
 - `/start` — головна Rich Message сторінка;
 - `/help` — довідка;
-- `/about` — інформація про Author C;
+- `/about` — розгорнута розповідь про можливості AuthorBot;
+- `/author` (також `/автор`, `/aboutauthor`) — про AuthorChe;
 - `/projects` — проєкти та офіційні ресурси.
 
-Редактори з дозволеними Telegram ID можуть оновлювати ці сторінки командами `/setstart`, `/sethelp`, `/setabout`, `/setprojects`. Контент зберігається локально в DB конкретного встановлення.
+Редактори з дозволеними Telegram ID можуть оновлювати ці сторінки командами `/setstart`, `/sethelp`, `/setabout`, `/setauthor`, `/setprojects`. Контент зберігається локально в DB конкретного встановлення. `reset` повертає локалізовану стандартну сторінку. Команди `.author` і `.автор` відкривають сторінку автора у приватному чаті з inline-ботом.
+
+---
+
+## Мови та привітання
+
+Українська (`ua` або `uk`), англійська (`en`), російська (`ru`), німецька (`de`) та японська (`ja`, також `jp`). Вибери мову кнопками після встановлення або командою `.setlang`. Для неперекладених рядків модулів працює англійський fallback.
+
+Публічні `/start`, `/help`, `/about`, `/author` та `/projects` використовують мову Telegram відвідувача. Щоб відкрити сторінку іншою мовою, додай код: `/about de`, `/start uk`. Вибір відвідувача не змінює мову власника userbot.
+
+Привітання після встановлення — Rich Message з локальним логотипом, центрованими заголовками, першими командами, ресурсами AuthorChe та кнопками мов. Коли Rich Messages недоступні, бот надсилає читабельну класичну версію. Після запуску термінал очищується командою `clear` і показує ASCII логотип AuthorBot, статус, версію та build.
+
+`.help` відкриває інтерактивну Rich Message довідку через ваш inline-бот: модулі поділено на сторінки, кнопки відкривають описи, команди та aliases. `.help назва` або `.help команда` відкриває потрібний інструмент одразу; `.help -f` показує приховані модулі, зберігаючи перевірки доступу до команд. Кнопка Close видаляє повідомлення через Bot API або акаунт; якщо видалення недоступне, вона прибирає клавіатуру. Контролери довідки діють 15 хвилин; URL-кнопки залишаються доступними.
 
 ---
 
@@ -241,7 +256,7 @@ CI перевіряє Python 3.10 і 3.11 з основними та додат�
 
 ## Автор
 
-**Author C**
+**AuthorChe**
 
 - Website: https://authorche.top
 - Telegram: https://t.me/wsinfo

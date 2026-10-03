@@ -1,10 +1,11 @@
-# © Dan G. && AuthorChe
-#  
+# © Dan G. && AuthorChe
+#
 # You can redistribute it and/or modify it under the terms of the GNU AGPLv3
-#  https://www.gnu.org/licenses/agpl-3.0.html
+#  https://www.gnu.org/licenses/agpl-3.0.html
 # -*- coding: utf-8 -*-
 
 from random import choice, randint
+import re
 
 from .. import loader, utils
 from ..inline.types import InlineQuery
@@ -20,12 +21,12 @@ class InlineRandomMod(loader.Module):
     async def coin_inline_handler(self, query: InlineQuery) -> dict:
         """Heads or tails?"""
 
-        r = "ðŸ¦… Heads" if randint(0, 1) else "ðŸª™ Tails"
+        r = self.strings("heads") if randint(0, 1) else self.strings("tails")
 
         return {
-            "title": "Toss a coin",
-            "description": "Trust in the God of luck, and he will be by your side!",
-            "message": f"<i>The God of luck tells us...</i> <b>{r}</b>",
+            "title": self.strings("coin_title"),
+            "description": "AuthorBot · by AuthorChe",
+            "message": f"<b>🪙 {self.strings('coin_title')}</b>\n\n{r}",
             "thumb": "https://authorche.top/poems/logo.jpg",
         }
 
@@ -38,13 +39,13 @@ class InlineRandomMod(loader.Module):
 
         a = query.args
 
-        if not str(a).isdigit():
+        if not re.fullmatch(r"[0-9]{1,12}", a) or int(a) < 1:
             return
 
         return {
-            "title": f"Toss random number less or equal to {a}",
-            "description": "Trust in the God of luck, and he will be by your side!",
-            "message": f"<i>The God of luck screams...</i> <b>{randint(1, int(a))}</b>",
+            "title": self.strings("number_title").format(a),
+            "description": "AuthorBot · by AuthorChe",
+            "message": f"<b>🎲 {self.strings('number_title').format(a)}</b>\n\n<code>{randint(1, int(a))}</code>",
             "thumb": "https://authorche.top/poems/logo.jpg",
         }
 
@@ -55,14 +56,16 @@ class InlineRandomMod(loader.Module):
         if not query.args or not query.args.count(","):
             return
 
-        a = query.args
+        items = [item.strip() for item in query.args.split(',') if item.strip()]
+        if len(items) < 2:
+            return
 
         return {
-            "title": "Choose one item from list",
-            "description": "Trust in the God of luck, and he will be by your side!",
+            "title": self.strings("choice_title"),
+            "description": "AuthorBot · by AuthorChe",
             "message": (
-                "<i>Ð‘Ð¾Ð³ ÑƒÐ´Ð°Ñ‡Ñ– ÑˆÐµÐ¿Ð¾Ñ‡Ðµ...</i>"
-                f" <b>{choice(a.split(',')).strip()}</b>"
+                f"<b>✦ {self.strings('choice_title')}</b>\n\n"
+                f"<b>{utils.escape_html(choice(items))}</b>"
             ),
             "thumb": "https://authorche.top/poems/logo.jpg",
         }
@@ -73,5 +76,5 @@ class InlineRandomMod(loader.Module):
 
         return {
             "photo": f"https://thispersondoesnotexist.com/image?id={utils.rand(10)}",
-            "title": "This person doesn't exist",
+            "title": self.strings("person_title"),
         }

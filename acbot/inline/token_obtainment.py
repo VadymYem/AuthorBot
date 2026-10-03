@@ -6,7 +6,7 @@ from herokutl.errors.rpcerrorlist import YouBlockedUserError
 from herokutl.tl.functions.contacts import UnblockRequest
 
 from .. import utils
-from ..branding import BOT_PHOTO
+from ..branding import BOT_PHOTO, personal_bot_name
 from .._internal import fw_protect
 from .types import InlineUnit
 
@@ -65,7 +65,7 @@ class TokenObtainment(InlineUnit):
                 username = f"@author_{uid}_off_AC_bot"
 
             for msg in [
-                "Author Bot off",
+                personal_bot_name(self._name),
                 username,
                 "/setuserpic",
                 username,

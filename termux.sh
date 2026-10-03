@@ -13,6 +13,7 @@ fi
 if [ ! -f "$APP_DIR/scripts/termux-runtime.sh" ] || [ ! -f "$APP_DIR/bootstrap-termux.sh" ]; then
   # The website also supports downloading/sourcing termux.sh by itself.
   # Keep stdin attached to the terminal; the script download uses a temp file.
+  if [ -t 1 ]; then clear 2>/dev/null || printf '\033[2J\033[H'; fi
   LOG_FILE="${AUTHORBOT_LOG_FILE:-$HOME/authorbot-install.log}"
   printf 'AuthorBot by AuthorChe · Підготовка встановлення…\n'
   umask 077

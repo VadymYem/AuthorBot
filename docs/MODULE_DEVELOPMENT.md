@@ -123,6 +123,23 @@ class CallbackDemoMod(loader.Module):
 
 ## 6. Telegram Rich Messages
 
+### Interactive inline Rich Message
+
+```python
+from ..public_pages import heading
+
+await self.inline.form(
+    message=message,
+    text="<b>AuthorBot</b>\nClassic fallback.",
+    rich_html=heading("AuthorBot", "by AuthorChe") + "<p>Native Rich Message.</p>",
+    reply_markup=[[{"text": "Close", "action": "close"}]],
+    force_me=True,
+    ttl=900,
+)
+```
+
+Форма надсилається в поточний чат через inline-бот. `rich_html` — Rich HTML, `text` — обов'язкова класична версія для fallback. `heading()` створює центрований заголовок. Callback-кнопки мають ті самі правила доступу, що й звичайна форма. Для редагування Rich Message використовуйте `self.inline.rich.request("editMessageText", inline_message_id=call.inline_message_id, rich_message={"html": html}, reply_markup=...)`; `call.edit()` редагує класичну версію. Приклад з навігацією й fallback: `acbot/modules/help.py`.
+
 ### Rich HTML
 
 ```python

@@ -1,7 +1,7 @@
-# © Dan G. && AuthorChe
-#  
+# © Dan G. && AuthorChe
+#
 # You can redistribute it and/or modify it under the terms of the GNU AGPLv3
-#  https://www.gnu.org/licenses/agpl-3.0.html
+#  https://www.gnu.org/licenses/agpl-3.0.html
 # -*- coding: utf-8 -*-
 
 import herokutl
@@ -160,7 +160,7 @@ class CoreMod(loader.Module):
         await utils.answer(
             message,
             self.strings("prefix_set").format(
-                "<emoji document_id=5197474765387864959>ðŸ‘</emoji>",
+                "<emoji document_id=5197474765387864959>👍</emoji>",
                 newprefix=utils.escape_html(args[0]),
                 oldprefix=utils.escape_html(oldprefix),
             ),
@@ -173,7 +173,7 @@ class CoreMod(loader.Module):
             self.strings("aliases")
             + "\n".join(
                 [
-                    f"<emoji document_id=4974259868996207180>ðŸ›‘</emoji> <code>{i}</code> &lt;- {y}"
+                    f"<emoji document_id=4974259868996207180>🛑</emoji> <code>{i}</code> &lt;- {y}"
                     for i, y in self.allmodules.aliases.items()
                 ]
             ),

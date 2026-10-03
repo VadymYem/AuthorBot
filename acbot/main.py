@@ -55,7 +55,7 @@ from herokutl.tl.functions.account import GetPasswordRequest
 from herokutl.tl.functions.auth import CheckPasswordRequest
 
 from . import database, loader, utils, version
-from ._internal import print_banner, restart
+from ._internal import print_banner, print_running_banner, restart
 from .dispatcher import CommandDispatcher
 from .qr import QRCode
 from .secure import patcher
@@ -846,15 +846,9 @@ class AuthorBot:
             diff = repo.git.log([f"HEAD..origin/{version.branch}", "--oneline"])
             upd = "Update required" if diff else "Up-to-date"
 
-            logo = (               
-                "█ ✍️ AuthorBot █\n\n"
-                f"• Build: {build[:7]}\n"
-                f"• Version: {'.'.join(list(map(str, list(__version__))))}\n"
-                f"• {upd}\n"
-            )
-
             if not self.omit_log:
-                print(logo)
+                selected = client.loader._db.get("acbot.translations", "lang", "en").split()
+                print_running_banner(build, ".".join(map(str, __version__)), bool(diff), selected[0] if selected else "en")
                 web_url = (
                     f"🌐 Web url: {self.web.url}"
                     if self.web and hasattr(self.web, "url")

@@ -1,619 +1,697 @@
-# -*- coding: utf-8 -*-
+# Core translations adapted from Heroku (AGPL-3.0).
+# © Dan Gazizullin and Codrago; AuthorBot texts and branding © AuthorChe.
+# Source revision: 87d855ff50a404484c84f8ca4237d5c27c137b45
 security:
-  invalid_name: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Неправильне ім'я</b>"
-  no_command: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Команда</b> <code>{}</code> <b>не знайдена!</b>"
-  permissions: "🔐 <b>Тут можна налаштувати дозволи для команди</b> <code>{}{}</code>"
-  close_menu: "🙈 Закрити це меню"
-  global: "🔐 <b>Тут можна налаштувати глобальну маску виключення. Якщо тумблер вимкнений тут, він вимкнений для всіх команд</b>"
-  owner: "😎 Власник"
-  group_owner: "🧛‍♂️ Власник групи"
-  group_admin_add_admins: "🧑‍⚖️ Адмін (додавати учасників)"
-  group_admin_change_info: "🧑‍⚖️ Адмін (змінювати інфо)"
-  group_admin_ban_users: "🧑‍⚖️ Адмін (банити)"
-  group_admin_delete_messages: "🧑‍⚖️ Адмін (видаляти повідомлення)"
-  group_admin_pin_messages: "🧑‍⚖️ Адмін (закріпляти)"
-  group_admin_invite_users: "🧑‍⚖️ Адмін (запрошувати)"
-  group_admin: "🧑‍⚖️ Адмін (будь-який)"
-  group_member: "👥 В групі"
-  pm: "🤙 В пп"
-  owner_list: "<emoji document_id=5386399931378440814>😎</emoji> <b>Користувачі групи</b> <code>owner</code><b>:</b>\n\n{}"
-  no_owner: "<emoji document_id=5386399931378440814>😎</emoji> <b>Немає користувачів в групі</b> <code>owner</code>"
-  no_user: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Вкажи, кому видати права</b>"
-  not_a_user: "<emoji document_id=5447644880824181073>⚠️</emoji> <b>Вказана ціль - не користувач</b>"
-  cancel: "🚫 Скасувати"
-  confirm: "👑 Підтвердити"
-  self: "<emoji document_id=5447644880824181073>⚠️</emoji> <b>Не можна керувати своїми правами!</b>"
-  warning: "⚠️ <b>Ти дійсно бажаєш додати <a href=\"tg://user?id={}\">{}</a> до групи</b> <code>{}</code><b>!\nЦя дія може передати частковий або повний доступ до юзерботу цьому користувачеві!</b>"
-  suggest_nonick: "🔰 <i>Чи бажаєш ти увімкнути NoNick для цього користувача?</i>"
-  user_nn: '🔰 <b>NoNick для <a href="tg://user?id={}">{}</a> ввімкнено</b>'
-  enable_nonick_btn: "🔰 Ввімкнути"
-  owner_added: '<emoji document_id="5386399931378440814">😎</emoji> <b><a href="tg://user?id={}">{}</a> додано до групи</b> <code>owner</code>'
-  owner_removed: '<emoji document_id="5386399931378440814">😎</emoji> <b><a href="tg://user?id={}">{}</a> видалено з групи</b> <code>owner</code>'
-  _cls_doc: "Керування налаштуваннями безпеки"
-  what: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Вам потрібно вказати тип цілі першим аргументом (</b><code>user</code> <b>or</b> <code>chat</code><b>)</b>"
-  no_target: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Не вказана мета правила безпеки</b>"
-  no_rule: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Не вказано правило безпеки (модуль або команда)</b>"
-  confirm_rule: "🔐 <b>Будь ласка, підтвердіть, що хочете видати {} <a href='{}'>{}</a> право використовувати {}</b> <code>{}</code> <b>{}</b>"
-  multiple_rules: "🔐 <b>Не вийшло однозначно розпізнати правила безпеки. Оберіть те, яке мали на увазі:</b>\n\n{}"
-  rule_added: "🔐 <b>Ви надали {} <a href='{}'>{}</a> право використовувати {}</b> <code>{}</code> <b>{}</b>"
-  rules: "<emoji document_id=5472308992514464048>🔐</emoji> <b>Таргетовані правила безпеки:</b>\n\n{}"
-  no_rules: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Немає таргетованих правил безпеки</b>"
-  owner_target: "<emoji document_id=5447644880824181073>⚠️</emoji> <b>Цей користувач - власник, його права не можуть керуватися таргетованою безпекою</b>"
-  rules_removed: '<emoji document_id=5472308992514464048>🔐</emoji> <b>Правила таргетованої безпеки для <a href="{}">{}</a> видалено</b>'
-  rule_removed: '<emoji document_id=5472308992514464048>🔐</emoji> <b>Видалено правило безпеки для <a href="{}">{}</a> (</b><code>{}</code><b>)</b>'
-  chat_inline: "⚠️ <b>Ви не можете створити правило inline-команди для чатів!</b>"
-  for: "на"
-  forever: "назавжди"
-  command: "команду"
-  module: "модуль"
-  inline: "інлайн-команду"
-  chat: "чату"
-  user: "користувачу"
-  day: "день"
-  days: "дня(-ів)"
-  hour: "година"
-  hours: "години(-ин)"
-  minute: "хвилина"
-  minutes: "хвилин(-и)"
-  second: "секунда"
-  seconds: "секунд(-и)"
-  _cmd_doc_inlinesec: "[команда] - Налаштувати дозволи для інлайн команди"
-  _cmd_doc_owneradd: "<користувач> - Додати користувача до групи `owner`"
-  _cmd_doc_ownerlist: "Показати список користувачів у групі `owner`"
-  _cmd_doc_ownerrm: "<користувач> - Видалити користувача з групи `owner`"
-  _cmd_doc_security: "[команда] - Налаштувати дозволи для команди"
-  _cmd_doc_tsec: "<\"user\"/\"chat\"/\"sgroup\"> [мета користувача або чату] [правило (команда/модуль)] [час] - Додати нове правило таргетованої безпеки\nНаприклад: .tsec user ban 1d, .tsec chat weather 1h, .tsec user HikariChat"
-  _cmd_doc_tsecclr: "<\"user\"/\"chat\"/\"sgroup\"> - Очистити правила таргетованої безпеки\nНаприклад: .tsecclr user, .tsecclr chat"
-  _cmd_doc_tsecrm: "<\"user\"/\"chat\"/\"sgroup\"> <правило - модуль або команда> - Видалити правило таргетованої безпеки\nНаприклад: .tsecrm user ban, .tsecrm chat HikariChat"
-  until: "до"
-  sgroup: "група безпеки"
-  sgroup_info: "<emoji document_id=5870704313440932932>🔒</emoji> <b>Інформація про групу безпеки</b> <code>{}</code>:\n\n{}\n{}"
-  created_sgroup: "<emoji document_id=5870704313440932932>🔒</emoji> <b>Створено групу безпеки</b> <code>{}</code>"
-  sgroup_already_exists: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Група безпеки</b> <code>{}</code> <b>вже існує</b>"
-  no_args: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Не вказані аргументи</b>"
-  sgroup_not_found: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Групу безпеки</b> <code>{}</code> <b>не знайдено</b>"
-  no_users: "<emoji document_id=5870772616305839506>👥</emoji> <b>Немає користувачів</b>"
-  users_list: "<emoji document_id=5870772616305839506>👥</emoji> <b>Користувачі:</b>\n{}\n"
-  no_permissions: "<emoji document_id=5870450390679425417>🗒</emoji> <b>Немає дозволів</b>"
-  permissions_list: "<emoji document_id=5870450390679425417>🗒</emoji> <b>Права доступу:</b>\n{}\n"
-  sgroup_li: "<emoji document_id=4974264756668990388>▫️</emoji> <code>{}</code> · <b>{} користувач(-ів)</b> · <b>{} правил(-о)</b>"
-  sgroups_list: "<emoji document_id=5870704313440932932>🔒</emoji> <b>Групи безпеки:</b>\n\n{}"
-  deleted_sgroup: "<emoji document_id=5870704313440932932>🔒</emoji> <b>Групу безпеки</b> <code>{}</code> <b>видалено</b>"
-  user_already_in_sgroup: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Користувач</b> <code>{}</code> <b>вже знаходиться в групі безпеки</b> <code>{}</code>"
-  user_added_to_sgroup: "<emoji document_id=5870704313440932932>🔒</emoji> <b>Користувача</b> <code>{}</code> <b>додано до групи безпеки</b> <code>{}</code>"
-  user_not_in_sgroup: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Користувач</b> <code>{}</code> <b>не знаходиться в цій групі безпеки</b> <code>{}</code>"
-  user_removed_from_sgroup: "<emoji document_id=5870704313440932932>🔒</emoji> <b>Користувача</b> <code>{}</code> <b>видалено з групи</b> <code>{}</code>"
-  _cmd_doc_delsgroup: "<ім'я> - Видалити групи безпеки"
-  _cmd_doc_sgroup: "<ім'я> - Показати інформацію про групу безпеки"
-  _cmd_doc_sgroups: "Список груп безпеки"
-  _cmd_doc_newsgroup: "<ім'я> - Створити нову групу безпеки"
-  _cmd_doc_sgroupadd: "<ім'я> [користувач або відповідь] - Додати користувача до групи безпеки"
-  _cmd_doc_sgroupdel: "<ім'я> [користувач або відповідь] - Видалити користувача з групи безпеки"
-
+  name: Security
+  invalid_name: <emoji document_id=5210952531676504517>🚫</emoji> <b>Неправильное имя</b>
+  no_command: <emoji document_id=5210952531676504517>🚫</emoji> <b>Команда</b> <code>{}</code> <b>не найдена!</b>
+  permissions: 🔐 <b>Здесь можно настроить разрешения для команды</b> <code>{}{}</code>
+  close_menu: 🙈 Закрыть это меню
+  global: 🔐 <b>Здесь можно настроить глобальную исключающую маску. Если тумблер выключен здесь, он выключен для всех команд</b>
+  owner: 😎 Владелец
+  group_owner: 🧛‍♂️ Влад. группы
+  group_admin_add_admins: 🧑‍⚖️ Админ (добавлять участников)
+  group_admin_change_info: 🧑‍⚖️ Админ (изменять инфо)
+  group_admin_ban_users: 🧑‍⚖️ Админ (банить)
+  group_admin_delete_messages: 🧑‍⚖️ Админ (удалять сообщения)
+  group_admin_pin_messages: 🧑‍⚖️ Админ (закреплять)
+  group_admin_invite_users: 🧑‍⚖️ Админ (приглашать)
+  group_admin: 🧑‍⚖️ Админ (любой)
+  group_member: 👥 В группе
+  pm: 🤙 В лс
+  everyone: 🌍 Everyone (Inline)
+  owner_list: "<emoji document_id=5386399931378440814>\U0001F60E</emoji> <b>Пользователи группы</b> <code>owner</code><b>:</b>\n\n<blockquote expandable>{}</blockquote>"
+  no_owner: <emoji document_id=5386399931378440814>😎</emoji> <b>Нет пользователей в группе</b> <code>owner</code>
+  owner_added: <emoji document_id=5386399931378440814>😎</emoji> <b><a href="tg://user?id={}">{}</a> добавлен в группу</b> <code>owner</code>
+  owner_removed: <emoji document_id=5386399931378440814>😎</emoji> <b><a href="tg://user?id={}">{}</a> удален из группы</b> <code>owner</code>
+  no_user: <emoji document_id=5210952531676504517>🚫</emoji> <b>Укажи, кому выдавать права</b>
+  not_a_user: <emoji document_id=5447644880824181073>⚠️</emoji> <b>Указанная цель - не пользователь</b>
+  li: <emoji document_id=4974307891025543730>▫️</emoji> <b><a href="tg://user?id={}">{}</a></b>
+  warning: "⚠️ <b>Ты действительно хочешь добавить <a href=\"tg://user?id={}\">{}</a> в группу</b> <code>{}</code><b>!\nЭто действие может передать частичный или полный доступ к юзерботу этому пользователю!</b>"
+  cancel: 🚫 Отмена
+  confirm: 👑 Подтвердить
+  enable_nonick_btn: 🔰 Включить
+  self: <emoji document_id=5447644880824181073>⚠️</emoji> <b>Нельзя управлять своими правами!</b>
+  suggest_nonick: 🔰 <i>Хочешь ли ты включить NoNick для этого пользователя?</i>
+  user_nn: 🔰 <b>NoNick для <a href="tg://user?id={}">{}</a> включен</b>
+  what: <emoji document_id=5210952531676504517>🚫</emoji> <b>Вам нужно указать тип цели первым аргументов (</b><code>user</code> <b>or</b> <code>chat</code><b>)</b>
+  no_target: <emoji document_id=5210952531676504517>🚫</emoji> <b>Не указана цель правила безопасности</b>
+  no_rule: <emoji document_id=5210952531676504517>🚫</emoji> <b>Не указано правило безопасности (модуль или команда)</b>
+  confirm_rule: 🔐 <b>Пожалуйста, подтвердите что хотите выдать {} <a href='{}'>{}</a> право использовать {}</b> <code>{}</code> <b>{}</b>
+  rule_added: 🔐 <b>Вы выдали {} <a href='{}'>{}</a> право использовать {}</b> <code>{}</code> <b>{}</b>
+  confirm_btn: 👑 Подтвердить
+  cancel_btn: 🚫 Отмена
+  multiple_rules: "\U0001F510 <b>Не получилось однозначно распознать правила безопасности. Выберите то, которое имели ввиду:</b>\n\n{}"
+  rules: "<emoji document_id=5472308992514464048>\U0001F510</emoji> <b>Таргетированные правила безопасности:</b>\n\n<blockquote expandable>{}</blockquote>"
+  no_rules: <emoji document_id=5210952531676504517>🚫</emoji> <b>Нет таргетированных правил безопасности</b>
+  owner_target: <emoji document_id=5447644880824181073>⚠️</emoji> <b>Этот пользователь - владелец, его права не могут управляться таргетированной безопасностью</b>
+  rules_removed: <emoji document_id=5472308992514464048>🔐</emoji> <b>Правила таргетированной безопасности для <a href="{}">{}</a> удалены</b>
+  rule_removed: <emoji document_id=5472308992514464048>🔐</emoji> <b>Удалено правило безопасности для <a href="{}">{}</a> (</b><code>{}</code><b>)</b>
+  chat_inline: ⚠️ <b>Вы не можете создать правило inline-команды для чатов!</b>
+  for: на
+  forever: навсегда
+  user: пользователю
+  chat: чату
+  command: команду
+  module: модуль
+  inline: инлайн-команду
+  day: день
+  days: дня(-ей)
+  hour: час
+  hours: часа(-ов)
+  minute: минута
+  minutes: минут(-ы)
+  second: секунда
+  seconds: секунд(-ы)
+  _cmd_doc_inlinesec: '[команда] - Настроить разрешения для инлайн команды'
+  _cmd_doc_owneradd: '[-f|--force] [-n|--nonick] <пользователь> - Добавить пользователя в группу `owner`'
+  _cmd_doc_ownerlist: Показать список пользователей в группе `owner`
+  _cmd_doc_ownerrm: <пользователь> - Удалить пользователя из группы `owner`
+  _cmd_doc_security: '[команда] - Настроить разрешения для команды'
+  _cmd_doc_tsec: "<\"user\"/\"chat\"/\"sgroup\"> [цель пользователя или чата] [правило (команда/модуль)] [время] - Добавить новое правило таргетированной безопасности\nНапример: .tsec user ban 1d, .tsec chat weather 1h, .tsec user HikariChat"
+  _cmd_doc_tsecclr: "<\"user\"/\"chat\"/\"sgroup\"> - Очистить правила таргетированной безопасности\nНапример: .tsecclr user, .tsecclr chat"
+  _cmd_doc_tsecrm: "<\"user\"/\"chat\"/\"sgroup\"> <правило - модуль или команда> - Удалить правило таргетированной безопасности\nНапример: .tsecrm user ban, .tsecrm chat HikariChat"
+  _cls_doc: Управление настройками безопасности
+  until: до
+  sgroup: группа безопасности
+  sgroup_info: "<emoji document_id=5870704313440932932>\U0001F512</emoji> <b>Информация о группе безопасности</b> <code>{}</code>:\n\n{}\n{}"
+  created_sgroup: <emoji document_id=5870704313440932932>🔒</emoji> <b>Создана группа безопасности</b> <code>{}</code>
+  sgroup_already_exists: <emoji document_id=5210952531676504517>🚫</emoji> <b>Группа безопасности</b> <code>{}</code> <b>уже существует</b>
+  no_args: <emoji document_id=5210952531676504517>🚫</emoji> <b>Не указаны аргументы</b>
+  sgroup_not_found: <emoji document_id=5210952531676504517>🚫</emoji> <b>Группа безопасности</b> <code>{}</code> <b>не найдена</b>
+  no_users: <emoji document_id=5870772616305839506>👥</emoji> <b>Нет пользователей</b>
+  users_list: "<emoji document_id=5870772616305839506>\U0001F465</emoji> <b>Пользователи:</b>\n{}\n"
+  no_permissions: <emoji document_id=5870450390679425417>🗒</emoji> <b>Нет разрешений</b>
+  permissions_list: "<emoji document_id=5870450390679425417>\U0001F5D2</emoji> <b>Права доступа:</b>\n{}\n"
+  sgroup_li: <emoji document_id=4974264756668990388>▫️</emoji> <code>{}</code> · <b>{} пользовател(-ей)</b> · <b>{} правил(-о)</b>
+  sgroups_list: "<emoji document_id=5870704313440932932>\U0001F512</emoji> <b>Группы безопасности:</b>\n\n{}"
+  deleted_sgroup: <emoji document_id=5870704313440932932>🔒</emoji> <b>Группа безопасности</b> <code>{}</code> <b>удалена</b>
+  user_already_in_sgroup: <emoji document_id=5210952531676504517>🚫</emoji> <b>Пользователь</b> <code>{}</code> <b>уже состоит в группе безопасности</b> <code>{}</code>
+  user_added_to_sgroup: <emoji document_id=5870704313440932932>🔒</emoji> <b>Пользователь</b> <code>{}</code> <b>добавлен в группу безопасности</b> <code>{}</code>
+  user_not_in_sgroup: <emoji document_id=5210952531676504517>🚫</emoji> <b>Пользователь</b> <code>{}</code> <b>не состоит в группе безопасности</b> <code>{}</code>
+  user_removed_from_sgroup: <emoji document_id=5870704313440932932>🔒</emoji> <b>Пользователь</b> <code>{}</code> <b>удален из группы</b> <code>{}</code>
+  _cmd_doc_delsgroup: <имя> - Удалить группу безопасности
+  _cmd_doc_sgroup: <имя> - Показать информацию о группе безопасности
+  _cmd_doc_sgroups: Список групп безопасности
+  _cmd_doc_newsgroup: <имя> - Создать новую группу безопасности
+  _cmd_doc_sgroupadd: <имя> [пользователь или ответ] - Добавить пользователя в группу безопасности
+  _cmd_doc_sgroupdel: <имя> [пользователь или ответ] - Удалить пользователя из группы безопасности
 acbot_settings:
-  watchers: "<emoji document_id=5424885441100782420>👀</emoji> <b>Наглядачі:</b>\n\n<b>{}</b>"
-  mod404: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Наглядача {} не знайдено</b>"
-  disabled: "<emoji document_id=5424885441100782420>👀</emoji> <b>Наглядача {} тепер <u>вимкнено</u></b>"
-  enabled: "<emoji document_id=5424885441100782420>👀</emoji> <b>Наглядача {} тепер <u>увімкнено</u></b>"
-  args: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Вкажи ім'я наглядача</b>"
-  user_nn: "<emoji document_id=5469791106591890404>🪄</emoji> <b>Стан NoNick для цього користувача: {}</b>"
-  no_cmd: "<emoji document_id=5469791106591890404>🪄</emoji> <b>Вкажи команду, для якої треба ввімкнути\\вимкнути NoNick</b>"
-  cmd_nn: "<emoji document_id=5469791106591890404>🪄</emoji> <b>Стан NoNick для</b> <code>{}</code><b>: {}</b>"
-  cmd404: "<emoji document_id=5469791106591890404>🪄</emoji> <b>Команду не знайдено</b>"
-  inline_settings: "⚙️ <b>Тут можна керувати налаштуваннями АвторБота</b>"
-  confirm_update: "🧭 <b>Підтвердіть оновлення. Юзербота буде перезавантажено</b>"
-  confirm_restart: "🔄 <b>Підтвердіть перезавантаження</b>"
-  suggest_fs: "✅ Пропонувати збереження модулів"
-  do_not_suggest_fs: "🚫 Пропонувати збереження модулів"
-  use_fs: "✅ Завжди зберігати модулі"
-  do_not_use_fs: "🚫 Завжди зберігати модулі"
-  btn_restart: "🔄 Перезавнтаження"
-  btn_update: "🧭 Оновлення"
-  close_menu: "😌 Закрити меню"
-  custom_emojis: "✅ Кастомні емодзі"
-  no_custom_emojis: "🚫 Кастомні емодзі"
-  suggest_subscribe: "✅ Пропонувати підписку на канал"
-  do_not_suggest_subscribe: "🚫 Пропонувати підписку на канал"
-  private_not_allowed: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Цю команду треба виконувати в чаті</b>"
-  _cls_doc: "Додаткові налаштування АвторБоту"
-  nonick_warning: "Увага! Ти ввімкнув NoNick зі стандартним префіксом! Тебе можуть замьютити в чатах. Зміни префікс або вимкни глобальний NoNick!"
-  reply_required: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Дай відповідь на повідомлення користувача, для якого треба увімкнути NoNick</b>"
-  deauth_confirm: "⚠️ <b>Ця дія повністю видалить АвторБота з цього акаунту! Її не можна скасувати</b>\n\n<i>- Всі чати, пов'язані з ним будуть видалені\n- Сесію АвторБота буде скинуто\n- Інлайн бота буде видалено</i>"
-  deauth_confirm_step2: "⚠️ <b>Ти точно впевнений, що хочеш видалити АвторБота?</b>"
-  deauth_yes: "Я впевнений"
-  deauth_no_1: "Я не впевнений"
-  deauth_no_2: "Не точно"
-  deauth_no_3: "Ні"
-  deauth_cancel: "🚫 Скасувати"
-  deauth_confirm_btn: "😢 Видалити"
-  uninstall: "😢 <b>Видаляю АвторБота...</b>"
-  uninstalled: "😢 <b>Все видалено. Веб-інтерфейс усе ще активний, можна додати інші акаунти!</b>"
-  cmd_nn_list: "<emoji document_id=5469791106591890404>🪄</emoji> <b>NoNick ввімкнено для цих команд:</b>\n\n{}"
-  user_nn_list: "<emoji document_id=5469791106591890404>🪄</emoji> <b>NoNick ввімкнено для цих користувачів:</b>\n\n{}"
-  chat_nn_list: "<emoji document_id=5469791106591890404>🪄</emoji> <b>NoNick ввімкнено для цих чатів:</b>\n\n{}"
-  nothing: "<emoji document_id=5427052514094619126>🤷‍♀️</emoji> <b>Нема чого показувати...</b>"
-  privacy_leak: "⚠️ <b>Ця команда надає доступ до веб-інтерфейсу боту. Її виконання в публічних чатах є загрозою для безпеки. Переважно виконувати її в <a href='tg://openmessage?user_id={}'>Збережених повідомленнях</a>. Виконай</b> <code>{}proxypass force_insecure</code> <b>щоб вимкнути це попередження</b>"
-  privacy_leak_nowarn: "⚠️ <b>Ця команда надає доступ до веб-інтерфейсу боту. Її виконання в публічних чатах є загрозою для безпеки. Переважно виконувати її в <a href='tg://openmessage?user_id={}'>Збережених повідомленнях</a>.</b>"
-  opening_tunnel: "🔁 <b>Відкриваю тунель до веб-інтерфейсу боту...</b>"
-  tunnel_opened: "🎉 <b>Тунель відкрито. Це посилання буде активно не більше години</b>"
-  web_btn: "🌍 Веб-інтерфейс"
-  btn_yes: "🚸 Все одно відкрити"
-  btn_no: "🔻 Закрити"
-  disable_debugger: "✅ Відладчик увімкнено"
-  enable_debugger: "🚫 Відлалдчик вимкнено"
-  _cmd_doc_nonickchat: "Ввімкнути NoNick для певного чату"
-  _cmd_doc_nonickchats: "Показати список активних NoNick чатів"
-  _cmd_doc_nonickcmd: "<команда> - Ввімкнути NoNick для певної команди"
-  _cmd_doc_nonickcmds: "Показати список активних NoNick команд"
-  _cmd_doc_nonickuser: "Ввімкнути NoNick для певного користувача"
-  _cmd_doc_nonickusers: "Показати список активних NoNick користувачів"
-  _cmd_doc_settings: "Показати налаштування"
-  _cmd_doc_uninstall_acbot: "Видалити АвторБота"
-  _cmd_doc_watcherbl: "<module> - Ввімкнути/вимкнути наглядача в поточному чаті"
-  _cmd_doc_watcher: "<модуль> - Керування глобальними правилами наглядача\nАргументи:\n[-c - тільки в чатах]\n[-p - тільки в пп]\n[-o - тільки вихідні]\n[-i - тільки вхідні]"
-  _cmd_doc_watchers: "Показати активних наглядачів"
-  _cmd_doc_weburl: "Відкрити тунель до веб-інтерфейсу боту"
-  core_protection_already_removed: "<emoji document_id=6003424016977628379>🔒</emoji> <b>Захист ядра вже видалено</b>"
-  core_protection_confirm: "⚠️ <b>УВАЖНО ПРОЧИТАТЙТЕ!</b>\n\nВидаляючи захист ядра, ви підтверджуєте, що знаєте що це і для чого воно. В звичайному сценарії життя вам <b>не треба</b>. Якщо ви не розробник, вам <b>не треба</b>. Якщо ви не впевнені, вам <b>не треба</b>.\n\n<b>Ви впевнені, що хочете видалити захист ядра?</b>"
-  core_protection_btn: "🔓 Видалити захист ядра"
-  core_protection_removed: "🔓 <b>Захист ядра успішно видалений</b>"
-
+  name: Settings
+  watchers: "<emoji document_id=5424885441100782420>\U0001F440</emoji> <b>Смотрители:</b>\n\n<blockquote expandable><b>{}</b></blockquote>"
+  no_args: <emoji document_id=5210952531676504517>🚫</emoji> <b>No arguments specified</b>
+  invoke404: <emoji document_id=5210952531676504517>🚫</emoji> <b>Internal debug method</b> <code>{}</code> <b>not found, ergo can't be invoked</b>
+  module404: <emoji document_id=5210952531676504517>🚫</emoji> <b>Module</b> <code>{}</code> <b>not found</b>
+  invoke: "<emoji document_id=5215519585150706301>\U0001F44D</emoji> <b>Invoked internal debug method</b> <code>{}</code>\n\n<emoji document_id=5784891605601225888>\U0001F535</emoji> <b>Result:\n{}</b>"
+  invoking: <emoji document_id=5213452215527677338>⏳</emoji> <b>Invoking internal debug method</b> <code>{}</code> <b>of</b> <code>{}</code><b>...</b>
+  mod404: <emoji document_id=5210952531676504517>🚫</emoji> <b>Смотритель {} не найден</b>
+  disabled: <emoji document_id=5424885441100782420>👀</emoji> <b>Смотритель {} теперь <u>выключен</u></b>
+  enabled: <emoji document_id=5424885441100782420>👀</emoji> <b>Смотритель {} теперь <u>включен</u></b>
+  args: <emoji document_id=5210952531676504517>🚫</emoji> <b>Укажи имя смотрителя</b>
+  user_nn: '<emoji document_id=5469791106591890404>🪄</emoji> <b>Состояние NoNick для этого пользователя: {}</b>'
+  no_cmd: <emoji document_id=5469791106591890404>🪄</emoji> <b>Укажи команду, для которой надо включить\выключить NoNick</b>
+  cmd_nn: '<emoji document_id=5469791106591890404>🪄</emoji> <b>Состояние NoNick для</b> <code>{}</code><b>: {}</b>'
+  cmd404: <emoji document_id=5469791106591890404>🪄</emoji> <b>Команда не найдена</b>
+  inline_settings: ⚙️ <b>Здесь можно управлять настройками AuthorBot</b>
+  confirm_update: 🧭 <b>Подтвердите обновление. Юзербот будет перезагружен</b>
+  confirm_restart: 🔄 <b>Подтвердите перезагрузку</b>
+  suggest_fs: ✅ Suggest FS for modules
+  do_not_suggest_fs: 🚫 Suggest FS for modules
+  use_fs: ✅ Always use FS for modules
+  do_not_use_fs: 🚫 Always use FS for modules
+  btn_restart: 🔄 Перезагрузка
+  btn_update: 🧭 Обновление
+  close_menu: 😌 Закрыть меню
+  custom_emojis: ✅ Custom emojis
+  no_custom_emojis: 🚫 Custom emojis
+  suggest_subscribe: ✅ Предлагать подписку на канал
+  do_not_suggest_subscribe: 🚫 Предлагать подписку на канал
+  private_not_allowed: <emoji document_id=5210952531676504517>🚫</emoji> <b>Эту команду нужно выполнять в чате</b>
+  nonick_warning: Внимание! Ты включил NoNick со стандартным префиксом! Тебя могут замьютить в чатах AuthorBot. Измени префикс или отключи глобальный NoNick!
+  reply_required: <emoji document_id=5210952531676504517>🚫</emoji> <b>Ответь на сообщение пользователя, для которого нужно включить NoNick</b>
+  deauth_confirm: "⚠️ <b>Это действие полностью удалит AuthorBot с этого аккаунта! Его нельзя отменить</b>\n\n<i>- Все чаты, связанные с AuthorBot будут удалены\n- Сессия AuthorBot будет сброшена\n- Инлайн бот AuthorBot будет удален</i>"
+  deauth_confirm_step2: ⚠️ <b>Ты точно уверен, что хочешь удалить AuthorBot?</b>
+  deauth_yes: Я уверен
+  deauth_no_1: Я не уверен
+  deauth_no_2: Не точно
+  deauth_no_3: Нет
+  deauth_cancel: 🚫 Отмена
+  deauth_confirm_btn: 😢 Удалить
+  uninstall: 😢 <b>Удаляю AuthorBot...</b>
+  uninstalled: 😢 <b>AuthorBot удалена.</b>
+  cmd_nn_list: "<emoji document_id=5469791106591890404>\U0001FA84</emoji> <b>NoNick включен для этих команд:</b>\n\n<blockquote expandable>{}</blockquote>"
+  user_nn_list: "<emoji document_id=5469791106591890404>\U0001FA84</emoji> <b>NoNick включен для этих пользователей:</b>\n\n<blockquote expandable>{}</blockquote>"
+  chat_nn_list: "<emoji document_id=5469791106591890404>\U0001FA84</emoji> <b>NoNick включен для этих чатов:</b>\n\n<blockquote expandable>{}</blockquote>"
+  nothing: <emoji document_id=5427052514094619126>🤷‍♀️</emoji> <b>Нечего показывать...</b>
+  privacy_leak: ⚠️ <b>This command gives access to your web interface. It's not recommended to run it in public group chats. Consider using it in <a href='tg://openmessage?user_id={}'>Saved messages</a>. Type</b> <code>{}proxypass force_insecure</code> <b>to ignore this warning</b>
+  privacy_leak_nowarn: ⚠️ <b>This command gives access to your web interface. It's not recommended to run it in public group chats. Consider using it in <a href='tg://openmessage?user_id={}'>Saved messages</a>.</b>
+  opening_tunnel: 🔁 <b>Opening tunnel to web interface...</b>
+  tunnel_opened: 🎉 <b>Tunnel opened. This link is valid for about 1 hour</b>
+  web_btn: 🌍 Web interface
+  btn_yes: 🚸 Все равно открыть
+  btn_no: 🔻 Закрыть
+  lavhost_web: "✌️ <b>This link leads to your web interface on lavHost</b>\n\n<i>\U0001F4A1 You'll need to authorize using lavHost credentials, specified on registration</i>"
+  disable_debugger: ✅ Debugger enabled
+  enable_debugger: 🚫 Debugger disabled
+  _cmd_doc_invoke: <module or `core` for built-in methods> <method> - Only for debugging purposes. DO NOT USE IF YOU'RE NOT A DEVELOPER
+  _cmd_doc_nonickchat: Включить NoNick для определенного чата
+  _cmd_doc_nonickchats: Показать список активных NoNick чатов
+  _cmd_doc_nonickcmd: <команда> - Включить NoNick для определенной команды
+  _cmd_doc_nonickcmds: Показать список активных NoNick команд
+  _cmd_doc_nonickuser: Включить NoNick для определенного пользователя
+  _cmd_doc_nonickusers: Показать список активных NoNick пользователей
+  _cmd_doc_settings: Показать настройки
+  _cmd_doc_uninstall_acbot: Uninstall AuthorBot
+  _cmd_doc_watcherbl: <module> - Включить/выключить смотрителя в текущем чате
+  _cmd_doc_watcher: "<модуль> - Управление глобальными правилами смотрителя\nАргументы:\n[-c - только в чатах]\n[-p - только в лс]\n[-o - только исходящие]\n[-i - только входящие]"
+  _cmd_doc_watchers: Показать активные смотрители
+  _cmd_doc_weburl: Opens web tunnel to your web interface
+  _cls_doc: Дополнительные настройки AuthorBot
+  core_protection_already_removed: <emoji document_id=6003424016977628379>🔒</emoji> <b>Защита ядра уже удалена</b>
+  core_protection_confirm: "⚠️ <b>ВНИМАТЕЛЬНО ПРОЧТИТЕ!</b>\n\nУдаляя защиту ядра, вы подтверждаете, что знаете что это и для чего оно. В обычном сценарии жизни вам <b>не нужно</b>. Если вы не разработчик, вам <b>не нужно</b>. Если вы не уверены, вам <b>не нужно</b>.\n\n<b>Вы уверены, что хотите удалить защиту ядра?</b>"
+  core_protection_btn: 🔓 Удалить защиту ядра
+  core_protection_removed: 🔓 <b>Защита ядра успешно удалена</b>
 terminal:
-  fw_protect: "Затримка між редагуваннями"
-  what_to_kill: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Дай відповідь на команду, що виконується для її завершення</b>"
-  kill_fail: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Не можу вбити процес</b>"
-  killed: "<b>Убит</b>"
-  no_cmd: "<emoji document_id=5210952531676504517>🚫</emoji> <b>В цьому повідомленні не виконується команда</b>"
-  running: "<emoji document_id=5472111548572900003>⌨️</emoji><b> Системна команда</b> <code>{}</code>"
-  finished: "\n<b>Вихідний код </b> <code>{}</code>"
-  stdout: "\n<b>📼 Stdout:</b>\n<pre><code class=\"language-stdout\">"
-  stderr: "</code></pre>\n\n<b><emoji document_id=5210952531676504517>🚫</emoji> Stderr:</b>\n<pre><code class=\"language-stderr\">"
-  end: "</code></pre>"
-  auth_fail: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Аутентифікація невдала, спробуй ще раз</b>"
-  auth_needed: '<emoji document_id=5472308992514464048>🔐</emoji><a href="tg://user?id={}"> Необхідна аутентифікація</a>'
-  auth_msg: "<emoji document_id=5472308992514464048>🔐</emoji> <b>Будь-ласка, відредагуй це повідомлення з паролем від рута для</b> <code>{}</code> <b>, щоб виконати</b> <code>{}</code>"
-  auth_locked: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Аутентифікація не вдалась. Спробуй пізніше</b>"
-  auth_ongoing: "<emoji document_id=5213452215527677338>⏳</emoji> <b>Аутентифікація...</b>"
-  done: "<emoji document_id=5314250708508220914>✅</emoji> <b>Ура</b>"
-  _cmd_doc_apt: "Скорочення для '.terminal apt'"
-  _cmd_doc_terminal: "<команда> - Запустити команду в системі"
-  _cmd_doc_terminate: "[-f to force kill] - Дай відповідь на повідомлення, щоб вбити процес"
-
+  name: Terminal
+  fw_protect: Задержка между редактированиями
+  what_to_kill: <emoji document_id=5210952531676504517>🚫</emoji> <b>Ответь на выполняемую команду для ее завершения</b>
+  kill_fail: <emoji document_id=5210952531676504517>🚫</emoji> <b>Не могу убить процесс</b>
+  killed: <b>Убит</b>
+  no_cmd: <emoji document_id=5210952531676504517>🚫</emoji> <b>В этом сообщении не выполняется команда</b>
+  running: <emoji document_id=5472111548572900003>⌨️</emoji><b> Системная команда</b> <code>{}</code>
+  finished: "\n<b>Код выхода </b> <code>{}</code>"
+  stdout: "\n<b>\U0001F4FC Stdout:</b>\n<pre><code class=\"language-stdout\">"
+  stderr: "</code></pre>\n\n<b><emoji document_id=5210952531676504517>\U0001F6AB</emoji> Stderr:</b>\n<pre><code class=\"language-stderr\">"
+  end: </code></pre>
+  auth_fail: <emoji document_id=5210952531676504517>🚫</emoji> <b>Аутентификация неуспешна, попробуй еще раз</b>
+  auth_needed: <emoji document_id=5472308992514464048>🔐</emoji><a href="tg://user?id={}"> Необходима аутентификация</a>
+  auth_msg: <emoji document_id=5472308992514464048>🔐</emoji> <b>Пожалуйста, отредактируй это сообщение с паролем от рута для</b> <code>{}</code> <b>, чтобы выполнить</b> <code>{}</code>
+  auth_locked: <emoji document_id=5210952531676504517>🚫</emoji> <b>Аутентификация не удалась. Попробуй позже</b>
+  auth_ongoing: <emoji document_id=5213452215527677338>⏳</emoji> <b>Аутентификация...</b>
+  done: <emoji document_id=5314250708508220914>✅</emoji> <b>Ура</b>
+  _cmd_doc_apt: Сокращение для '.terminal apt'
+  _cmd_doc_terminal: <команда> - Запустить команду в системе
+  _cmd_doc_terminate: '[-f to force kill] - Ответьте на сообщение, чтобы убить процесс'
+  _cls_doc: Запуск shell-команд
 backup:
-  period: "⌚️ <b>Юніт «ALPHA»</b> створює регулярні резервні копії. Ці налаштування можна змінити пізніше.\n\nБудь-ласка, оберіть періодичність резервного копіювання"
-  saved: "✅ Періодичність збережено! Її можна змінити за допомогою .set_backup_period"
-  never: "✅ Я не буду робити автоматичні резервні копії. Можна скасувати використовуючи .set_backup_period"
-  invalid_args: "🚫 <b>Вкажи правильну періодичність в годинах, або `0` для вимкнення</b>"
-  backup_caption: '<emoji document_id=5469718869536940860>👆</emoji> <b>Це твоя резервна копія бази даних. Не передавай її нікому, вона містить особисту інформацию. Якщо тобі потрібно її відновити, використай</b> <pre><code class="language-acbot">{prefix}restoredb</code></pre> <b>у відповідь на цей файл.</b>'
-  reply_to_file: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Дай відповідь на .json або .zip файл</b>"
-  db_restored: "<emoji document_id=5774134533590880843>🔄</emoji> <b>Базу даних оновлено, перезавантаження...</b>"
-  modules_backup: "<emoji document_id=5431736674147114227>🗂</emoji> <b>Бекап модулів ({})</b>\n\n<b>Ви можете відновити його використовуючи:</b>\n<pre><code class=\"language-acbot\">{}restoremods</code></pre>"
-  mods_restored: "<emoji document_id=5774134533590880843>🔄</emoji> <b>Модулі відновлені, перезавантаження</b>"
-  backup_sent: "<emoji document_id=5431736674147114227>🗂</emoji> <b>Резервну копію надіслано в збережені пвідомлення</b>"
-  _cls_doc: "Обробляє резервні копії бази даних та модулів"
-  _cmd_doc_backupdb: "Створити бекап бази даних [буде надіслано в пп]"
-  _cmd_doc_backupmods: "Створити бекап модів [буде надіслано в пп]"
-  _cmd_doc_restoredb: "Відновити базу даних з файлу"
-  _cmd_doc_restoremods: "<відповідь на файл> - Відновити модулі з бекапу"
-  _cmd_doc_set_backup_period: "<час в годинах> - Встановити частоту бекапів"
-
+  name: Backup
+  period: "⌚️ <b>Юнит «ALPHA»</b> создает регулярные резервные копии. Эти настройки можно изменить позже.\n\nПожалуйста, выберите периодичность резервного копирования\n\n<b>\U0001F6AB Таким образом невозможно восстановить модули скачанные с файлов командой .lm! Будьте осторожны и делайте .backupmods перед восстановлением.</b>"
+  saved: ✅ Backup period saved. You can re-configure it later with .set_backup_period
+  never: ✅ I will not make automatic backups. You can re-configure it later with .set_backup_period
+  invalid_args: 🚫 <b>Укажи правильную периодичность в часах, или `0` для отключения</b>
+  backup_caption: <emoji document_id=5469718869536940860>👆</emoji> <b>Это твоя резервная копия базы данных. Не передавай ее никому, она содержит личную информацию. Если тебе нужно ее восстановить, используй</b> <pre><code class="language-heroku">{prefix}restoredb</code></pre> <b>в ответ на этот файл.</b>
+  reply_to_file: <emoji document_id=5210952531676504517>🚫</emoji> <b>Ответь на .json или .zip файл</b>
+  db_restored: <emoji document_id=5774134533590880843>🔄</emoji> <b>База данных обновлена, перезапуск...</b>
+  modules_backup: "<emoji document_id=5431736674147114227>\U0001F5C2</emoji> <b>Бэкап модулей ({})</b>\n\n<b>Вы можете восстановить его используя:</b>\n<pre><code class=\"language-heroku\">{}restoremods</code></pre>"
+  mods_restored: <emoji document_id=5774134533590880843>🔄</emoji> <b>Модули восстановлены, перезапуск</b>
+  backup_sent: <emoji document_id=5431736674147114227>🗂</emoji> <b>Backup has been sent to saved messages</b>
 presets:
-  _fun_title: "🪩 Розважальні модулі"
-  _fun_desc: "Кумедні модулі — анімації, спам, ігри, та ін."
-  _chat_title: "👥 Модулі адміністрування чату"
-  _chat_desc: "Колекція модулів, які допоможуть вам адмініструвати чат — фільтри, нотатки, розпізнавання мовлення, та ін."
-  _service_title: "⚙️ Корисні модулі"
-  _service_desc: "Дійсно корисні модулі — керування акаунтом, скорочувач посилань, пошукач, та ін."
-  _downloaders_title: "📥 Завантажувачі"
-  _downloaders_desc: "Колекція модулів, які допоможуть вам завантатжувати файли в/з різних(-і) джерел(-а) — YouTube, TikTok, Instagram, Spotify, VK Музика, та ін."
-  welcome: "👋 <b>Привіт! Втомився гортати безкінечну кількість модулів в каналах? Можу запропонувати тобі декілька готових наборів. Якщо тобі знадобится знову викликати це меню, надішли мені команду /presets</b>"
-  preset: "<b>{}:</b>\nℹ️ <i>{}</i>\n\n⚒ <b>Модулі в цьому наборі:</b>\n\n{}"
-  back: "🔙 Назад"
-  install: "📦 Встановити"
-  installing: "<emoji document_id=5451732530048802485>⏳</emoji> <b>Встановлення набору </b><code>{}</code><b>...</b>"
-  installing_module: "<emoji document_id=5451732530048802485>⏳</emoji> <b>Встановлення набору</b> <code>{}</code> <b>({}/{} модулів)...</b>\n\n<emoji document_id=5188377234380954537>✍️</emoji> <i>Встановлення модуля {}...</i>"
-  installed: "<emoji document_id=5436040291507247633>🎉</emoji> <b>Набір</b> <code>{}</code> <b>встановлено!</b>"
-  already_installed: "✅ [Встановлено]"
-
+  name: Presets
+  _fun_title: 🪩 Развлекательные модули
+  _fun_desc: Забавные модули — анимации, спам, игры, и др.
+  _chat_title: 👥 Модули администрирования чата
+  _chat_desc: Коллекция модулей, которые помогут вам администрировать чат — фильтры, заметки, распознавание речи, и др.
+  _service_title: ⚙️ Полезные модули
+  _service_desc: Действительно полезные модули — управление аккаунтом, сократитель ссылок, поисковик, и др.
+  _downloaders_title: 📥 Загрузчики
+  _downloaders_desc: Коллекция модулей, которые помогут вам загружать файлы в/из различных(-е) источников(-и) — YouTube, TikTok, Instagram, Spotify, VK Музыка, и др.
+  welcome: 👋 <b>Привет! Устал листать бесчисленное количество модулей в каналах? Могу предложить тебе несколько готовых наборов. Если тебе понадобится повторно вызвать это меню, отправь мне команду /presets</b>
+  preset: "<b>{}:</b>\nℹ️ <i>{}</i>\n\n⚒ <b>Модули в этом наборе:</b>\n\n{}"
+  back: 🔙 Назад
+  install: 📦 Установить
+  installing: <emoji document_id=5451732530048802485>⏳</emoji> <b>Установка набора </b><code>{}</code><b>...</b>
+  installing_module: "<emoji document_id=5451732530048802485>⏳</emoji> <b>Установка набора</b> <code>{}</code> <b>({}/{} модулей)...</b>\n\n<emoji document_id=5188377234380954537>\U0001FA90</emoji> <i>Установка модуля {}...</i>"
+  installed: <emoji document_id=5436040291507247633>🎉</emoji> <b>Набор</b> <code>{}</code> <b>установлен!</b>
+  already_installed: ✅ [Установлен]
+  _cls_doc: Предлагает новым пользователям AuthorBot готовые сборки модулей для загрузки
 settings:
-  installation: '<emoji document_id=5363805650327450240>▪️</emoji> Установка дуже легка! Достатньо написати в термінал твого сервера:
-
-<pre><code class="language-bash">sudo apt update &amp;&amp; sudo apt upgrade -y &amp;&amp; sudo apt install git &amp;&amp; sudo apt install python3-pip &amp;&amp; git clone https://github.com/VadymYem/AuthorBot &amp;&amp; cd AuthorBot &amp;&amp; pip install -r requirements.txt &amp;&amp; python3 -m acbot</code></pre>
-<emoji document_id=5299027123913105700>😐</emoji> Якщо у вас немає доступу до sudo, просто приберіть початкові дії.
-
-<emoji document_id=5300777464820145682>🥳</emoji> Розберемося трохи з аргументами:
-
-<emoji document_id=5787313834012184077>🔐</emoji> Аргумент <code>--root</code> дозволяє запустити АвторБота від <b>root користувача</b>.
-
-<emoji document_id=5785209342986817408>🌎</emoji> Аргумент <code>--no-web</code> відкриває процес входу в ваш обліковий запис <b>прямо в терміналі, а не через посилання</b> <code>{}.lhr.life</code>.'
-  too_many_args: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Слишком много аргументов</b>"
-  blacklisted: "<emoji document_id=5197474765387864959>👍</emoji> <b>Чат {} додано до чорного списку юзербота</b>"
-  unblacklisted: "<emoji document_id=5197474765387864959>👍</emoji> <b>Чат {} видалено з чорного списку юзербота</b>"
-  user_blacklisted: "<emoji document_id=5197474765387864959>👍</emoji> <b>Користувача {} додано до чорного списку юзербота</b>"
-  user_unblacklisted: "<emoji document_id=5197474765387864959>👍</emoji> <b>Користувача {} видалено з чорного списку юзербота</b>"
-  what_prefix: "<emoji document_id=5382187118216879236>❓</emoji> <b>А який префікс встановлювати?</b>"
-  prefix_incorrect: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Префікс має бути тільки з одного символу</b>"
-  prefix_set: "{} <b>Префікс команд оновлено. Використай наступну команду, щоб змінити його назад:</b>\n<pre><code class=\"language-acbot\">{newprefix}setprefix {oldprefix}</code></pre>"
-  alias_created: "<emoji document_id=5197474765387864959>👍</emoji> <b>Аліас створено. Використовуй його через</b> <code>{}</code>"
-  aliases: "<b>🔗 Аліаси:</b>\n"
-  no_command: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Команди</b> <code>{}</code> <b>не існує</b>"
-  alias_args: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Потрібно ввести команду та аліас для неї</b>"
-  delalias_args: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Потрібно ім'я аліасу</b>"
-  alias_removed: "<emoji document_id=5197474765387864959>👍</emoji> <b>Аліас</b> <code>{}</code> <b>видалено</b>."
-  no_alias: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Аліаса</b> <code>{}</code> <b>не існує</b>"
-  db_cleared: "<emoji document_id=5197474765387864959>👍</emoji> <b>Базу очищена</b>"
-  acbot: "<emoji document_id=5377437404078546699>💜</emoji> <b>Telethon:</b> <i>1.37.0</i>\n\n✍️ <b>Developer: t.me/wsinfo · authorche.top</b>"
-  _cls_doc: "Керування базовими налаштуваннями юзербота"
-  confirm_cleardb: "⚠️ <b>Ви впевнені, що хочете зкинути базу даних?</b>"
-  cleardb_confirm: "🗑 Очистити базу"
-  cancel: "🚫 Скасувати"
-  who_to_blacklist: "<emoji document_id=5382187118216879236>❓</emoji> <b>Кого заблокировати?</b>"
-  who_to_unblacklist: "<emoji document_id=5382187118216879236>❓</emoji> <b>Кого розблокувати?</b>"
-  _cmd_doc_addalias: "Встановити аліас для команди"
-  _cmd_doc_aliases: "Показати список аліасів"
-  _cmd_doc_blacklist: "[чат] [модуль] - Вимкнути бота де-небудь"
-  _cmd_doc_blacklistuser: "[користувач] - Заборонити користувачу виконувати команди"
-  _cmd_doc_cleardb: "Очистити базу даних"
-  _cmd_doc_delalias: "Видалити аліас для команди"
-  _cmd_doc_acbot: "Показати версію АвторБота"
-  _cmd_doc_setprefix: "<префікс> - Встановити префікс команд"
-  _cmd_doc_unblacklist: "[чат] - Увімкнути бота де-небудь"
-  _cmd_doc_unblacklistuser: "[користувач] - Дозволити користувачу виконувати команди"
-
+  name: Settings
+  installation: "<emoji document_id=5363805650327450240>▪️</emoji> The installation is very easy! Just enter the following in your servers terminal:\n<pre><code class=\"language-bash\">sudo apt update &amp;&amp; sudo apt upgrade -y &amp;&amp; sudo apt install git &amp;&amp; sudo apt install python3-pip &amp;&amp; git clone https://github.com/VadymYem/AuthorBot && cd AuthorBot && pip install -r requirements.txt &amp;&amp; python3 -m acbot</code></pre> <emoji document_id=5299027123913105700>\U0001F610</emoji> If you dont have sudo access, simply remove the initial steps.\n<emoji document_id=5300777464820145682>\U0001F973</emoji> Lets go over a few arguments:\n<emoji document_id=5787313834012184077>\U0001F510</emoji> The <code>--root</code> argument allows you to run as a <b>root user</b>.\n<emoji document_id=5785209342986817408>\U0001F30E</emoji> The <code>--no-web</code> argument enables login to your account <b>directly in the terminal, rather than through a link</b> <code>{}.lhr.life</code>.\nIt completely safe and will help you upgrade to AuthorBot automatically"
+  too_many_args: <emoji document_id=5210952531676504517>🚫</emoji> <b>Слишком много аргументов</b>
+  blacklisted: <emoji document_id=5197474765387864959>👍</emoji> <b>Чат {} добавлен в черный список юзербота</b>
+  unblacklisted: <emoji document_id=5197474765387864959>👍</emoji> <b>Чат {} удален из черного списка юзербота</b>
+  user_blacklisted: <emoji document_id=5197474765387864959>👍</emoji> <b>Пользователь {} добавлен в черный список юзербота</b>
+  user_unblacklisted: <emoji document_id=5197474765387864959>👍</emoji> <b>Пользователь {} удален из черного списка юзербота</b>
+  what_prefix: <emoji document_id=5382187118216879236>❓</emoji> <b>А какой префикс ставить то?</b>
+  prefix_incorrect: <emoji document_id=5210952531676504517>🚫</emoji> <b>Префикс должен состоять только из одного символа</b>
+  prefix_set: "{} <b>Префикс команд обновлен. Используй следующую команду, чтобы изменить его обратно:</b>\n<pre><code class=\"language-heroku\">{newprefix}setprefix {oldprefix}</code></pre>"
+  alias_created: <emoji document_id=5197474765387864959>👍</emoji> <b>Алиас создан. Используй его через</b> <code>{}</code>
+  aliases: "<b>\U0001F517 Алиасы:</b>\n"
+  no_command: <emoji document_id=5210952531676504517>🚫</emoji> <b>Команда</b> <code>{}</code> <b>не существует</b>
+  alias_args: <emoji document_id=5210952531676504517>🚫</emoji> <b>Требуется ввести команду и алиас для нее</b>
+  delalias_args: <emoji document_id=5210952531676504517>🚫</emoji> <b>Требуется имя алиаса</b>
+  alias_removed: <emoji document_id=5197474765387864959>👍</emoji> <b>Алиас</b> <code>{}</code> <b>удален</b>.
+  no_alias: <emoji document_id=5210952531676504517>🚫</emoji> <b>Алиас</b> <code>{}</code> <b>не существует</b>
+  db_cleared: <emoji document_id=5197474765387864959>👍</emoji> <b>База очищена</b>
+  acbot: "<emoji document_id=5377437404078546699>\U0001F49C</emoji> <b>Telethon:</b> <i>1.37.0</i>\n\n✍️ <b>Developer: t.me/wsinfo, authorche.top</b>"
+  confirm_cleardb: ⚠️ <b>Вы уверены, что хотите сбросить базу данных?</b>
+  cleardb_confirm: 🗑 Очистить базу
+  cancel: 🚫 Отмена
+  who_to_blacklist: <emoji document_id=5382187118216879236>❓</emoji> <b>Кого заблокировать то?</b>
+  who_to_unblacklist: <emoji document_id=5382187118216879236>❓</emoji> <b>Кого разблокировать то?</b>
+  _cmd_doc_addalias: Установить алиас для команды
+  _cmd_doc_aliases: Показать список алиасов
+  _cmd_doc_blacklist: '[чат] [модуль] - Отключить бота где-либо'
+  _cmd_doc_blacklistuser: '[пользователь] - Запретить пользователю выполнять команды'
+  _cmd_doc_cleardb: Очистить базу данных
+  _cmd_doc_delalias: <алиас|-c|--clear> - Удалить алиас или все алиасы
+  _cmd_doc_acbot: Get version
+  _cmd_doc_setprefix: <префикс> [владелец] - Установить префикс команд
+  _cmd_doc_unblacklist: '[чат] - Включить бота где-либо'
+  _cmd_doc_unblacklistuser: '[пользователь] - Разрешить пользователю выполнять команды'
+  _cfg_nonstandart_prefixes: Allow non-standart prefixes like flags or more than one symbol
+  _cls_doc: Управление базовыми настройками юзербота
 config:
-  choose_core: "⚙️ <b>Обери категорію</b>"
-  configure: "⚙️ <b>Обери модуль для налаштування</b>"
-  configure_lib: "📦 <b>Обери бібліотеку для налаштування</b>"
-  configuring_mod: "⚙️ <b>Обери параметр для модуля</b> <code>{}</code>\n\n<b>Поточні налаштування:</b>\n\n{}"
-  configuring_lib: "📦 <b>Обери параметр для бібліотеки</b> <code>{}</code>\n\n<b>Поточні налаштування:</b>\n\n{}"
-  configuring_option: "⚙️ <b>Керування параметром</b> <code>{}</code> <b>модуля</b> <code>{}</code>\n<i>ℹ️ {}</i>\n\n<b>Стандартне: {}</b>\n\n<b>Поточне: {}</b>\n\n{}"
-  configuring_option_lib: "📦 <b>Керування параметром</b> <code>{}</code> <b>бібліотеки</b> <code>{}</code>\n<i>ℹ️ {}</i>\n\n<b>Стандартне: {}</b>\n\n<b>Поточне: {}</b>\n\n{}"
-  option_saved: "<emoji document_id=5318933532825888187>⚙️</emoji> <b>Параметр</b> <code>{}</code> <b>модуля</b> <code>{}</code><b> збережено!</b>\n<b>Поточне: {}</b>"
-  option_saved_lib: "<emoji document_id=5431736674147114227>📦</emoji> <b>Параметр</b> <code>{}</code> <b>бібліотеки</b> <code>{}</code><b> збережено!</b>\n<b>Поточне: {}</b>"
-  option_reset: "♻️ <b>Параметр</b> <code>{}</code> <b>модуля</b> <code>{}</code><b> зкинуто до значення за замовчуванням</b>\n<b>Поточне: {}</b>"
-  option_reset_lib: "♻️ <b>Параметр</b> <code>{}</code> <b>бібліотеки</b> <code>{}</code><b> зкинути до значення за замовчуванням</b>\n<b>Поточне: {}</b>"
-  _cls_doc: "Інтерактивний конфігуратор"
-  args: "🚫 <b>Ти вказав неправильні аргументи</b>"
-  no_mod: "🚫 <b>Модуля не існує</b>"
-  no_option: "🚫 <b>У модуля немає такого значення конфігу</b>"
-  validation_error: "🚫 <b>Введено некоректне значення конфігу.\nПомилка: {}</b>"
-  try_again: "🔁 Спробувати ще раз"
-  typehint: "🕵️ <b>Має бути {}</b>"
-  set: "поставити"
-  set_default_btn: "♻️ Значення за замовчуванням"
-  enter_value_btn: "✍️ Ввести значення"
-  enter_value_desc: "✍️ Введи нове значення цього параметру"
-  add_item_desc: "✍️ Введи елемент, який треба додати"
-  remove_item_desc: "✍️ Введи елемент, який треба видалити"
-  back_btn: "👈 Назад"
-  close_btn: "🔻 Закрити"
-  add_item_btn: "➕ Додати елемент"
-  remove_item_btn: "➖ Видалити елемент"
-  show_hidden: "🚸 Показати значення"
-  hide_value: "🔒 Приховати значення"
-  builtin: "🛰 Вбудовані"
-  external: "🛸 Зовнішні"
-  libraries: "📦 Бібліотеки"
-  _cmd_doc_config: "Налаштувати модулі"
-  _cmd_doc_fconfig: "<модуль> <налаштування> <значення> - встановити значення конфігу для модуля"
-
+  name: Config
+  choose_core: <emoji document_id=5341715473882955310>⚙️</emoji> <b>Выбери категорию</b>
+  configure: <emoji document_id=5341715473882955310>⚙️</emoji> <b>Выбери модуль для настройки</b>
+  configure_lib: 📦 <b>Выбери библиотеку для настройки</b>
+  configuring_mod: "<emoji document_id=5341715473882955310>⚙️</emoji> <b>Выбери параметр для модуля</b> <code>{}</code>\n\n<b>Текущие настройки:</b>\n\n{}"
+  configuring_lib: "\U0001F4E6 <b>Выбери параметр для библиотеки</b> <code>{}</code>\n\n<b>Текущие настройки:</b>\n\n{}"
+  configuring_option: "<emoji document_id=5341715473882955310>⚙️</emoji> <b>Управление параметром</b> <code>{}</code> <b>модуля</b> <code>{}</code>\n<i>ℹ️ {}</i>\n\n<b>Стандартное: {}</b>\n\n<b>Текущее: {}</b>\n\n{}"
+  configuring_option_lib: "<emoji document_id=5431736674147114227>\U0001F4E6</emoji> <b>Управление параметром</b> <code>{}</code> <b>библиотеки</b> <code>{}</code>\n<i>ℹ️ {}</i>\n\n<b>Стандартное: {}</b>\n\n<b>Текущее: {}</b>\n\n{}"
+  option_saved: "<emoji document_id=5341715473882955310>⚙️</emoji> <b>Параметр</b> <code>{}</code> <b>модуля</b> <code>{}</code><b> сохранен!</b>\n<b>Текущее: {}</b>"
+  option_saved_lib: "<emoji document_id=5431736674147114227>\U0001F4E6</emoji> <b>Параметр</b> <code>{}</code> <b>библиотеки</b> <code>{}</code><b> сохранен!</b>\n<b>Текущее: {}</b>"
+  option_reset: "<emoji document_id=5318933532825888187>♻️</emoji> <b>Параметр</b> <code>{}</code> <b>модуля</b> <code>{}</code><b> сброшен до значения по умолчанию</b>\n<b>Текущее: {}</b>"
+  option_reset_lib: "<emoji document_id=5318933532825888187>♻️</emoji> <b>Параметр</b> <code>{}</code> <b>библиотеки</b> <code>{}</code><b> сброшен до значения по умолчанию</b>\n<b>Текущее: {}</b>"
+  args: 🚫 <b>Ты указал неверные аргументы</b>
+  no_mod: 🚫 <b>Модуль не существует</b>
+  no_option: 🚫 <b>У модуля нет такого значения конфига</b>
+  validation_error: "\U0001F6AB <b>Введено некорректное значение конфига.\nОшибка: {}</b>"
+  try_again: 🔁 Попробовать еще раз
+  typehint: 🕵️ <b>Must be a{eng_art} {}</b>
+  set: поставить
+  set_default_btn: ♻️ Значение по умолчанию
+  enter_value_btn: ✍️ Ввести значение
+  enter_value_desc: ✍️ Введи новое значение этого параметра
+  add_item_desc: ✍️ Введи элемент, который нужно добавить
+  remove_item_desc: ✍️ Введи элемент, который нужно удалить
+  back_btn: 👈 Назад
+  close_btn: 🔻 Закрыть
+  add_item_btn: ➕ Добавить элемент
+  remove_item_btn: ➖ Удалить элемент
+  show_hidden: 🚸 Показать значение
+  hide_value: 🔒 Скрыть значение
+  builtin: 🛰 Встроенные
+  external: 🛸 Внешние
+  libraries: 📦 Библиотеки
+  _cmd_doc_config: Настроить модули
+  _cmd_doc_fconfig: <модуль> <настройка> <значение> - установить значение конфига для модуля
+  _cls_doc: Интерактивный конфигуратор AuthorBot
 inline_stuff:
-  bot_username_invalid: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Неправильний нік бота. Він має закінчитися на</b> <code>bot</code> <b>і бути не коротше ніж 5 символів</b>"
-  bot_username_occupied: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Такий нік бота вже зайнятий</b>"
-  bot_updated: "<emoji document_id=6318792204118656433>🎉</emoji> <b>Налаштування збережені. Для їх застосування треба перезавантажити юзербота</b>"  
-  _cmd_doc_ch_acbot: "<юзернейм> - Змінити юзернейм інлайн бота"
-
+  name: InlineStuff
+  bot_username_invalid: <emoji document_id=5210952531676504517>🚫</emoji> <b>Неправильный ник бота. Он должен заканчиваться на</b> <code>bot</code> <b>и быть не короче чем 5 символов</b>
+  bot_username_occupied: <emoji document_id=5210952531676504517>🚫</emoji> <b>Такой ник бота уже занят</b>
+  bot_updated: <emoji document_id=6318792204118656433>🎉</emoji> <b>Настройки сохранены. Для их применения нужно перезагрузить юзербот</b>
+  _cmd_doc_ch_acbot_bot: <username> - Change your inline bot username
+  _cls_doc: Настройка inline-бота
 test:
-  set_loglevel: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Вкажи рівень логів числом або рядком</b>"
-  no_logs: "<emoji document_id=5363948200291998612>🤷‍♀️</emoji> <b>У тебе немає логів рівня</b> <code>{}</code><b>.</b>"
-  logs_caption: "<emoji document_id=5188377234380954537>✍️</emoji> <b>Логи рівня</b> <code>{}</code>\n\n<emoji document_id=6318902906900711458>⚪️</emoji> <b>Версія: {}.{}.{}</b>{}"
-  debugging_enabled: "<emoji document_id=5332533929020761310>✅</emoji> <b>Режим розробника увімкнено для модуля</b> <code>{0}</code>\n<i>Прямуй до директорії `debug_modules`, змінюй файл `{0}.py`, и смотри изменения в режиме реального времени</i>"
-  debugging_disabled: "<emoji document_id=5332533929020761310>✅</emoji> <b>Режим розробника вімкнено</b>"
-  suspend_invalid_time: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Неверное время заморозки</b>"
-  suspended: "<emoji document_id=5452023368054216810>🥶</emoji> <b>Бота заморожено на</b> <code>{}</code> <b>секунд</b>"
-  results_ping: "<emoji document_id=5920515922505765329>⚡️</emoji> <b>𝙿𝚒𝚗𝚐: </b><code>{}</code><b> 𝚖𝚜
-</b>\n<emoji document_id=5900104897885376843>🕓</emoji><b> 𝚄𝚙𝚝𝚒𝚖𝚎: </b><code>{}</code>"
-  noprem_ping: "⚡️ 𝙿𝚒𝚗𝚐: <code>{}</code> 𝚖𝚜\n🚀 𝚄𝚙𝚝𝚒𝚖𝚎: <code>{}</code>"
+  name: Tester
+  set_loglevel: <emoji document_id=5355133243773435190>🚫</emoji> <b>Укажи уровень логов числом или строкой</b>
+  no_logs: <emoji document_id=5355133243773435190>🤷‍♀️</emoji> <b>У тебя нет логов уровня</b> <code>{}</code><b>.</b>
+  logs_caption: "<emoji document_id=5350594756126721186>\U0001FA90</emoji> <b>Логи AuthorBot уровня</b> <code>{}</code>\n\n<emoji document_id=5228879218363872764>⚪️</emoji> <b>Версия: {}.{}.{}</b>{}"
+  suspend_invalid_time: <emoji document_id=5210952531676504517>🚫</emoji> <b>Неверное время заморозки</b>
+  suspended: <emoji document_id=5452023368054216810>🥶</emoji> <b>Бот заморожен на</b> <code>{}</code> <b>секунд</b>
+  results_ping: "<emoji document_id=5920515922505765329>⚡️</emoji> <b>\U0001D67F\U0001D692\U0001D697\U0001D690: </b><code>{}</code><b> \U0001D696\U0001D69C </b>\n<emoji document_id=5900104897885376843>\U0001F553</emoji><b> \U0001D684\U0001D699\U0001D69D\U0001D692\U0001D696\U0001D68E: </b><code>{}</code>"
+  noprem_ping: "⚡️ \U0001D67F\U0001D692\U0001D697\U0001D690: <code>{}</code> \U0001D696\U0001D69C\n\U0001F680 \U0001D684\U0001D699\U0001D69D\U0001D692\U0001D696\U0001D68E: <code>{}</code>"
   ping_hint: "\n"
-  confidential: "⚠️ <b>Рівень логів</b> <code>{}</code> <b>може містити особисту інформацію, будь обережний</b>"
-  confidential_text: "⚠️ <b>Рівень логів</b> <code>{0}</code> <b>може містити особисту інформацію, будь обережний</b>\n<b>Напиши</b> <code>.logs {0} force_insecure</code><b>, щоб надіслати логи ігноруючи попередження</b>"
-  choose_loglevel: "💁‍♂️ <b>Вибери рівень логів</b>"
-  _cmd_doc_dump: "Показати інформацію про повідомлення"
-  _cmd_doc_logs: "<рівень> - Надсилає лог-файл. Рівні нижче WARNING можуть містити особисту інфомрацію."
-  _cmd_doc_suspend: "<час> - Заморозити бота на деякий час"
-  _cmd_doc_ping: "Перевіряє швидкість відгуку юзербота"
-  _cls_doc: "Операції, пов'язані із самотестуванням"
-  send_anyway: "📤 Все одно відправити"
-  cancel: "🚫 Скасування"
-  logs_cleared: "🗑 <b>Логи очищено</b>"
-  _cmd_doc_clearlogs: "Очистити логи"
-
-unit_heta:
-  "name": "UnitHeta"
-  no_query: "╭╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╮\n╵\n╵    ❌ <b>𝚈𝚘𝚞 𝚖𝚞𝚜𝚝 𝚠𝚛𝚒𝚝𝚎 𝚚𝚞𝚎𝚛𝚢</b>\n╵\n╰╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╯"
-  no_results: "╭╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╮\n╵\n╵    ❌<b> 𝙽𝚘 𝚛𝚎𝚜𝚞𝚕𝚝𝚜</b>\n╵\n╰╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╯"
-  api_error: "╭╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╮\n╵\n╵   💤 <b>API 𝚒𝚜 𝚜𝚕𝚎𝚎𝚙𝚒𝚗𝚐</b>\n╵\n╰╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╯"
-  result: "🥰 <b>Результати для</b> <code>{query}</code><b>:</b>\n\n🧳 <code>{name}</code> <b>від</b> <code>{dev}</code>\n👨‍🏫 <i>{cls_doc}</i>\n\n📚 <b>Команди:</b>\n{commands}\n\n🔗 <b>Встановити:</b> <code>{prefix}dlh {mhash}</code>"
-  install: "╭╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╮\n╵\n╵    💦 <b>𝙸𝚗𝚜𝚝𝚊𝚕𝚕</b>\n╵\n╰╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╯"
-  loaded: "╭╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╮\n╵\n╵    ✅ <b>𝙸𝚗𝚜𝚝𝚊𝚕𝚕𝚎𝚍!</b>\n╵\n╰╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╯"
-  not_loaded: "╭╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╮\n╵\n╵    ❌ <b>𝙽𝚘𝚝 𝚒𝚗𝚜𝚝𝚊𝚕𝚕𝚎𝚍! </b>\n╵\n╰╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╶╯"
-  language: "en"
-  _cls_doc: "Керує речами, пов'язаними з @acbotmods_bot"
-  404: "<emoji document_id=5210952531676504517>❌</emoji> <b>Модуль не знайдено</b>"
-  args: "<emoji document_id=5210952531676504517>❌</emoji> <b>Ви маєте вказати аргументи</b>"
-  _cmd_doc_heta: "<запит> - Шукає модулі в репозиторії Heta"
-  _cmd_doc_ml: "<ім'я модуля> - Надіслати посилання на модуль"
-  enter_search_query: "🔎 Введіть пошуковий запит"
-  search_query_desc: "Команда, назва модуля, опис, тощо."
-  _ihandle_doc_heta: "Шукає модулі в репозиторії Heta"
-  enter_hash: "<emoji document_id=5210952531676504517>❌</emoji> <b>Вам потрібно вказати хеш</b>"
-  resolving_hash: "<emoji document_id=5325731315004218660>⏳</emoji> <b>Дозволяю хеш...</b>"
-  installing_from_hash: "<emoji document_id=5325731315004218660>⏳</emoji> <b>Встановлюю модуль</b> <code>{}</code> <b>...</b>"
-  installed: "<emoji document_id=5398001711786762757>✅</emoji> <b>Модуль</b> <code>{}</code> <b>встановлений</b>"
-  error: "<emoji document_id=5210952531676504517>❌</emoji> <b>Помилка, хай йому грець!</b>"
-  _cmd_doc_dlh: "<hash> - Встановити модуль із хешу"
-
+  confidential: <emoji document_id=5447644880824181073>⚠️</emoji> <b>Уровень логов</b> <code>{}</code> <b>может содержать личную информацию, будь осторожен</b>
+  confidential_text: "<emoji document_id=5447644880824181073>⚠️</emoji> <b>Уровень логов</b> <code>{0}</code> <b>может содержать личную информацию, будь осторожен</b>\n<b>Напиши</b> <code>.logs {0} -f</code><b>, чтобы отправить логи игнорируя предупреждение</b>"
+  choose_loglevel: 💁‍♂️ <b>Выбери уровень логов</b>
+  bad_module: <emoji document_id=5210952531676504517>🚫</emoji> <b>Module not found</b>
+  debugging_enabled: "<emoji document_id=5332533929020761310>✅</emoji> <b>Режим разработчика включен для модуля</b> <code>{0}</code>\n<i>Отправляйся в директорию `debug_modules`, изменяй файл `{0}.py`, и смотри изменения в режиме реального времени</i>"
+  debugging_disabled: <emoji document_id=5332533929020761310>✅</emoji> <b>Режим разработчика выключен</b>
+  send_anyway: 📤 Все равно отправить
+  cancel: 🚫 Отмена
+  logs_cleared: 🗑 <b>Логи очищены</b>
+  _cmd_doc_clearlogs: Очистить логи
+  _cmd_doc_debugmod: "[module] - For developers: Open module for debugging\nYou will be able to track changes in real-time"
+  _cmd_doc_dump: Показать информацию о сообщении
+  _cmd_doc_logs: <уровень> [-f] - Отправляет лог-файл. Уровни ниже WARNING могут содержать личную информацию.
+  _cmd_doc_ping: Проверяет скорость отклика юзербота
+  _cmd_doc_suspend: <время> - Заморозить бота на некоторое время
+  _cls_doc: Операции, связанные с самотестированием
 update_notifier:
-  update_required: "🆕 <b>Доступне оновлення АвторБоту!</b>\n\nОпубліковано нову версію.\n🔮 <b>AuthorBot <s>{}</s> -> {}</b>\n\n{}"
-  more: "\n<i><b>🎥 І ще {}...</b></i>"
-  _cfg_doc_disable_notifications: "Вимкнути сповіщення про оновлення"
-  latest_disabled: "Повідомлення про останнє оновлення було вимкнено"
-  update: "🔄 Оновити"
-  ignore: "🚫 Ігнорувати"
-  changelog: '<emoji document_id=5434144690511290129>📰</emoji> <b>Список змін останнього великого оновлення:</b><pre><code class="language-acbot">{}</code></pre>'
-
+  name: UpdateNotifier
+  update_required: "\U0001F195 <b>Update available!</b>\n\nNew version released.\n\U0001F52E <b><s>{}</s> -> {}</b>\n\n{}"
+  more: "\n<i><b>\U0001F3A5 And {} more...</b></i>"
+  _cfg_doc_disable_notifications: Disable update notifications
+  latest_disabled: Notifications about the latest update have been suppressed
+  update: 🔄 Update
+  ignore: 🚫 Ignore
+  changelog: <emoji document_id=5434144690511290129>📰</emoji> <b>Changelog of the last major update:</b><pre><code class="language-acbot">{}</code></pre>
+  _cls_doc: Tracks latest releases, and notifies you, if update is required
 updater:
-  source: "<emoji document_id=5456255401194429832>📖</emoji> <b>Исходный код можно посмотреть</b> <a href='{}'>здесь</a>"
-  restarting_caption: "<emoji document_id=5328274090262275771>🕗</emoji> <b>AuthorBot перезапускается...</b>"
-  downloading: "<emoji document_id=5328274090262275771>🕗</emoji> <b>Загрузка обновлений...</b>"
-  installing: "<emoji document_id=5328274090262275771>🕗</emoji> <b>Установка обновлений...</b>"
-  update_failed: "❌ <b>Обновление не удалось и было безопасно отменено.</b>\n<i>Предыдущая версия AuthorBot сохранена. Перед повторной попыткой проверьте логи.</i>"
-  success: "<emoji document_id=5326015457155620929>⏱</emoji> <b>Перезапуск выполнен успешно! {}</b>\n<i>Модули ещё загружаются...</i>\n<i>Перезапуск занял {} с</i>"
-  full_success: "<emoji document_id=5301096082674032190>👍</emoji> <b>Юзербот полностью загружен! {}</b>\n<i>Полный перезапуск занял {} с</i>"
-  secure_boot_complete: "<emoji document_id=5472308992514464048>🔐</emoji> <b>Безопасная загрузка завершена! {}</b>\n<i>Перезапуск занял {} с</i>"
-  origin_cfg_doc: "Git-репозиторий, из которого загружаются обновления"
-  btn_restart: "🔄 Перезапустить"
-  btn_update: "🧭 Обновить"
-  restart_confirm: "❓ <b>Вы уверены, что хотите перезапустить AuthorBot?</b>"
-  secure_boot_confirm: "❓ <b>Вы уверены, что хотите перезапустить AuthorBot в безопасном режиме?</b>"
-  update_confirm: "❓ <b>Вы уверены, что хотите обновиться?\n\n<a href=\"https://github.com/VadymYem/AuthorBot/commit/{}\">{}</a> ⤑ <a href=\"https://github.com/VadymYem/AuthorBot/commit/{}\">{}</a></b>"
-  no_update: "🚸 <b>Установлена последняя версия. Всё равно загрузить обновления?</b>"
-  cancel: "🚫 Отмена"
-  _cls_doc: "Обновляет юзербот"
-  lavhost_update: "<emoji document_id=5469986291380657759>✌️</emoji> <b>{} обновляется...</b>"
-  _cmd_doc_restart: "Перезапускает юзербот"
-  _cmd_doc_source: "Показывает ссылку на исходный код проекта"
-  _cmd_doc_update: "Загружает обновления юзербота"
-
+  name: Updater
+  source: <emoji document_id=5208634061085492935>📖</emoji> <b>Исходный код можно прочитать</b> <a href='{}'>здесь</a>
+  restarting_caption: <emoji document_id=5328274090262275771>🕗</emoji> <b>Your AuthorBot is restarting...</b>
+  downloading: <emoji document_id=5208622108191506906>🕗</emoji> <b>Скачивание обновлений...</b>
+  installing: <emoji document_id=5208622108191506906>🕗</emoji> <b>Установка обновлений...</b>
+  update_failed: "❌ <b>Update failed and was rolled back safely.</b>\n<i>The previous AuthorBot version was preserved. Check logs before retrying.</i>"
+  success: "<emoji document_id=5208661316947955396>⏱</emoji> <b>Перезагрузка успешна! {}</b>\n<i>Но модули еще загружаются...</i>\n<i>Перезагрузка заняла {} сек</i>"
+  origin_cfg_doc: Ссылка, из которой будут загружаться обновления
+  btn_restart: 🔄 Перезагрузиться
+  btn_update: 🧭 Обновиться
+  restart_confirm: <emoji document_id=5382187118216879236>❓</emoji> <b>Ты уверен, что хочешь перезагрузиться?</b>
+  secure_boot_confirm: <emoji document_id=5382187118216879236>❓</emoji> <b>Ты уверен, что хочешь перезагрузиться в режиме безопасной загрузки?</b>
+  update_confirm: "<emoji document_id=5382187118216879236>❓</emoji> <b>Ты уверен, что хочешь обновиться?\n\n<a href=\"https://github.com/VadymYem/AuthorBot/commit/{}\">{}</a> ⤑ <a href=\"https://github.com/VadymYem/AuthorBot/commit/{}\">{}</a></b>"
+  no_update: <emoji document_id=5465496001856950230>🌟</emoji> <b>У тебя последняя версия. Обновиться принудительно?</b>
+  cancel: 🚫 Отмена
+  lavhost_update: <emoji document_id=5469986291380657759>✌️</emoji> <b>Your {} is updating...</b>
+  full_success: "<emoji document_id=6028215594707324419>\U0001F44D</emoji> <b>Юзербот полностью загружен! {}</b>\n<i>Полная перезагрузка заняла {} сек.</i>"
+  secure_boot_complete: "<emoji document_id=5472308992514464048>\U0001F510</emoji> <b>Безопасная загрузка завершена! {}</b>\n<i>Перезагрузка заняла {} сек</i>"
+  _cmd_doc_restart: Перезагружает юзербот
+  _cmd_doc_source: Показать ссылку на исходный код проекта
+  _cmd_doc_update: Скачивает обновления юзербота
+  _cls_doc: Обновляет юзербот
 api_protection:
-  warning: "⚠️ <b>УВАГА!</b>\n\nАкаунт вийшов за ліміти запитів, зазначені в конфігурації. З метою запобігання флуду Telegram API, юзербот був <b>повністю заморожений</b> на {} секунд, задля того щоб твій аккаунт не видалили.\n\nЯкщо ти вважаєш, що це запланована поведінка юзербота, просто почекай, доки закінчиться таймер, і наступного разу, коли заплануєш виконувати таку ресурсовитратну операцію, використовуй <code>{prefix}suspend_api_protect</code> &lt;час у секундах&gt;"
-  args_invalid: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Неправильні аргументи</b>"
-  suspended_for: "<emoji document_id=5458450833857322148>👌</emoji> <b>Захист API вимкнено на {} секунд</b>"
-  on: "<emoji document_id=5458450833857322148>👌</emoji> <b>Захист увімкнено</b>"
-  off: "<emoji document_id=5458450833857322148>👌</emoji> <b>Захист вимкнено</b>"
-  u_sure: "<emoji document_id=5312383351217201533>⚠️</emoji> <b>Ти впевнений?</b>"
-  _cfg_time_sample: "Часовий проміжок, за яким буде рахуватися кількість запитів"
-  _cfg_threshold: "Поріг запитів, за якого спрацьовуватиме захист"
-  _cfg_local_floodwait: "Заморозити юзербота на цю кількість секунд, якщо ліміт запитів перевищено"
-  _cfg_forbidden_methods: "Заборонити виконання зазначених методів у всіх зовнішніх модулях"
-  btn_no: "🚫 Ні"
-  btn_yes: "✅ Так"
-  web_pin: "🔓 <b>Натисни на кнопку нижче, щоб показати Werkzeug debug PIN. Не давай його нікому.</b>"
-  web_pin_btn: "🐞 Показати Werkzeug PIN"
-  proxied_url: "🌐 Проксоване посилання"
-  local_url: "🏠 Локальне посилання"
-  debugger_disabled: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Веб-налагоджувач вимкнено, Посилання недоступна</b>"
-  _cmd_doc_api_fw_protection: "Увімкнути/вимкнути захист API"
-  _cmd_doc_debugger: "Показати PIN Werkzeug"
-  _cmd_doc_suspend_api_protect: "<час у секундах> - Заморозити захист API на N секунд"
-
+  name: APILimiter
+  warning: "<emoji document_id=5447644880824181073>⚠️</emoji> <b>ВНИМАНИЕ!</b>\n\nАккаунт вышел за лимиты запросов, указанные в конфиге. С целью предотвращения флуда Telegram API, юзербот был <b>полностью заморожен</b> на {} секунд. Дополнительная информация прикреплена в файле ниже. \n\nРекомендуется обратиться за помощью в <code>{prefix}support</code> группу!\n\nЕсли ты считаешь, что это запланированное поведение юзербота, просто подожди, пока закончится таймер и в следующий раз, когда запланируешь выполнять такую ресурсозатратную операцию, используй <code>{prefix}suspend_api_protect</code> &lt;время в секундах&gt;"
+  args_invalid: <emoji document_id=5210952531676504517>🚫</emoji> <b>Неверные аргументы</b>
+  suspended_for: <emoji document_id=5458450833857322148>👌</emoji> <b>Защита API отключена на {} секунд</b>
+  on: <emoji document_id=5458450833857322148>👌</emoji> <b>Защита включена</b>
+  off: <emoji document_id=5458450833857322148>👌</emoji> <b>Защита отключена</b>
+  u_sure: <emoji document_id=5312383351217201533><emoji document_id=5447644880824181073>⚠️</emoji></emoji> <b>Ты уверен?</b>
+  _cfg_time_sample: Временной промежуток, по которому будет считаться количество запросов
+  _cfg_threshold: Порог запросов, при котором будет срабатывать защита
+  _cfg_local_floodwait: Заморозить юзербота на это количество секунд, если лимит запросов превышен
+  _cfg_forbidden_methods: Запретить выполнение указанных методов во всех внешних модулях
+  btn_no: 🚫 Нет
+  btn_yes: ✅ Да
+  web_pin: 🔓 <b>Click the button below to show Werkzeug debug PIN. Do not give it to anyone.</b>
+  web_pin_btn: 🐞 Show Werkzeug PIN
+  proxied_url: 🌐 Проксированная ссылка
+  local_url: 🏠 Локальная ссылка
+  debugger_disabled: <emoji document_id=5210952531676504517>🚫</emoji> <b>Web debugger is disabled, url is not available</b>
+  _cmd_doc_api_fw_protection: Включить/выключить защиту API
+  _cmd_doc_debugger: Show the Werkzeug PIN
+  _cmd_doc_suspend_api_protect: <время в секундах> - Заморозить защиту API на N секунд
+  _cls_doc: Помогает юзерботу не спамить Telegram API
 help:
-  undoc: "🦥 Немає опису"
-  all_header: "<emoji document_id=5188377234380954537>✍️</emoji> <b>{} модулів доступно, {} приховано:</b>"
-  no_mod: "🚫 <b>Вкажи модуль(-і), які потрібно приховати</b>"
-  hidden_shown: "<emoji document_id=5188377234380954537>✍️</emoji> <b>{} модулів приховано, {} модулів показано:</b>\n{}\n{}"
-  support: "{} <b>Support</b> <a href='https://t.me/wsinfo'>чат допомоги</a></b>"
-  _cls_doc: "Показує допомогу за модулями"
-  partial_load: "<emoji document_id=5312383351217201533>☝️</emoji> <b>Юзербот ще не завантажився повністю, тому показані не всі модулі</b>"
-  not_exact: "<emoji document_id=5312383351217201533>☝️</emoji> <b>Точного збігу не знайшлося, тому було обрано найбільш підходяще</b>"
-  request_join: "Ви запросили посилання на чат допомоги"
-  core_notice: "<emoji document_id=5312383351217201533>☝️</emoji> <b>Це вбудований модуль. Ви не можете його вивантажити або замінити</b>"
-  _cmd_doc_help: "[модуль] [-f] - Показати команди"
-  _cmd_doc_helphide: "<модуль або модулі> - Сховати модуль(-і) з help\n*Розділяй модулі пробілами"
-  _cmd_doc_support: "Показати посилання на чат допомоги"
+  name: Help
+  undoc: <emoji document_id=5469741319330996757>💫</emoji> Нет описания
+  all_header: <b>{} модулей доступно, {} скрыто:</b>
+  no_mod: 🚫 <b>Укажи модуль(-и), которые нужно скрыть</b>
+  hidden_shown: "<b>{} модулей скрыто, {} модулей показано:</b>\n{}\n{}"
+  partial_load: <emoji document_id=5355133243773435190>☝️</emoji> <b>Юзербот еще не загрузился полностью, поэтому показаны не все модули</b>
+  not_exact: <emoji document_id=5355133243773435190>☝️</emoji> <b>Точного совпадения не нашлось, поэтому было выбрано наиболее подходящее</b>
+  request_join: Вы запросили ссылку на чат помощи AuthorBot
+  core_notice: <emoji document_id=5355133243773435190>☝️</emoji> <b>Это встроенный модуль. Вы не можете его выгрузить или заменить</b>
+  rich_title: Справка
+  rich_modules: Модули
+  rich_close: Закрыть
+  rich_service: 'Служебный модуль: работает в фоне или через другие модули.'
+  rich_summary: 'Модулей: {} · скрыто: {} · префикс <code>{}</code>'
+  rich_hint: Выбери модуль ниже, чтобы посмотреть команды и описания. help &lt;команда&gt; сразу открывает справку инструмента.
 
 info:
-  owner: "Власник"
-  version: "Версія"
-  build: "Збірка"
-  prefix: "Префікс"
-  uptime: "Аптайм"
-  branch: "Гілка"
-  cpu_usage: "ЦП"
-  ram_usage: "ОЗП"
-  send_info: "Надіслати інформацію про юзербота"
-  description: "ℹ Це не розкриє жодної особистої інформації"
-  _ihandle_doc_info: "Надіслати інформацію про юзербота"
-  up-to-date: "<emoji document_id=5370699111492229743>😌</emoji> <b>Актуальна версія</b>"
-  update_required: "<emoji document_id=5424728541650494040>😕</emoji> <b>Потрібне оновлення</b> <code>.update</code>"
-  _cfg_cst_msg: "Кастомний текст повідомлення в info. Може містити ключові слова {me}, {version}, {build}, {prefix}, {platform}, {upd}, {uptime}, {cpu_usage}, {ram_usage}, {branch}"
-  _cfg_cst_btn: "Кастомна кнопка в повідомленні в info. Залиш порожнім, щоб прибрати кнопку"
-  _cfg_banner: "Посилання на банер-картинку"
-  setinfo_no_args: "<emoji document_id=5370881342659631698>😢</emoji> <b>Тобі потрібно вказати текст для кастомного інфо</b>"
-  setinfo_success: "<emoji document_id=5436040291507247633>🎉</emoji> <b>Текст інфо успішно змінено</b>"
-  desc: "<emoji document_id=5188377234380954537>✍️</emoji> <b>Що таке Userbot?</b>\n\n<emoji document_id=5472238129849048175>😎</emoji> Userbot - це <b>стороння програма</b>, яка взаємодіє з Telegram API для виконання <b>автоматизованих завдань від імені користувача</b>. Юзерботи можуть використовуватися для автоматизації різних завдань, таких як <b>надсилання повідомлень, приєднання до каналів, завантаження медіафайлів і багато іншого</b>.\n\n<emoji document_id=5474667187258006816>😎</emoji> Юзерботи відрізняються від звичайних ботів у Telegram тим, що <b>вони працюють на акаунті користувача</b>, а не на бот-акаунті. Це означає, що вони можуть мати доступ до більшої кількості функцій і мають більшу гнучкість у плані виконання дій.\n\n<emoji document_id=5472267631979405211>🚫</emoji> Однак важливо зазначити, що <b>юзерботи офіційно не підтримуються Telegram</b> і їх використання може порушувати умови використання платформи. Тому <b>користувачі мають бути обережними під час їх використання</b> і переконатися, що на їхньому акаунті не виконується шкідливий код.\n\n"
-  _cmd_doc_acbotinfo: "Надіслати інформацію на кшталт 'Що таке АвторБот?'"
-  _cmd_doc_info: "Надсилає інформацію про бота"
-  _cmd_doc_setinfo: "<текст> - Змінити текст у .info"
-
+  name: Info
+  owner: Owner
+  version: Version
+  build: Build
+  prefix: Prefix
+  uptime: Uptime
+  branch: Branch
+  cpu_usage: CPU usage
+  ram_usage: RAM usage
+  send_info: Отправить информацию о юзерботе
+  description: ℹ Это не раскроет никакой личной информации
+  up-to-date: <b>Актуальная версия</b>
+  update_required: <emoji document_id=5424728541650494040>😕</emoji> <b>Update required</b> <code>.update</code>
+  setinfo_no_args: <emoji document_id=5370881342659631698>😢</emoji> <b>You need to specify text to change info to</b>
+  setinfo_success: <emoji document_id=5436040291507247633>🎉</emoji> <b>Info changed successfully</b>
+  _cfg_cst_msg: Custom message for info. May contain {me}, {version}, {build}, {prefix}, {platform}, {upd}, {uptime}, {cpu_usage}, {ram_usage}, {branch} keywords
+  _cfg_cst_btn: Кастомная кнопка в сообщении в info. Оставь пустым, чтобы убрать кнопку
+  _cfg_banner: Ссылка на баннер-картинку
+  desc: "<emoji document_id=5188377234380954537>\U0001FA90</emoji> <b>Что такое Userbot?</b>\n\n<emoji document_id=5472238129849048175>\U0001F60E</emoji> Userbot - это <b>сторонняя программа</b>, которая взаимодействует с Telegram API для выполнения <b>автоматизированных задач от имени пользователя</b>. Юзерботы могут использоваться для автоматизации различных задач, таких как <b>отправка сообщений, присоединение к каналам, загрузка медиафайлов и многое другое</b>.\n\n<emoji document_id=5474667187258006816>\U0001F60E</emoji> Юзерботы отличаются от обычных ботов в Telegram тем, что <b>они работают на аккаунте пользователя</b>, а не на бот-аккаунте. Это означает, что они могут иметь доступ к большему количеству функций и обладают большей гибкостью в плане выполнения действий.\n\n<emoji document_id=5472267631979405211>\U0001F6AB</emoji> Однако важно отметить, что <b>юзерботы официально не поддерживаются Telegram</b> и их использование может нарушать условия использования платформы. Поэтому <b>пользователи должны быть осторожны при их использовании</b> и убедиться, что на их аккаунте не выполняется вредоносный код.\n\n"
+  _cmd_doc_info: Отправляет информацию о боте
+  _cmd_doc_acbotinfo: Send userbot info
+  _cmd_doc_setinfo: <текст> - Изменить текст в .info
+  _ihandle_doc_info: Отправить информацию о юзерботе
+  _cls_doc: Показать информацию о юзерботе
 loader:
-  loadmod_pm_timeout: "Будь ласка, зачекайте 10 секунд перед підтвердженням цієї дії"
-  loadmod_not_allowed_fresh_pm: "<emoji document_id=5447644880824181073>⚠️</emoji> <b><u>Уважно прочитайте це!</u></b> <emoji document_id=5447644880824181073>⚠️</emoji>\n\n<b>Ви намагаєтеся завантажити модуль в приватних повідомленнях з користувачем, якого не знаєте.</b> Це міра безпеки щоб ваш аккаунт не взломали та не видалили</b>. Якщо ти знаєш цього користувача і <b><u>100%</u></b> довіряєш йому, почекай декілька днів і спробуй знову."
-  link: "<emoji document_id=5280658777148760247>🌐</emoji> <b><a href=\"{url}\">Посилання</a> на</b> <code>{class_name}</code>\n\n<emoji document_id=5188377234380954537>✍️</emoji> <code>{prefix}dlm {url}</code>\n\n{not_exact}"
-  file: "<emoji document_id=5433653135799228968>📁</emoji> <b>Файл</b> <code>{class_name}</code>\n\n<emoji document_id=5188377234380954537>✍️</emoji> <code>{prefix}lm</code> <b>у відповідь на це повідомлення, щоб встановити</b>\n\n{not_exact}"
-  not_exact: "<emoji document_id=5312383351217201533>⚠️</emoji> <b>Точного збігу не знайдено, тому показано найближчий результат</b>"
-  loadmod_confirm_pm_message: "<emoji document_id=5451732530048802485>⏳</emoji> <i>Очікую вашого підтвердження...</i>"
-  loadmod_cancelled: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Завантаження модуля скасовано</b>"
-  loadmod_confirm_pm: "⚠️ <b>Увага!</b>\n\nЗавантаження модулів із невідомих джерел <b><u>дуже небезпечна</u></b> і може призвести до <b>видалення облікового запису або компрометації сесії</b>. Переконайтеся, що ви знаєте цього користувача і <b><u>100%</u></b> довіряєте йому.\n\n<b>Ви хочете продовжити завантаження модуля?</b>"
-  loadmod_confirm_pm_yes: "✅ Так, продовжити"
-  loadmod_confirm_pm_no: "🚫 Ні, скасувати"
-  repo_config_doc: "Посилання для завантаження модулів"
-  add_repo_config_doc: "Додаткові репозиторії"
-  avail_header: "🎢 <b>Офіційні модулі з репозиторію</b>"
-  no_module: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Модуль недоступний у репозиторії.</b>"
-  no_file: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Файл не знайдено</b>"
-  provide_module: "<emoji document_id=5312383351217201533>⚠️</emoji> <b>Вкажи модуль для завантаження</b>"
-  bad_unicode: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Неправильне кодування модуля</b>"
-  load_failed: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Завантаження не увінчалося успіхом. Дивись логи.</b>"
-  loaded: "<emoji document_id=5188377234380954537>✍️</emoji> <b>Модуль</b> <code>{}</code>{} <b>завантажено {}</b>{}{}{}{}{}{}"
-  no_class: "<b>Мені самому придумати що вивантажити?</b>"
-  unloaded: "{} <b>Модуль {} вивантажено.</b>"
-  not_unloaded: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Модуль не вивантажено.</b>"
-  requirements_failed: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Помилка встановлення залежностей</b>"
-  requirements_failed_termux: "<emoji document_id=5407025283456835913>🕶</emoji> <b>Помилка встановлення залежностей</b>\n<b>Найчастіше виникає через те, що Termux не підтримує багато бібліотек. Не повідомляйте про це як про помилку, це не може бути виправлено.</b>"
-  requirements_installing: "<emoji document_id=5328311576736833844>🚀</emoji> <b>Встановлюю залежності:\n\n{}</b>"
-  requirements_restart: "<emoji document_id=5875145601682771643>🚀</emoji> <b>Залежності встановлено, але потрібне перезавантаження для застосування</b> <code>{}</code>"
-  all_modules_deleted: "<emoji document_id=5784993237412351403>✅</emoji> <b>Модулі видалено</b>"
-  undoc: "<emoji document_id=5427052514094619126>🤷‍♀️</emoji> Немає опису"
-  ihandler: "\n<emoji document_id=5372981976804366741>🤖</emoji> <code>{}</code> {}"
-  version_incompatible: "<emoji document_id=5454225457916420314>😖</emoji> <b>Цей модуль потребує АвторБот версії {}+\nОновіться за допомогою</b> <code>.update</code>"
-  ffmpeg_required: "<emoji document_id=5454225457916420314>😖</emoji> <b>Цьому модулю потрібен FFMPEG, який не встановлено</b>"
-  developer: "\n\n<emoji document_id=5875452644599795072>🫶</emoji> <b>Розробник:</b> {}"
-  depends_from: "\n\n<emoji document_id=5431736674147114227>📦</emoji> <b>Залежності:</b> \n{}"
-  by: "від"
-  module_fs: "💿 <b>Ти хочеш зберегти модуль на жорсткий диск, щоб він не вивантажувався під час перезавантаження?</b>"
-  save: "💿 Зберегти"
-  no_save: "🚫 Не зберігати"
-  save_for_all: "💽 Завжди зберігати"
-  never_save: "🚫 Ніколи не зберігати"
-  will_save_fs: "💽 Тепер усі модулі, завантажені з файлу, зберігатимуться на жорсткий диск"
-  inline_init_failed: "<emoji document_id=5454225457916420314>😖</emoji> <b>Цьому модулю потрібен Іnline, а ініціалізація менеджера інлайну невдала</b>\n<i>Спробуй видалити одного зі старих ботів в @BotFather і перезавантажити юзербота</i>"
-  _cmd_doc_dlmod: "Завантажує і встановлює модуль з репозиторію"
-  _cmd_doc_loadmod: "Завантажує і встановлює модуль із файлу"
-  _cmd_doc_unloadmod: "Вивантажує (видаляє) модуль"
-  _cmd_doc_clearmodules: "Вивантажує всі встановлені модулі"
-  _cls_doc: "Завантажує модулі"
-  share_link_doc: "Вказувати посилання на модуль після завантаження через .dlm"
-  modlink: "\n\n<emoji document_id=6037284117505116849>🌐</emoji> <b>Посилання:</b> <code>{}</code>"
-  blob_link: "\n\n<emoji document_id=5312383351217201533>⚠️</emoji> <b>Не використовуй `blob` посилання для завантаження модулів. Краще завантажувати з `raw`</b>"
-  raw_link: "\n<emoji document_id=6037284117505116849>🌐</emoji> <b>Посилання:</b> <code>{}</code>"
-  suggest_subscribe: "\n\n⭐️ <b>Цей модуль зроблений {}. Підписатися на нього, щоб підтримати розробника?</b>"
-  subscribe: "💬 Підписатися"
-  no_subscribe: "🚫 Не підписуватись"
-  subscribed: "💬 Підписався!"
-  unsubscribed: "🚫 Я більше не буду пропонувати підписатися на цей канал"
-  confirm_clearmodules: "⚠️ <b>Ви впевнені, що хочете вивантажити всі модулі?</b>"
-  clearmodules: "🗑 Вивантажити модулі"
-  cancel: "🚫 Скасування"
-  overwrite_module: "<emoji document_id=5454225457916420314>😖</emoji> <b>Цей модуль спробував перезаписати вбудований (</b><code>{}</code><b>)</b>\n\n<emoji document_id=5472146462362048818>💡</emoji><i> Це не помилка, а захід безпеки, необхідний для запобігання заміни вбудованих модулів усяким мотлохом.</i>"
-  overwrite_command: "<emoji document_id=5454225457916420314>😖</emoji> <b>Цей модуль спробував перезаписати вбудовану команду (</b><code>{}</code><b>)</b>\n\n<emoji document_id=5472146462362048818>💡</emoji><i> Це не помилка, а захід безпеки, необхідний для запобігання заміни команд вбудованих модулів усіляким мотлохом.</i>"
-  unload_core: "<emoji document_id=5454225457916420314>😖</emoji> <b>Ти не можеш вивантажити вбудований модуль</b> <code>{}</code><b></b>\n\n<emoji document_id=5472146462362048818>💡</emoji><i> Це не помилка, а захід безпеки, необхідний для запобігання заміни вбудованих модулів усяким мотлохом.</i>"
-  cannot_unload_lib: "<emoji document_id=5454225457916420314>😖</emoji> <b>Ти не можеш вивантажити бібліотеку</b>"
-  wait_channel_approve: "<emoji document_id=5469741319330996757>💫</emoji> <b>Модуль</b> <code>{}</code> <b>запитує дозвіл на вступ до каналу <a href=\"https://t.me/{}\">{}</a>.\n\n<b><emoji document_id=\"5467666648263564704\">❓</emoji> Причина: {}</b>\n\n<i>Очікування <a href=\"https://t.me/{}\">підтвердження</a>...</i>"
-  installing: "<emoji document_id=5325792861885570739>🕔</emoji> <b>Встановлюю модуль</b> <code>{}</code><b>...</b>"
-  repo_exists: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Репозиторій</b> <code>{}</code> <b>вже додано</b>"
-  repo_added: "<emoji document_id=5784993237412351403>✅</emoji> <b>Репозиторій</b> <code>{}</code> <b>додано</b>"
-  no_repo: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Ви повинні вказати репозиторій для додавання</b>"
-  repo_not_exists: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Репозиторій</b> <code>{}</code> <b>не додано</b>"
-  repo_deleted: "<emoji document_id=5784993237412351403>✅</emoji> <b>Репозиторій</b> <code>{}</code> <b>видален</b>"
-  _cmd_doc_addrepo: "Додати додатковий репозиторій"
-  _cmd_doc_delrepo: "Видалити додатковий репозиторій"
-  basic_auth_doc: "Авторизація для доступу до репозиторію"
-
+  name: Loader
+  loadmod_pm_timeout: Please, wait for 10 seconds before confirming this action
+  loadmod_not_allowed_fresh_pm: "<emoji document_id=5447644880824181073>⚠️</emoji> <b><u>Read this carefully!</u></b> <emoji document_id=5447644880824181073>⚠️</emoji>\n\n<b>You are attempting to load a module in personal messages with a user you do not know.</b> Modules, not verified by the developer, might cause a lot of trouble, from <b>messing with your account to account deletion or session comprometation</b>. If you know this user and <b><u>100%</u></b> trust him, wait a few days and try again."
+  loadmod_confirm_pm_message: <emoji document_id=5451732530048802485>⏳</emoji> <i>Waiting for your confirmation...</i>
+  link: "<emoji document_id=5280658777148760247>\U0001F310</emoji> <b><a href=\"{url}\">Link</a> of</b> <code>{class_name}</code>\n\n<emoji document_id=5188377234380954537>✍️</emoji> <code>{prefix}dlm {url}</code>\n\n{not_exact}"
+  file: "<emoji document_id=5256113064821926998>\U0001F4C1</emoji> <b>Файл</b> {class_name}\n\n<emoji document_id=5134452506935427991>\U0001FA90</emoji> <b>{prefix}lm в ответ на это сообщение для установки</b>\n\n{not_exact}"
+  not_exact: <emoji document_id=5355133243773435190>⚠️</emoji> <i>Точного совпадения не найдено, поэтому вместо него отображается наиболее близкий результат</i>
+  args: <emoji document_id=5210952531676504517>❌</emoji> <b>Вы должны указать аргументы</b>
+  loadmod_cancelled: <emoji document_id=5210952531676504517>🚫</emoji> <b>Module loading cancelled</b>
+  loadmod_confirm_pm: "⚠️ <b>Warning!</b>\n\nLoading modules from unknown sources is <b><u>very dangerous</u></b> and can lead to <b>account deletion or session comprometation</b>. Make sure that you know this user and <b><u>100%</u></b> trust him.\n\n<b>Do you want to continue with module loading?</b>"
+  loadmod_confirm_pm_yes: ✅ Yes, continue
+  loadmod_confirm_pm_no: 🚫 No, cancel
+  repo_config_doc: Ссылка для загрузки модулей
+  avail_header: <emoji document_id=5440551785284510215>🎢</emoji> <b>Официальные модули из репозитория</b>
+  no_module: <emoji document_id=5210952531676504517>🚫</emoji> <b>Модуль недоступен в репозитории.</b>
+  no_file: <emoji document_id=5210952531676504517>🚫</emoji> <b>Файл не найден</b>
+  provide_module: <emoji document_id=5312383351217201533>⚠️</emoji> <b>Укажи модуль для загрузки</b>
+  bad_unicode: <emoji document_id=5210952531676504517>🚫</emoji> <b>Неверная кодировка модуля</b>
+  load_failed: <emoji document_id=5210952531676504517>🚫</emoji> <b>Загрузка не увенчалась успехом. Смотри логи.</b>
+  loaded: <emoji document_id=5188377234380954537>✍️</emoji> <b>Module</b> <code>{}</code>{} <b>loaded {}</b>{}{}{}{}{}{}
+  no_class: <b>А что выгружать то?</b>
+  unloaded: '{} <b>Модуль {} выгружен.</b>'
+  not_unloaded: <emoji document_id=5253780051471642059>❌</emoji> <b>Модуль не выгружен.</b>
+  requirements_failed: <emoji document_id=5210952531676504517>🚫</emoji> <b>Ошибка установки зависимостей</b>
+  requirements_failed_termux: "<emoji document_id=5407025283456835913>\U0001F576</emoji> <b>Requirements installation failed</b>\n<b>The most common reason is that Termux doesn't support many libraries. Don't report it as bug, this can't be solved.</b>"
+  requirements_installing: "<emoji document_id=5873225338984599714>\U0001F680</emoji> <b>Устанавливаю зависимости:\n\n{}</b>"
+  requirements_restart: <emoji document_id=5875145601682771643>🚀</emoji> <b>Зависимости установлены, но нужна перезагрузка для применения</b> <code>{}</code>
+  all_modules_deleted: <emoji document_id=5784993237412351403>✅</emoji> <b>Модули удалены</b>
+  undoc: <emoji document_id=5427052514094619126>🤷‍♀️</emoji> Нет описания
+  ihandler: "\n<emoji document_id=5372981976804366741>\U0001F916</emoji> <code>{}</code> {}"
+  inline_init_failed: "<emoji document_id=5287372146039861774>❌</emoji> <b>Этому модулю нужен AuthorBotInline, а инициализация менеджера инлайна неудачна</b>\n<i>Попробуй удалить одного из старых ботов в @BotFather и перезагрузить юзербота</i>"
+  version_incompatible: "<emoji document_id=5287372146039861774>❌</emoji> <b>Этому модулю требуется AuthorBot версии {}+\nОбновись с помощью</b> <code>.update</code>"
+  ffmpeg_required: <emoji document_id=5287372146039861774>❌</emoji> <b>Этому модулю требуется FFMPEG, который не установлен</b>
+  developer: "\n\n<emoji document_id=5287454910059654880>\U0001FAF6</emoji> <b>Разработчик:</b> {}"
+  depends_from: "\n\n<emoji document_id=5341492148468465410>\U0001F4E6</emoji> <b>Зависимости:</b> \n{}"
+  by: от
+  module_fs: 💿 <b>Ты хочешь сохранить модуль на жесткий диск, чтобы он не выгружался при перезагрузке?</b>
+  save: 💿 Сохранить
+  no_save: 🚫 Не сохранять
+  save_for_all: 💽 Всегда сохранять
+  never_save: 🚫 Никогда не сохранять
+  will_save_fs: 💽 Теперь все модули, загруженные из файла, будут сохраняться на жесткий диск
+  add_repo_config_doc: Дополнительные репозитории
+  share_link_doc: Указывать ссылку на модуль после загрузки через .dlmod
+  modlink: "\n\n<emoji document_id=6037284117505116849>\U0001F310</emoji> <b>Ссылка:</b> <code>{}</code>"
+  blob_link: "\n\n<emoji document_id=5312383351217201533>⚠️</emoji> <b>Не используй `blob` ссылки для загрузки модулей. Лучше загружать из `raw`</b>"
+  suggest_subscribe: "\n\n<emoji document_id=5435957248314579621>⭐️</emoji> <b>Этот модуль сделан {}. Подписаться на него, чтобы поддержать разработчика?</b>"
+  subscribe: 💬 Подписаться
+  no_subscribe: 🚫 Не подписываться
+  subscribed: 💬 Подписался!
+  not_subscribed: <emoji document_id=5210952531676504517>🚫</emoji> <b>Сначала нужно подписаться на канал модуля</b>
+  confirm_clearmodules: <emoji document_id=5312383351217201533>⚠️</emoji> <b>Вы уверены, что хотите выгрузить все модули?</b>
+  clearmodules: 🗑 Выгрузить модули
+  cancel: 🚫 Отмена
+  overwrite_module: "<emoji document_id=5287372146039861774>❌</emoji> <b>Этот модуль попытался перезаписать встроенный (</b><code>{}</code><b>)</b>\n\n<emoji document_id=5472146462362048818>\U0001F4A1</emoji><i> Это не ошибка, а мера безопасности, требуемая для предотвращения замены встроенных модулей всяким хламом. Не сообщайте о ней в support чате</i>"
+  overwrite_command: "<emoji document_id=5454225457916420314>\U0001F616</emoji> <b>This module attempted to override the core command (</b><code>{}{}</code><b>)</b>\n\n<emoji document_id=5472146462362048818>\U0001F4A1</emoji><i> Don't report it as bug. It's a security measure to prevent replacing core modules' commands with some junk</i>"
+  unload_core: "<emoji document_id=5287372146039861774>❌</emoji> <b>Ты не можешь выгрузить встроенный модуль</b> <code>{}</code><b></b>\n\n<emoji document_id=5472146462362048818>\U0001F4A1</emoji><i> Это не ошибка, а мера безопасности, требуемая для предотвращения замены встроенных модулей всяким хламом. Не сообщайте о ней в support чате</i>"
+  cannot_unload_lib: <emoji document_id=5287372146039861774>❌</emoji> <b>Ты не можешь выгрузить библиотеку</b>
+  wait_channel_approve: "<emoji document_id=5469741319330996757>\U0001F4AB</emoji> <b>Модуль</b> <code>{}</code> <b>запрашивает разрешение на вступление в канал <a href=\"https://t.me/{}\">{}</a>.\n\n<b><emoji document_id=5467666648263564704>❓</emoji> Причина: {}</b>\n\n<i>Ожидание <a href=\"https://t.me/{}\">подтверждения</a>...</i>"
+  installing: <emoji document_id=5325792861885570739>🕔</emoji> <b>Устанавливаю модуль</b> <code>{}</code><b>...</b>
+  repo_exists: <emoji document_id=5210952531676504517>🚫</emoji> <b>Репозиторий</b> <code>{}</code> <b>уже добавлен</b>
+  repo_added: <emoji document_id=5784993237412351403>✅</emoji> <b>Репозиторий</b> <code>{}</code> <b>добавлен</b>
+  no_repo: <emoji document_id=5210952531676504517>🚫</emoji> <b>Вы должны указать репозиторий для добавления</b>
+  repo_not_exists: <emoji document_id=5210952531676504517>🚫</emoji> <b>Репозиторий</b> <code>{}</code> <b>не добавлен</b>
+  repo_deleted: <emoji document_id=5784993237412351403>✅</emoji> <b>Репозиторий</b> <code>{}</code> <b>удален</b>
+  _cmd_doc_addrepo: Добавить дополнительный репозиторий
+  _cmd_doc_clearmodules: Выгружает все установленные модули
+  _cmd_doc_delrepo: Удалить дополнительный репозиторий
+  _cmd_doc_dlmod: Скачивает и устаналвивает модуль из репозитория
+  _cmd_doc_loadmod: Скачивает и устанавливает модуль из файла
+  _cmd_doc_unloadmod: Выгружает (удаляет) модуль
+  _cls_doc: Загружает модули
+  basic_auth_doc: Авторизация для доступа к репозиторию
 translations:
-  lang_saved: "{} <b>Мову збережено!</b>"
-  pack_saved: "<emoji document_id=5197474765387864959>👍</emoji> <b>Пакет перекладів збережено!</b>"
-  incorrect_language: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Вказано неправильну мову</b>"
-  lang_removed: "<emoji document_id=5197474765387864959>👍</emoji> <b>Переклади скинуто на стандартні</b>"
-  check_pack: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Невірний формат пакета переказів у посиланні</b>"
-  check_url: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Ви маєте вказати посилання, що містить пакет переказів</b>"
-  too_long: "<emoji document_id=5433653135799228968>📁</emoji> <b>Висновок команди занадто довгий, тому його надіслано у файлі.</b>"
-  choose_language: "🗽 <b>Оберіть мову</b>"
-  not_official: "<emoji document_id=5312383351217201533>⚠️</emoji> <b>Цю мову не підтримують офіційно</b>"
-  requested_join: "💫 <b>Модуль</b> <code>{}</code> <b>запросив приєднання до каналу <a href='https://t.me/{}'>{}</a></b>\n\n<b>❓ Причина:</b> <i>{}</i>"
-  fw_error: "<emoji document_id=5877458226823302157>🕒</emoji> <b>Команда</b> <code>{}</code> <b>викликав FloodWait {} у методі</b> <code> {}</code>"
-  rpc_error: "<emoji document_id=5877477244938489129>🚫</emoji> <b>Команда</b> <code>{}</code> <b>не вдалася через помилку RPC:</b> <code>{}</code>"
-  _cmd_doc_dllangpack: "[посилання на пк | без аргументів щоб видалити] - Змінити зовнішній пак"
-  _cmd_doc_setlang: "[мови] - Змінити стандартну мову"
-
+  name: Translations
+  lang_saved: '{} <b>Язык сохранён!</b>'
+  pack_saved: <emoji document_id=5197474765387864959>👍</emoji> <b>Пакет переводов сохранён!</b>
+  incorrect_language: <emoji document_id=5210952531676504517>🚫</emoji> <b>Указан неверный язык</b>
+  lang_removed: <emoji document_id=5197474765387864959>👍</emoji> <b>Переводы сброшены на стандартные</b>
+  check_pack: <emoji document_id=5210952531676504517>🚫</emoji> <b>Неверный формат пакета переводов в ссылке</b>
+  check_url: <emoji document_id=5210952531676504517>🚫</emoji> <b>Вы должны указать ссылку, содержащую пакет переводов</b>
+  too_long: <emoji document_id=5341492148468465410>📁</emoji> <b>Вывод команды слишком длинный, поэтому он отправлен в файле.</b>
+  choose_language: <emoji document_id=5454219968948229067>🗽</emoji> <b>Выберите язык</b>
+  not_official: <emoji document_id=5312383351217201533>⚠️</emoji> <b>Этот язык не поддерживается официально</b>
+  requested_join: "<emoji document_id=5469741319330996757>\U0001F4AB</emoji> <b>Модуль</b> <code>{}</code> <b>запросил присоединение к каналу <a href='https://t.me/{}'>{}</a></b>\n\n<b>❓ Причина:</b> <i>{}</i>"
+  fw_error: <emoji document_id=5877458226823302157>🕒</emoji> <b>Команда</b> <code>{}</code> <b>вызвал FloodWait {} в методе</b> <code> {}</code>
+  rpc_error: <emoji document_id=5877477244938489129>🚫</emoji> <b>Команда</b> <code>{}</code> <b>не удалась из-за ошибки RPC:</b> <code>{}</code>
+  _cmd_doc_dllangpack: '[ссылка на пак] - добавить внешний пак перевода'
+  _cmd_doc_setlang: '[язык] - изменить стандартный язык'
+  _cls_doc: Управляет внутренними переводами
 eval:
-  eval: "<emoji document_id={}>💻</emoji><b> Код:</b>\n<pre><code class=\"language-{}\">{}</code></pre>\n\n<emoji document_id=5197688912457245639>✅</emoji><b> Результат:</b>\n<pre><code class=\"language-{}\">{}</code></pre>"
-  err: "<emoji document_id={}>💻</emoji><b> Код:</b>\n<pre><code class=\"language-{}\">{}</code></pre>\n\n<emoji document_id=5210952531676504517>🚫</emoji> <b>Помилка:</b>\n<pre><code class=\"language-{}\">{}</code></pre>"
-  _cls_doc: "Виконує код різними мовами програмування"
-  compiling: "<emoji document_id=5325787248363314644>🫥</emoji> <b>Компіляція коду...</b>"
-  no_compiler: "<emoji document_id={}>💻</emoji> <b>Компілятор {} не встановлено в системі.</b>"
-  _cmd_doc_e: "Виконує Python код"
-  _cmd_doc_ebf: "Виконує Brainf*ck код"
-  _cmd_doc_ec: "Виконує C код"
-  _cmd_doc_ecpp: "Виконує C++ код"
-  _cmd_doc_enode: "Виконує Node.js код"
-  _cmd_doc_ephp: "Виконує PHP код"
-  _cmd_doc_eruby: "Виконує Ruby код"
-
+  name: Evaluator
+  eval: "<tg-emoji emoji-id={}>\U0001F4BB</emoji><b> Код:</b>\n<pre><code class=\"language-{}\">{}</code></pre>\n\n<emoji document_id=5197688912457245639>✅</emoji><b> Результат:</b>\n<pre><code class=\"language-{}\">{}</code></pre>"
+  err: "<tg-emoji emoji-id={}>\U0001F4BB</emoji><b> Код:</b>\n<pre><code class=\"language-{}\">{}</code></pre>\n\n<emoji document_id=5210952531676504517>\U0001F6AB</emoji> <b>Ошибка:</b>\n<pre><code class=\"language-{}\">{}</code></pre>"
+  compiling: <emoji document_id=5325787248363314644>🫥</emoji> <b>Компиляция кода...</b>
+  no_compiler: <tg-emoji emoji-id={}>💻</emoji> <b>Компилятор {} не установлен на системе.</b>
+  _cmd_doc_e: Выполняет Python код
+  _cmd_doc_ebf: Выполняет Brainf*ck код
+  _cmd_doc_ec: Выполняет C код
+  _cmd_doc_ecpp: Выполняет C++ код
+  _cmd_doc_enode: Выполняет Node.js код
+  _cmd_doc_ephp: Выполняет PHP код
+  _cmd_doc_eruby: Выполняет Ruby код
+  _cls_doc: Выполняет код на различных языках программирования
 translate:
-  no_args: "<emoji document_id=5210952531676504517>❌</emoji> <b>Немає аргументів</b>"
-  error: "<emoji document_id=5210952531676504517>❌</emoji> <b>Йосип драний, це ж помилка</b>"
-  language: "ru"
-  _cls_doc: "Перекладає текст (ні блін, ядерку запускає)"
-  _cmd_doc_tr: "[мова] [текст] - Перекласти текст"
-
+  name: Translator
+  no_args: <emoji document_id=5210952531676504517>❌</emoji> <b>Не указаны аргументы</b>
+  error: <emoji document_id=5210952531676504517>❌</emoji> <b>Не удалось перевести текст</b>
+  language: ru
+  _cmd_doc_tr: '[язык] [текст] - Перевести текст'
+  _cls_doc: Переводит текст (очевидно)
 quickstart:
-  base: "✍️🇺🇦 <b>Привіт.</b> Твій юзербот <b>AuthorBot</b> встановлено.\n\n❓ <b>Потрібна допомога?</b> питай у @vyfb_bot, у ньому ми допомагаємо <b>усім</b>.\n\n📼 <b>Ти можеш шукати та встановлювати модулі через </b><code>.heta</code><b>. Просто введи пошуковий запит і натисни ⛩ Install на потрібному модулі або ж скористайся каналами з модулями: @hikarimods_database, @ftgmodulesbyfl1yd, @hikarimods, @blazeftg, @morisummermods, @nalinormods, @AstroModules, @vsecoder_m , @mm_mods, @apodiktum_modules, @shadow_modules, @DorotoroMods, @AuthorBotFTGmods, @nercymods, @sqlmerr_m, @AuroraModules, @famods</b>\n\n💁‍♀️ <b>Швидкий гайд:</b>\n\n1️⃣ <b>Напиши</b> <code>.help</code> <b>щоб побачити список модулів</b>\n2️⃣ <b>Напиши</b> <code>.help &lt;Назву модуля/команди&gt;</code> <b>щоб побачити опис модуля</b>\n3️⃣ <b>Напиши</b> <code>.dlm &lt;посилання&gt;</code> <b>щоб завантажити модуль з посилання</b>\n4️⃣ <b>Напиши</b> <code>.lm</code> <b>відповіддю на файл, щоб завантажити модуль із нього</b>\n5️⃣ <b>Напиши</b> <code>.ulm &lt;Назву модуля&gt;</code> <b>щоб вивантажити модуль</b>\n\n💡 <b>AuthorBot підтримує модулі з Friendly-Telegram та GeekTG, Zikka, а також свої особисті.</b>\n"
-  railway: "🚂 <b>Ти встановив юзербота на Railway, вітаю!</b>. На цій платформі ти отримуєш лише <b>500 безкоштовних годин на місяць</b>. Коли ліміт буде досягнуто, твій <b>юзербот буде заморожено</b>. Наступного місяця <b>ти повинен будеш перейти на https://railway.app і перезапустити його</b>."
-  language_saved: "🇺🇦 Йосип драний, я кацапської не знаю"
-  language: "⚰️ русский"
-  btn_support: "Коротко про Автора"
+  name: Quickstart
+  language_saved: 🇷🇺 Язык сохранен!
+  language: 🇷🇺 Русский
+  btn_support: 🥷 Чат поддержки
+  _cls_doc: Уведомляет пользователя об установке юзербота
 
 $validators:
-  boolean: "логічним значенням"
-  positive: "позитивним "
-  digits: ", в якому рівно {digits} цифр "
-  integer_min: "{sign}цілим числом більше {minimum}{digits}"
-  integer_range: "{sign}цілим числом в проміжку від {minimum} до {maximum}{digits}"
-  integer: "{sign}цілим числом{digits}"
-  integer_max: "{sign}цілим числом менше {maximum}{digits}"
-  choice: "одним з: {possible}"
-  multichoice: "список значень, кожне з яких має бути одним із наступного: {possible}"
-  each: " (кожне має бути {each})"
-  fixed_len: " (рівно {fixed_len} шт.)"
-  max_len: " (до {max_len} шт.)"
-  len_range: " (від {min_len} до {max_len} шт.)"
-  min_len: " (як мінімум {min_len} шт.)"
-  series: "списком значень{len}{each}, розділених «,»"
-  link: "посиланням"
-  string_fixed_len: "рядком з {length} символа(-ів)"
-  string: "рядком"
-  string_max_len: "рядком не більше {max_len} символа(-ів)"
-  string_len_range: "рядком з {min_len}-{max_len} символа(-ів)"
-  string_min_len: "рядком не менше ніж з {min_len} символа(-ів)"
-  regex: "рядком, що відповідає шаблону «{regex}»"
-  float_min: "{sign}дробовим числом більше {minimum}"
-  float_range: "{sign}дробовим числом у проміжку від {minimum} до {maximum}"
-  float: "{sign}дробовим числом"
-  float_max: "{sign}дробовим числом менше {maximum}"
-  union: "одним з наступного:\n"
-  empty: "порожнім значенням"
-  emoji_fixed_len: "рівно {length} емоджі"
-  emoji_len_range: "від {min_len} до {max_len} ємоджі"
-  emoji_min_len: "не менше {min_len} ємоджі"
-  emoji_max_len: "не більше {max_len} ємоджі"
-  emoji: "емоджі"
-  entity_like: "посилання на сутність, ім'я користувача або Telegram ID"
-
+  boolean: логическим значением
+  positive: 'положительным '
+  digits: ', в котором ровно {digits} цифр '
+  integer_min: '{sign}целым числом больше {minimum}{digits}'
+  integer_range: '{sign}целым числом в промежутке от {minimum} до {maximum}{digits}'
+  integer: '{sign}целым числом{digits}'
+  integer_max: '{sign}целым числом меньше {maximum}{digits}'
+  choice: 'одним из: {possible}'
+  multichoice: 'список значений, каждое из которых должно быть одним из следующего: {possible}'
+  each: ' (каждое должно быть {each})'
+  fixed_len: ' (ровно {fixed_len} шт.)'
+  max_len: ' (до {max_len} шт.)'
+  len_range: ' (от {min_len} до {max_len} шт.)'
+  min_len: ' (как минимум {min_len} шт.)'
+  series: списком значений{len}{each}, разделенных «,»
+  link: ссылкой
+  string_fixed_len: строкой из {length} символа(-ов)
+  string: строкой
+  string_max_len: строкой не более чем из {max_len} символа(-ов)
+  string_len_range: строкой из {min_len}-{max_len} символа(-ов)
+  string_min_len: строкой не менее чем из {min_len} символа(-ов)
+  regex: строкой, соответствующей шаблону «{regex}»
+  float_min: '{sign}дробным числом больше {minimum}'
+  float_range: '{sign}дробным числом в промежутке от {minimum} до {maximum}'
+  float: '{sign}дробным числом'
+  float_max: '{sign}дробным числом меньше {maximum}'
+  union: "одним из следующего:\n"
+  empty: пустым значением
+  emoji_fixed_len: ровно {length} эмодзи
+  emoji_len_range: от {min_len} до {max_len} эмодзи
+  emoji_min_len: не менее {min_len} эмодзи
+  emoji_max_len: не более {max_len} эмодзи
+  emoji: эмодзи
+  entity_like: ссылка на сущность, имя пользователя или Telegram ID
 $inline:
-  opening_form: " <b>Відкриваю форму...</b>"
-  opening_gallery: " <b>Відкриваю галерею...</b>"
-  opening_list: " <b>Відкриваю список...</b>"
-  inline403: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Ти не можеш відправляти вбудовані елементи у цьому чаті</b>"
-  invoke_failed: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Трясця, виклик юніта закінчився дупою! Дивись логи</b>"
-  invoke_failed_logs: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Трясця, виклик юніта закінчився дупою!</b>\n\n<emoji document_id=5226512880362332956>📖</emoji> <b>Логи:</b>\n\n<pre><code class=\"language-logs\">{}</code></pre>"
-  show_inline_cmds: "📄 Показати усі доступні вбудовані команди"
-  no_inline_cmds: "У тебе немає доступних inline команд"
-  no_inline_cmds_msg: "<b>😔 Немає доступних inline команд або у тебе немає доступу до них</b>"
-  inline_cmds: "ℹ️ В тебе {} доступна(-их) команда(-и)"
-  inline_cmds_msg: "<b>ℹ️ Доступні inline команди:</b>\n\n{}"
-  run_command: "🏌️ Виконати команду"
-  command_msg: "<b>✍️ Команда «{}»</b>\n\n<i>{}</i>"
-  command: "✍️ Команда «{}»"
-  button403: "Ця кнопочка не для тебе =3"
-  keep_id: "⚠️ Не видаляйте ID! {}"
+  opening_form: ' <b>Открываю форму...</b>'
+  opening_gallery: ' <b>Открываю галерею...</b>'
+  opening_list: ' <b>Открываю список...</b>'
+  inline403: <emoji document_id=5210952531676504517>🚫</emoji> <b>Вы не можете отправлять встроенные элементы в этом чате</b>
+  invoke_failed: <emoji document_id=5210952531676504517>🚫</emoji> <b>Вызов юнита завершился неудачей! Подробнее в логах</b>
+  invoke_failed_logs: "<emoji document_id=5210952531676504517>\U0001F6AB</emoji> <b>Вызов юнита завершился неудачей!</b>\n\n<emoji document_id=5226512880362332956>\U0001F4D6</emoji> <b>Логи:</b>\n\n<pre><code class=\"language-logs\">{}</code></pre>"
+  show_inline_cmds: 📄 Показать все доступные встроенные команды
+  no_inline_cmds: У вас нет доступных inline команд
+  no_inline_cmds_msg: <b>😔 Нет доступных inline команд или у вас нет доступа к ним</b>
+  inline_cmds: ℹ️ У вас {} доступная(-ых) команда(-ы)
+  inline_cmds_msg: "<b>ℹ️ Доступные inline команды:</b>\n\n{}"
+  run_command: 🏌️ Выполнить команду
+  command_msg: "<b>\U0001FA90 Команда «{}»</b>\n\n<i>{}</i>"
+  command: 🪐 Команда «{}»
+  button403: Вы не можете нажать на эту кнопку!
+  keep_id: ⚠️ Не удаляйте ID! {}
+
+# AuthorBot public pages and onboarding · © AuthorChe
+$public_pages:
+  start_label: Добро пожаловать в AuthorBot
+  help_label: Команды и первые шаги
+  about_label: Знакомство с AuthorBot
+  author_label: Об AuthorChe
+  projects_label: Проекты AuthorChe
+  install: Установить AuthorBot
+  welcome_title: ✦ Твой Telegram. Твои возможности.
+  start_intro: 'Добро пожаловать в <b>AuthorBot</b> — модульный Telegram userbot от <b>AuthorChe</b>. Преврати повседневные действия в инструменты, которые работают по твоим правилам: автоматизация, модули и удобный интерфейс прямо в Telegram.'
+  welcome_intro: <b>AuthorBot готов к работе.</b> Твоё личное пространство инструментов в Telegram уже запущено. Изучай встроенные возможности, выбирай язык и добавляй нужные модули. Начни с малого — и сделай его своим.
+  possibilities: ✦ Создан для твоего ритма
+  feature_modules: <b>Модули</b> — добавляй возможности и настраивай каждый инструмент отдельно.
+  feature_inline: <b>Inline-инструменты</b> — кнопки, формы, списки и галереи внутри Telegram.
+  feature_rich: <b>Rich Messages</b> — выразительные страницы с медиа, таблицами и интерактивными кнопками.
+  feature_control: <b>Твои настройки</b> — язык, разрешения, резервные копии и обновления под твоим контролем.
+  explore: ✦ Открой для себя AuthorBot
+  first_steps: ✦ Несколько команд для начала
+  step_help: Посмотреть установленные модули и команды.
+  step_module: Прочитать справку о модуле или команде.
+  step_install: Установить модуль по ссылке на его код.
+  step_file: Ответить на Python-файл модуля, чтобы установить его.
+  step_language: Выбрать язык интерфейса.
+  step_info: Посмотреть версию и состояние своего userbot.
+  choose_language: Выбери язык кнопками ниже. Изменить его позже можно командой setlang.
+  help_intro: Этот бот — публичный интерфейс установленного AuthorBot. Страницы ниже доступны всем; команды userbot запускаются с Telegram-аккаунта владельца.
+  help_note: Модули могут добавлять свои команды и inline-инструменты. Их доступность зависит от установленных модулей и разрешений владельца. В примерах используется стандартный префикс «точка»; если ты изменил его, используй свой.
+  about_tagline: ✦ Личный набор инструментов в Telegram
+  about_intro: <b>AuthorBot переносит автоматизацию туда, где ты уже общаешься.</b> Он работает с твоим Telegram-аккаунтом и объединяет модульное ядро с ботом для интерактивных инструментов. Повседневные команды, работа с медиа и собственные идеи собираются в одном пространстве, которое можно настроить под себя.
+  about_workflow: Найди нужный инструмент, установи его модуль и подстрой настройки под свой ритм. Открой форму вместо запоминания всех параметров, посмотри галерею или опубликуй rich-страницу. Оставляй то, чем пользуешься, и расширяй userbot вместе со своими потребностями.
+  about_modules_title: 🧩 Модульное ядро
+  about_modules: Устанавливай, настраивай и удаляй модули без переписывания ядра. Создавай собственные Python-модули для AuthorBot.
+  about_inline_title: 🎛 Интерактивный интерфейс
+  about_inline: Формы, кнопки, списки и галереи превращают команды в удобные элементы управления в Telegram.
+  about_rich_title: ✦ Rich Messages
+  about_rich: Структурированные страницы с медиа, центрированными блоками заголовков, таблицами, раскрываемыми секциями и rich-кнопками.
+  about_security_title: 🔐 Управление доступом
+  about_security: Определяй, кто может выполнять команды, с помощью прав владельца и адресных правил безопасности.
+  about_backup_title: 💾 Сохранение работы
+  about_backup: Встроенные резервные копии, постоянные настройки и самообновление помогают поддерживать твоё рабочее пространство.
+  about_language_title: 🌍 Языки
+  about_language: Украинский, английский, русский, немецкий и японский; для непереведённых строк модулей используется английский.
+  about_setup_title: Где работает AuthorBot
+  about_setup: На Linux-сервере, в Docker или на Android через Termux. Автоматизированный Termux-установщик готовит Debian и Python, проверяет библиотеки и сохраняет подробности установки в журнале.
+  about_vision: 'Инструмент, который растёт вместе с тобой: от полезной команды до собственного сценария работы в Telegram.'
+  author_hint: Познакомься с человеком, который создаёт проект, командой <code>/author</code>.
+  author_tagline: Разработчик · музыкант · автор
+  author_intro: '<b>AuthorChe</b> — творческий и технический бренд украинского разработчика <b>Вадима Емельянова</b>: музыканта, певца, композитора, поэта и автора цифровых проектов.'
+  author_vision: Музыка, слово и код — разные способы воплотить идею. Технические проекты AuthorChe объединяют Telegram, Android, автоматизацию, приватность и AI-инструменты — с вниманием к возможностям продукта и ощущениям от его использования.
+  author_world: ✦ Один автор. Разные способы творить.
+  author_projects: AuthorBot, AuthorGram, Jarvis | AuthorAi, Goose | AuthorBrowser и Author AI воплощают эти интересы в цифровых инструментах. Открой <code>/projects</code>, чтобы познакомиться с ними, или следи за официальным сайтом и Telegram-каналом.
+  projects_intro: Цифровые проекты <b>AuthorChe</b>. Официальный сайт и Telegram-канал объединяют новости, релизы и эксперименты.
+  project_gram: <b>AuthorGram</b> — Telegram-клиент для Android с упором на приватность, настройки интерфейса и мультимедиа.
+  project_bot: <b>AuthorBot</b> — модульный Telegram userbot с автоматизацией, inline-инструментами, управлением доступом, резервными копиями и Rich Messages.
+  project_ai: <b>Jarvis | AuthorAi</b> — Android AI-agent с локальными GGUF-моделями, голосовыми режимами, инструментами, файлами и офлайн-знаниями.
+  project_browser: <b>Goose | AuthorBrowser</b> — Android-браузер с медиа-инструментами, блокировкой рекламы, фоновым воспроизведением и интеграциями.
+  project_platform: <b>Author AI</b> — серверная AI-платформа и интеграции для агентов, инструментов и автоматизации.
+  ready: ✅ Inline-интерфейс AuthorBot готов к работе.
+  sent_author: ✅ Страница AuthorChe — в твоём личном чате с inline-ботом.
+  running: ЗАПУЩЕН
+  build: Сборка
+  version: Версия
+  current: Актуальная версия
+  update: Доступно обновление
+  language_saved: ✅ Язык сохранён.
+
+Weather:
+  city: "\U0001F324 <b>Погода · город по умолчанию</b>\n<code>{}</code>"
+  not_set: не задан
+  need_city: "\U0001F324 <b>Где проверить погоду?</b>\nУкажите <code>{}weather город</code> или сохраните город через weathercity."
+  unavailable: "\U0001F327 <b>Сервис погоды временно недоступен.</b>\nПопробуйте немного позже."
+  forecast: 🌤 <b>Погода · {}</b>
+  unavailable_plain: Сервис погоды временно недоступен
+  forecast_plain: Погода · {}
+  _cls_doc: Текущая погода и прогноз на вашем языке.
+  _cmd_doc_weather: '[город] — показать погоду и прогноз.'
+  _cmd_doc_weathercity: '[город] — сохранить или посмотреть город по умолчанию.'
+  _ihandle_doc_weather: '[город] — поделиться прогнозом погоды.'
+InlineRandom:
+  heads: Орёл
+  tails: Решка
+  coin_title: Подбросить монету
+  number_title: Случайное число · 1–{}
+  choice_title: Сделать выбор
+  person_title: Вымышленный человек
+  _cls_doc: Подбрасывайте монету, генерируйте числа и выбирайте между своими вариантами.
+LongRead:
+  no_text: ✦ <b>Добавьте текст, который хотите скрыть.</b>
+  longread: "✦ <b>AuthorBot · сообщение для вас</b>\n<i>Откройте кнопку ниже, чтобы прочитать.</i>"
+  read: 📖 Прочитать сообщение
+  title: Скрытое сообщение
+  _cmd_doc_lr: <текст> — скрыть текст под кнопкой для чтения.
+  _ihandle_doc_lr: <текст> — поделиться скрытым сообщением.
+  _cls_doc: Скрывает длинное сообщение под удобной кнопкой.

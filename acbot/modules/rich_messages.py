@@ -5,6 +5,7 @@ from herokutl.tl.types import Message
 
 from .. import loader, utils
 from ..inline.rich import RichMessageError
+from ..public_pages import heading
 
 
 @loader.tds
@@ -59,7 +60,7 @@ class RichMessagesMod(loader.Module):
     @loader.command()
     async def richdemo(self, message: Message):
         """— send a showcase message with modern rich formatting."""
-        demo = """<h1>AuthorBot Rich Message</h1>
+        demo = heading("AuthorBot · Rich Messages", "by AuthorChe") + """
 <blockquote>Native Telegram Rich Messages are available to AuthorBot modules.</blockquote>
 <table bordered striped compact>
 <tr><th>Feature</th><th>Status</th></tr>
@@ -75,7 +76,7 @@ class RichMessagesMod(loader.Module):
 )</code></pre></details>
 <tg-button-row align="center">
 <tg-button type="url" style="primary" url="https://github.com/VadymYem/AuthorBot">AuthorBot</tg-button>
-<tg-button type="url" url="https://authorche.top">Author C</tg-button>
+<tg-button type="url" url="https://authorche.top">AuthorChe</tg-button>
 </tg-button-row>"""
         try:
             await self.inline.rich.send(self._client.tg_id, html=demo)

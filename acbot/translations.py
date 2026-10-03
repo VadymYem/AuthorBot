@@ -23,7 +23,15 @@ SUPPORTED_LANGUAGES = {
     "en": "🇬🇧 English",
     "ru": "🇷🇺 Русский",
     "ua": "🇺🇦 Українська",
+    "de": "🇩🇪 Deutsch",
+    "ja": "🇯🇵 日本語",
 }
+
+
+def normalize_language(language: str) -> str:
+    """Accept Telegram's ISO codes and old AuthorBot language identifiers."""
+    language = language.lower().replace("_", "-").split("-", 1)[0]
+    return {"uk": "ua", "jp": "ja"}.get(language, language)
 
 
 def fmt(text: str, kwargs: dict) -> str:
@@ -118,6 +126,8 @@ class Translator(BaseTranslator):
         any_ = False
         if lang := self.db.get(__name__, "lang", False):
             for language in lang.split():
+                if not utils.check_url(language):
+                    language = normalize_language(language)
                 if utils.check_url(language):
                     try:
                         response = await utils.run_sync(

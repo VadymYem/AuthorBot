@@ -95,7 +95,7 @@ install_python_packages() {
 
 : >"$LOG_FILE"
 clear 2>/dev/null || true
-printf '\033[1;35mAuthor Bot\033[0m  \033[2mby AuthorChe\033[0m\n'
+printf '\033[1;35mAuthorBot\033[0m  \033[2mby AuthorChe\033[0m\n'
 printf '\033[0;36mGitHub:\033[0m https://github.com/VadymYem/AuthorBot\n'
 printf '\033[0;36mWeb:\033[0m    https://authorche.top\n\n'
 

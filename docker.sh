@@ -6,6 +6,9 @@ APP_DIR="${AUTHORBOT_DIR:-$HOME/AuthorBot}"
 EXTERNAL_PORT="${EXTERNAL_PORT:-8085}"
 BIND_ADDRESS="${BIND_ADDRESS:-127.0.0.1}"
 
+if [ -t 1 ]; then clear 2>/dev/null || printf '\033[2J\033[H'; fi
+printf '\033[1;35mAuthorBot\033[0m · by AuthorChe\n\n'
+
 info() { printf '\033[0;36m%s\033[0m\n' "$1"; }
 ok() { printf '\033[0;32m%s\033[0m\n' "$1"; }
 fail() { printf '\033[1;31m%s\033[0m\n' "$1" >&2; exit 1; }

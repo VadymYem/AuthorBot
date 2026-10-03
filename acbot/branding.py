@@ -1,6 +1,7 @@
 """Bundled AuthorBot artwork and Telegram photo helpers."""
 
 from pathlib import Path
+import re
 
 from aiogram.types import InputFile, InlineQueryResultCachedPhoto, InlineQueryResultPhoto
 
@@ -12,6 +13,13 @@ LEGACY_BANNERS = {
     "https://raw.githubusercontent.com/VadymYem/AuthorBot/main/assets/bot_pfp.jpg",
     "https://raw.githubusercontent.com/AuthorGramProject/AuthorBot/main/assets/bot_pfp.jpg",
 }
+
+
+def personal_bot_name(owner: str) -> str:
+    """BotFather and Bot API share the same 64-character display-name limit."""
+    owner = " ".join(re.sub(r"[\x00-\x1f\x7f]", " ", owner or "").split()) or "User"
+    prefix = "AuthorBot of "
+    return prefix + owner[:64 - len(prefix)].rstrip()
 
 
 def bot_photo() -> InputFile:
