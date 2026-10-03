@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="assets/authorbot_banner.jpg" width="100%" alt="AuthorBot — by Author C">
+<img src="assets/authorbot_banner.svg" width="100%" alt="AuthorBot — by Author C">
 
 # AuthorBot
 

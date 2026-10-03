@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 PUBLIC_BOT_EDITORS = {6316376597, 6802848305}
 
 START_RICH = """<h1>AuthorBot</h1>
-<figure><img src="https://raw.githubusercontent.com/VadymYem/AuthorBot/main/assets/authorbot_banner.jpg"/><figcaption>AuthorBot · by Author C</figcaption></figure>
+<figure><img src="https://raw.githubusercontent.com/VadymYem/AuthorBot/main/assets/bot_pfp.jpg"/><figcaption>AuthorBot · by Author C</figcaption></figure>
 <blockquote>Модульний Telegram userbot від Author C — автоматизація, inline-інструменти, модулі, локальні налаштування та сучасний Telegram Bot API.</blockquote>
 
 <h3>Що тут є</h3>

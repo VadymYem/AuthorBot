@@ -76,7 +76,7 @@ class acbotInfoMod(loader.Module):
             ),
             loader.ConfigValue(
                 "custom_banner",
-                "https://raw.githubusercontent.com/VadymYem/AuthorBot/main/assets/authorbot_banner.jpg",
+                "https://raw.githubusercontent.com/VadymYem/AuthorBot/main/assets/bot_pfp.jpg",
                 lambda: self.strings("_cfg_cst_bnr"),
             ),
             loader.ConfigValue(

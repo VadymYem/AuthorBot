@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">AuthorBot by Author C</title>
+  <desc id="desc">Dark mountain landscape with a restrained amber horizon and a thin white Author C monogram.</desc>
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#101812"/>
+      <stop offset="0.52" stop-color="#1c291d"/>
+      <stop offset="0.75" stop-color="#504a28"/>
+      <stop offset="1" stop-color="#171c17"/>
+    </linearGradient>
+    <linearGradient id="horizon" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#6b6437" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="#c4a451" stop-opacity=".64"/>
+      <stop offset="1" stop-color="#6b6437" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="lake" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#183c31"/>
+      <stop offset=".55" stop-color="#0d2922"/>
+      <stop offset="1" stop-color="#08120f"/>
+    </linearGradient>
+    <filter id="soft" x="-20%" y="-50%" width="140%" height="200%">
+      <feGaussianBlur stdDeviation="15"/>
+    </filter>
+  </defs>
+
+  <rect width="1600" height="900" fill="url(#sky)"/>
+  <ellipse cx="800" cy="520" rx="520" ry="48" fill="url(#horizon)" filter="url(#soft)" opacity=".75"/>
+
+  <path d="M0 520 L185 360 L300 430 L430 300 L585 455 L730 335 L865 445 L1010 315 L1140 430 L1270 300 L1410 390 L1600 250 L1600 700 L0 700 Z" fill="#111916"/>
+  <path d="M0 605 L230 455 L410 560 L600 420 L760 575 L940 435 L1110 570 L1280 425 L1440 555 L1600 445 L1600 760 L0 760 Z" fill="#15251e" opacity=".95"/>
+  <path d="M0 665 C240 620 360 700 585 655 C805 610 965 675 1200 635 C1370 607 1480 625 1600 600 L1600 900 L0 900 Z" fill="url(#lake)"/>
+  <path d="M260 760 C450 720 570 790 800 742 C1020 697 1190 770 1370 735" fill="none" stroke="#57826a" stroke-width="8" opacity=".18"/>
+
+  <g fill="none" stroke="#f5f2e8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M694 560 L792 290 L890 560" stroke-width="22"/>
+    <path d="M735 460 H849" stroke-width="17"/>
+    <path d="M706 575 Q794 540 878 575" stroke-width="12" opacity=".9"/>
+  </g>
+
+  <text x="800" y="675" text-anchor="middle" fill="#f5f2e8" font-family="Inter, Arial, sans-serif" font-size="78" font-weight="300" letter-spacing="18">AUTHORBOT</text>
+  <text x="800" y="742" text-anchor="middle" fill="#d9d3c5" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="300" letter-spacing="7">BY AUTHOR C</text>
+  <line x1="500" y1="785" x2="1100" y2="785" stroke="#f5f2e8" stroke-width="2" opacity=".45"/>
+</svg>

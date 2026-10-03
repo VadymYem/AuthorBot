@@ -80,7 +80,6 @@ def check_brand_assets() -> None:
     for relative in (
         "assets/acbot_pfp.jpg",
         "assets/bot_pfp.jpg",
-        "assets/authorbot_banner.jpg",
     ):
         path = ROOT / relative
         if not path.is_file():
@@ -100,13 +99,21 @@ def check_brand_assets() -> None:
         if not data.endswith(b"\xff\xd9"):
             ERRORS.append(f"Branding asset is truncated: {relative}")
 
+    svg = ROOT / "assets" / "authorbot_banner.svg"
+    try:
+        svg_text = svg.read_text(encoding="utf-8")
+        if "<svg" not in svg_text or "</svg>" not in svg_text:
+            ERRORS.append("Branding SVG is invalid: assets/authorbot_banner.svg")
+    except OSError as exc:
+        ERRORS.append(f"Branding SVG: assets/authorbot_banner.svg: {exc}")
+
 
 def check_required_files() -> None:
     for relative in (
         "requirements.txt",
         "assets/download.txt",
         "assets/bot_pfp.jpg",
-        "assets/authorbot_banner.jpg",
+        "assets/authorbot_banner.svg",
         "acbot/__main__.py",
         "acbot/inline/rich.py",
     ):
