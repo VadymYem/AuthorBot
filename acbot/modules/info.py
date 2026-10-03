@@ -76,7 +76,7 @@ class acbotInfoMod(loader.Module):
             ),
             loader.ConfigValue(
                 "custom_banner",
-                "",
+                "https://raw.githubusercontent.com/VadymYem/AuthorBot/main/assets/acbot_pfp.png",
                 lambda: self.strings("_cfg_cst_bnr"),
             ),
             loader.ConfigValue(
@@ -99,8 +99,9 @@ class acbotInfoMod(loader.Module):
             ),
             loader.ConfigValue(
                 "timezone",
-                "+3",
+                3,
                 lambda: self.strings("_cfg_time"),
+                validator=loader.validators.Integer(minimum=-12, maximum=14),
             ),
             loader.ConfigValue(
                 "close_btn",
@@ -191,7 +192,7 @@ class acbotInfoMod(loader.Module):
 
         try:
             repo = git.Repo()
-            diff = repo.git.log(["HEAD..origin/master", "--oneline"])
+            diff = repo.git.log(["HEAD..origin/main", "--oneline"])
             upd = (
                 self.strings("update_required") if diff else self.strings("up-to-date")
             )
@@ -204,7 +205,11 @@ class acbotInfoMod(loader.Module):
         prefix = f"«<code>{utils.escape_html(self.get_prefix())}</code>»"
         platform = utils.get_named_platform()
         uptime = utils.formatted_uptime()
-        offset = datetime.timedelta(hours=self.config["timezone"])
+        try:
+            timezone_hours = int(self.config["timezone"])
+        except (TypeError, ValueError):
+            timezone_hours = 0
+        offset = datetime.timedelta(hours=timezone_hours)
         tz = datetime.timezone(offset)
         time1 = datetime.datetime.now(tz)
         time = time1.strftime("%H:%M:%S")

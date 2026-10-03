@@ -217,7 +217,33 @@ class Utils(InlineUnit):
     generate_markup = _generate_markup
 
     async def _close_unit_handler(self, call: InlineCall):
-        await call.delete()
+        # Answer first so Telegram clients stop showing the callback spinner.
+        with contextlib.suppress(Exception):
+            await call.answer()
+
+        deleted = await call.delete()
+        if deleted:
+            return True
+
+        # Deletion can fail for old messages or after message state changes.
+        # Fall back to removing the keyboard, then unload the unit so dead
+        # callbacks are never left behind.
+        message = getattr(call, "message", None)
+        if getattr(message, "chat", None) and getattr(message, "message_id", None):
+            with contextlib.suppress(Exception):
+                await self.bot.edit_message_reply_markup(
+                    chat_id=message.chat.id,
+                    message_id=message.message_id,
+                    reply_markup=None,
+                )
+
+        unit_id = getattr(call, "unit_id", None)
+        if unit_id:
+            with contextlib.suppress(Exception):
+                await self._unload_unit(unit_id)
+
+        logger.warning("Close action could not delete the message; markup was detached")
+        return False
 
     async def _unload_unit_handler(self, call: InlineCall):
         await call.unload()
@@ -447,6 +473,7 @@ class Utils(InlineUnit):
                     reply_markup=self.generate_markup(reply_markup),
                 )
             except Exception:
+                logger.debug("Unable to delete bot message", exc_info=True)
                 return False
 
             return True

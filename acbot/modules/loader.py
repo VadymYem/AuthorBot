@@ -35,7 +35,7 @@ from ..compat import geek
 from ..inline.types import InlineCall
 from ..types import CoreOverwriteError, CoreUnloadError
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)\n\nDEFAULT_MODULES_REPO = "https://github.com/hikariatama/host/raw/master"
 
 
 class FakeOne:
@@ -65,7 +65,7 @@ class LoaderMod(loader.Module):
         self.config = loader.ModuleConfig(
             loader.ConfigValue(
                 "MODULES_REPO",
-                "https://github.com/hikariatama/host/raw/master",
+                DEFAULT_MODULES_REPO,
                 lambda: self.strings("repo_config_doc"),
                 validator=loader.validators.Link(),
             ),
@@ -110,7 +110,6 @@ class LoaderMod(loader.Module):
         )
         logger.debug("Modules: %s", modules)
         asyncio.ensure_future(self._storage.preload(modules))
-        asyncio.ensure_future(self._storage.preload_main_repo())
 
     async def client_ready(self):
         while not (settings := self.lookup("settings")):
@@ -227,15 +226,21 @@ class LoaderMod(loader.Module):
         if self._links_cache.get(repo, {}).get("exp", 0) >= time.time():
             return self._links_cache[repo]["data"]
 
-        res = await utils.run_sync(
-            requests.get,
-            f"{repo}/full.txt",
-            auth=(
-                tuple(self.config["basic_auth"].split(":", 1))
-                if self.config["basic_auth"]
-                else None
-            ),
-        )
+        try:
+            res = await utils.run_sync(
+                requests.get,
+                f"{repo}/full.txt",
+                auth=(
+                    tuple(self.config["basic_auth"].split(":", 1))
+                    if self.config["basic_auth"]
+                    else None
+                ),
+                timeout=15,
+            )
+        except requests.RequestException:
+            logger.exception("Can't load module repository %s", repo)
+            cached = self._links_cache.get(repo, {}).get("data", [])
+            return cached
 
         if not str(res.status_code).startswith("2"):
             logger.debug(
@@ -256,21 +261,23 @@ class LoaderMod(loader.Module):
         self,
         only_primary: bool = False,
     ) -> dict:
+        primary = self.config["MODULES_REPO"] or DEFAULT_MODULES_REPO
+        repos = [primary] + ([] if only_primary else self.config["ADDITIONAL_REPOS"])
+        repos = list(dict.fromkeys(repo for repo in repos if isinstance(repo, str)))
+
         return {
             repo: {
                 f"Mod/{repo_id}/{i}": f'{repo.strip("/")}/{link}.py'
                 for i, link in enumerate(set(await self._get_repo(repo)))
             }
-            for repo_id, repo in enumerate(
-                [self.config["MODULES_REPO"]]
-                + ([] if only_primary else self.config["ADDITIONAL_REPOS"])
-            )
+            for repo_id, repo in enumerate(repos)
             if repo.startswith("http")
         }
 
     async def get_links_list(self) -> typing.List[str]:
         links = await self.get_repo_list()
-        main_repo = list(links.pop(self.config["MODULES_REPO"]).values())
+        primary = self.config["MODULES_REPO"] or DEFAULT_MODULES_REPO
+        main_repo = list(links.pop(primary, {}).values())
         return main_repo + list(dict(ChainMap(*list(links.values()))).values())
 
     async def _find_link(self, module_name: str) -> typing.Union[str, bool]:

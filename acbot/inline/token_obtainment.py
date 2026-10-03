@@ -13,6 +13,25 @@ logger = logging.getLogger(__name__)
 
 
 class TokenObtainment(InlineUnit):
+    _BOT_TOKEN_RE = re.compile(r"\b\d{5,12}:[A-Za-z0-9_-]{30,}\b")
+    _MANAGED_BOT_RE = re.compile(
+        r"@(?:ac_[0-9A-Za-z]{6}_ubot|author_[0-9A-Za-z]{6}_off_AC_bot)$",
+        re.IGNORECASE,
+    )
+
+    @staticmethod
+    def _safe_botfather_log(direction: str, message) -> None:
+        text = getattr(message, "raw_text", "") or ""
+        logger.debug("%s BotFather response (%d chars)", direction, len(text))
+
+    @classmethod
+    def _extract_token(cls, message) -> str:
+        text = getattr(message, "raw_text", "") or ""
+        match = cls._BOT_TOKEN_RE.search(text)
+        if not match:
+            raise RuntimeError("BotFather response did not contain a valid bot token")
+        return match.group(0)
+
     async def _create_bot(self):
         logger.info("User doesn't have bot, attempting creating new one")
         async with self._client.conversation("@BotFather", exclusive=False) as conv:
@@ -20,8 +39,7 @@ class TokenObtainment(InlineUnit):
             m = await conv.send_message("/newbot")
             r = await conv.get_response()
 
-            logger.debug(">> %s", m.raw_text)
-            logger.debug("<< %s", r.raw_text)
+            self._safe_botfather_log("received", r)
 
             if "20" in r.raw_text:
                 return False
@@ -40,13 +58,13 @@ class TokenObtainment(InlineUnit):
                     pass
                 else:
                     uid = utils.rand(6)
-                    username = f"@ac_{uid}_ubot"
+                    username = f"@author_{uid}_off_AC_bot"
             else:
                 uid = utils.rand(6)
-                username = f"@ac_{uid}_ubot"
+                username = f"@author_{uid}_off_AC_bot"
 
             for msg in [
-                f"✍️ AuthorBot of {self._name}"[:64],
+                "Author Bot off",
                 username,
                 "/setuserpic",
                 username,
@@ -55,8 +73,7 @@ class TokenObtainment(InlineUnit):
                 m = await conv.send_message(msg)
                 r = await conv.get_response()
 
-                logger.debug(">> %s", m.raw_text)
-                logger.debug("<< %s", r.raw_text)
+                self._safe_botfather_log("received", r)
 
                 await fw_protect()
                 await m.delete()
@@ -70,14 +87,13 @@ class TokenObtainment(InlineUnit):
                 r = await conv.get_response()
 
                 logger.debug(">> <Photo>")
-                logger.debug("<< %s", r.raw_text)
+                self._safe_botfather_log("received", r)
             except Exception:
                 await fw_protect()
                 m = await conv.send_message("/cancel")
                 r = await conv.get_response()
 
-                logger.debug(">> %s", m.raw_text)
-                logger.debug("<< %s", r.raw_text)
+                self._safe_botfather_log("received", r)
 
             await fw_protect()
 
@@ -115,8 +131,8 @@ class TokenObtainment(InlineUnit):
 
             r = await conv.get_response()
 
-            logger.debug(">> %s", m.raw_text)
-            logger.debug("<< %s", r.raw_text)
+            logger.debug("Sent BotFather command")
+            self._safe_botfather_log("received", r)
 
             await fw_protect()
 
@@ -141,7 +157,7 @@ class TokenObtainment(InlineUnit):
                         "acbot.inline",
                         "custom_bot",
                         False,
-                    ) and not re.search(r"@ac_[0-9a-zA-Z]{6}_ubot", button.text):
+                    ) and not self._MANAGED_BOT_RE.search(button.text):
                         continue
 
                     await fw_protect()
@@ -149,8 +165,7 @@ class TokenObtainment(InlineUnit):
                     m = await conv.send_message(button.text)
                     r = await conv.get_response()
 
-                    logger.debug(">> %s", m.raw_text)
-                    logger.debug("<< %s", r.raw_text)
+                    self._safe_botfather_log("received", r)
 
                     if revoke_token:
                         await fw_protect()
@@ -162,8 +177,7 @@ class TokenObtainment(InlineUnit):
                         m = await conv.send_message("/revoke")
                         r = await conv.get_response()
 
-                        logger.debug(">> %s", m.raw_text)
-                        logger.debug("<< %s", r.raw_text)
+                        self._safe_botfather_log("received", r)
 
                         await fw_protect()
 
@@ -175,10 +189,9 @@ class TokenObtainment(InlineUnit):
                         m = await conv.send_message(button.text)
                         r = await conv.get_response()
 
-                        logger.debug(">> %s", m.raw_text)
-                        logger.debug("<< %s", r.raw_text)
+                        self._safe_botfather_log("received", r)
 
-                    token = r.raw_text.splitlines()[1]
+                    token = self._extract_token(r)
 
                     self._db.set("acbot.inline", "bot_token", token)
                     self._token = token
@@ -202,8 +215,7 @@ class TokenObtainment(InlineUnit):
                         m = await conv.send_message(msg)
                         r = await conv.get_response()
 
-                        logger.debug(">> %s", m.raw_text)
-                        logger.debug("<< %s", r.raw_text)
+                        self._safe_botfather_log("received", r)
 
                         await fw_protect()
 
@@ -220,14 +232,13 @@ class TokenObtainment(InlineUnit):
                         r = await conv.get_response()
 
                         logger.debug(">> <Photo>")
-                        logger.debug("<< %s", r.raw_text)
+                        self._safe_botfather_log("received", r)
                     except Exception:
                         await fw_protect()
                         m = await conv.send_message("/cancel")
                         r = await conv.get_response()
 
-                        logger.debug(">> %s", m.raw_text)
-                        logger.debug("<< %s", r.raw_text)
+                        self._safe_botfather_log("received", r)
 
                     await fw_protect()
 

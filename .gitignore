@@ -177,3 +177,8 @@ acbot.log.*
 
 *.pyc
 __pycache__/
+
+# AuthorBot runtime state
+authorbot-install.log
+config-*.json.bak
+config-*.json.tmp

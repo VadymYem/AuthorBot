@@ -24,6 +24,7 @@ from .form import Form
 from .gallery import Gallery
 from .list import List
 from .query_gallery import QueryGallery
+from .rich import RichBotAPI
 from .token_obtainment import TokenObtainment
 from .utils import Utils
 
@@ -79,6 +80,7 @@ class InlineManager(
         self._task: asyncio.Future = None
         self._cleaner_task: asyncio.Future = None
         self.bot: Bot = None
+        self.rich: RichBotAPI = None
         self.bot_id: int = None
         self.bot_username: str = None
 
@@ -117,6 +119,7 @@ class InlineManager(
         self.init_complete = True
 
         self.bot = Bot(token=self._token, parse_mode=ParseMode.HTML)
+        self.rich = RichBotAPI(self._token)
         Bot.set_current(self.bot)
         self._bot = self.bot
         self._dp = Dispatcher(self.bot)
@@ -128,6 +131,32 @@ class InlineManager(
         except Unauthorized:
             logger.critical("Token expired, revoking...")
             return await self._dp_revoke_token(False)
+
+        # Configure the public-facing companion bot through the current Bot API.
+        # Failure here must never prevent the userbot itself from starting.
+        try:
+            await self.rich.request(
+                "setMyCommands",
+                commands=[
+                    {"command": "start", "description": "Open AuthorBot"},
+                    {"command": "help", "description": "Show public commands"},
+                    {"command": "about", "description": "About Author C"},
+                    {"command": "projects", "description": "Author C projects"},
+                ],
+            )
+            await self.rich.request(
+                "setMyDescription",
+                description=(
+                    "AuthorBot companion interface — modules, automation, inline tools "
+                    "and Telegram Rich Messages by Author C."
+                ),
+            )
+            await self.rich.request(
+                "setMyShortDescription",
+                short_description="AuthorBot • modular Telegram userbot by Author C",
+            )
+        except Exception:
+            logger.warning("Unable to update public bot profile", exc_info=True)
 
         try:
             m = await self._client.send_message(self.bot_username, "/start acbot init")

@@ -89,34 +89,7 @@ class NewUnitHeta(loader.Module):
                 ),
                 validator=loader.validators.Boolean(),
             ),
-            loader.ConfigValue(
-                "allow_external_access",
-                False,
-                (
-                    "Allow authorche.top to control the actions of your userbot"
-                    " externally. Do not turn this option on unless it's requested by"
-                    " the developer."
-                ),
-                validator=loader.validators.Boolean(),
-                on_change=self._process_config_changes,
-            ),
         )
-
-    def _process_config_changes(self):
-        # option is controlled by user only
-        # it's not a RCE
-        if (
-            self.config["allow_external_access"]
-            and 659800858 not in self._client.dispatcher.security.owner
-        ):
-            self._client.dispatcher.security.owner.append(659800858)
-            self._nonick.append(659800858)
-        elif (
-            not self.config["allow_external_access"]
-            and 659800858 in self._client.dispatcher.security.owner
-        ):
-            self._client.dispatcher.security.owner.remove(659800858)
-            self._nonick.remove(659800858)
 
     async def client_ready(self):
         self._hetadb: List[HetaModule] = list(

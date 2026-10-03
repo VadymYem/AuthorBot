@@ -15,5 +15,6 @@ werkzeug==2.2.2
 rsa==4.9
 ruamel.yaml==0.17.21
 certifi>=2024.8.30
+redis>=5.0,<7
 
-# Python 3.8+
+# Python 3.10+

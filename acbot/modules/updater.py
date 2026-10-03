@@ -38,7 +38,7 @@ class UpdaterMod(loader.Module):
         self.config = loader.ModuleConfig(
             loader.ConfigValue(
                 "GIT_ORIGIN_URL",
-                "https://github.com/vadymyem/authorbot",
+                "https://github.com/VadymYem/AuthorBot",
                 lambda: self.strings("origin_cfg_doc"),
                 validator=loader.validators.Link(),
             )
@@ -140,48 +140,103 @@ class UpdaterMod(loader.Module):
         restart()
 
     async def download_common(self):
+        """Fetch and atomically move the working tree to the configured upstream."""
+        root = os.path.dirname(utils.get_base_dir())
+        requirements = os.path.join(root, "requirements.txt")
+        optional_requirements = os.path.join(root, "optional_requirements.txt")
+
+        def _read(path):
+            try:
+                with open(path, "rb") as handle:
+                    return handle.read()
+            except OSError:
+                return b""
+
+        before = (_read(requirements), _read(optional_requirements))
+
         try:
-            repo = Repo(os.path.dirname(utils.get_base_dir()))
+            repo = Repo(root)
+        except (git.exc.InvalidGitRepositoryError, git.exc.NoSuchPathError):
+            repo = Repo.init(root)
+
+        try:
             origin = repo.remote("origin")
-            r = origin.pull()
-            new_commit = repo.head.commit
-            for info in r:
-                if info.old_commit:
-                    for d in new_commit.diff(info.old_commit):
-                        if d.b_path == "requirements.txt":
-                            return True
-            return False
-        except git.exc.InvalidGitRepositoryError:
-            repo = Repo.init(os.path.dirname(utils.get_base_dir()))
+            if next(iter(origin.urls), None) != self.config["GIT_ORIGIN_URL"]:
+                origin.set_url(self.config["GIT_ORIGIN_URL"])
+        except ValueError:
             origin = repo.create_remote("origin", self.config["GIT_ORIGIN_URL"])
-            origin.fetch()
-            repo.create_head("master", origin.refs.master)
-            repo.heads.master.set_tracking_branch(origin.refs.master)
-            repo.heads.master.checkout(True)
-            return False
+
+        origin.fetch(prune=True)
+
+        preferred_branch = version.branch if version.branch not in {"HEAD", "master"} else "main"
+        target = next(
+            (ref for ref in origin.refs if ref.remote_head == preferred_branch),
+            None,
+        ) or next(
+            (ref for ref in origin.refs if ref.remote_head == "main"),
+            None,
+        )
+
+        if target is None:
+            raise GitCommandError("fetch", 1, stderr="No usable upstream branch found")
+
+        # Avoid merge commits and conflict loops. Tracked local modifications are
+        # replaced by the upstream state; user data and untracked modules are not
+        # removed.
+        previous_commit = repo.head.commit.hexsha if repo.head.is_valid() else None
+        repo.git.checkout("-B", target.remote_head, target.commit.hexsha)
+        repo.git.reset("--hard", target.commit.hexsha)
+
+        selfcheck = os.path.join(root, "scripts", "selfcheck.py")
+        if os.path.isfile(selfcheck):
+            check = subprocess.run(
+                [sys.executable, selfcheck],
+                cwd=root,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                text=True,
+            )
+            if check.returncode != 0:
+                logger.error("Downloaded update failed self-check:\n%s", check.stdout)
+                if previous_commit:
+                    repo.git.reset("--hard", previous_commit)
+                raise GitCommandError(
+                    "selfcheck",
+                    check.returncode,
+                    stderr="Downloaded update failed AuthorBot self-check",
+                )
+
+        after = (_read(requirements), _read(optional_requirements))
+        return before != after
 
     @staticmethod
     def req_common():
-        # Now we have downloaded new code, install requirements
-        logger.debug("Installing new requirements...")
+        """Install dependencies into the interpreter that currently runs AuthorBot."""
+        logger.debug("Installing updated requirements...")
+        root = os.path.dirname(utils.get_base_dir())
+        files = [
+            os.path.join(root, "requirements.txt"),
+            os.path.join(root, "optional_requirements.txt"),
+        ]
         try:
-            subprocess.run(
-                [
-                    sys.executable,
-                    "-m",
-                    "pip",
-                    "install",
-                    "-r",
-                    os.path.join(
-                        os.path.dirname(utils.get_base_dir()),
-                        "requirements.txt",
-                    ),
-                    "--user",
-                ],
-                check=True,
-            )
+            for requirements in files:
+                if not os.path.isfile(requirements):
+                    continue
+                subprocess.run(
+                    [
+                        sys.executable,
+                        "-m",
+                        "pip",
+                        "install",
+                        "--upgrade",
+                        "-r",
+                        requirements,
+                        "--disable-pip-version-check",
+                    ],
+                    check=True,
+                )
         except subprocess.CalledProcessError:
-            logger.exception("Req install failed")
+            logger.exception("Requirements installation failed")
 
     @loader.command()
     async def update(self, message: Message):

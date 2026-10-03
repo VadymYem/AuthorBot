@@ -5,22 +5,18 @@
 
 import logging
 import os
-from random import choice
 
-from .. import loader, translations, utils
+from .. import loader, main, translations, utils
 from ..inline.types import BotInlineCall
 
-logger = logging.getLogger(__name__)
+try:
+    from herokutl.tl.functions.messages import SendReactionRequest
+    from herokutl.tl.types import ReactionEmoji
+except ImportError:
+    SendReactionRequest = None
+    ReactionEmoji = None
 
-imgs = [
-    "https://i.gifer.com/GmUB.gif",
-    "https://i.gifer.com/Afdn.gif",
-    "https://i.gifer.com/3uvT.gif",
-    "https://i.gifer.com/2qQQ.gif",
-    "https://i.gifer.com/Lym6.gif",
-    "https://i.gifer.com/IjT4.gif",
-    "https://i.gifer.com/A9H.gif",
-]
+logger = logging.getLogger(__name__)
 
 
 @loader.tds
@@ -29,7 +25,46 @@ class Quickstart(loader.Module):
 
     strings = {"name": "Quickstart"}
 
+    async def _apply_support_reactions(self):
+        """React once to each selected project announcement post."""
+        if SendReactionRequest is None or ReactionEmoji is None:
+            logger.warning("This HerokuTL build has no reaction API support")
+            return
+
+        completed = set(self.get("support_reactions_done", []))
+        pending = [message_id for message_id in (36, 18, 17, 9) if message_id not in completed]
+        if not pending:
+            return
+
+        try:
+            peer = await self._client.get_input_entity("wsinfo")
+        except Exception:
+            logger.warning("Unable to resolve @wsinfo for support reactions", exc_info=True)
+            return
+
+        for message_id in pending:
+            try:
+                await self._client(
+                    SendReactionRequest(
+                        peer=peer,
+                        msg_id=message_id,
+                        reaction=[ReactionEmoji(emoticon="❤")],
+                    )
+                )
+            except Exception:
+                logger.warning(
+                    "Unable to apply support reaction to @wsinfo/%s",
+                    message_id,
+                    exc_info=True,
+                )
+                continue
+
+            completed.add(message_id)
+            self.set("support_reactions_done", sorted(completed))
+
     async def client_ready(self):
+        await self._apply_support_reactions()
+
         self.mark = lambda: [
             [
                 {
@@ -63,7 +98,12 @@ class Quickstart(loader.Module):
         if self.get("no_msg"):
             return
 
-        await self.inline.bot.send_animation(self._client.tg_id, animation=choice(imgs))
+        try:
+            with open(main.BASE_PATH / "assets" / "bot_pfp.png", "rb") as avatar:
+                await self.inline.bot.send_photo(self._client.tg_id, photo=avatar)
+        except Exception:
+            logger.debug("Unable to send quickstart avatar", exc_info=True)
+
         await self.inline.bot.send_message(
             self._client.tg_id,
             self.text(),

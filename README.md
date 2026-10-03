@@ -1,110 +1,202 @@
 <div align="center">
-  <img src="https://authorche.top/poems/logo.jpg" alt="AuthorBot Logo" width="200" style="border-radius: 50%;">
-  
-  # 🚀 AuthorBot v2.1
-  
-  <p>
-    <b>The Ultimate Branded Telegram Userbot</b><br>
-    <i>Fast, Secure, and Architecturally Perfected.</i>
-  </p>
 
-  <p>
-    <a href="https://github.com/VadymYem/AuthorBot/stargazers"><img src="https://img.shields.io/github/stars/VadymYem/AuthorBot?color=28a0dc&style=for-the-badge&logo=github" alt="Stars"></a>
-    <a href="https://github.com/VadymYem/AuthorBot/network/members"><img src="https://img.shields.io/github/forks/VadymYem/AuthorBot?color=18cc18&style=for-the-badge&logo=github" alt="Forks"></a>
-    <img src="https://img.shields.io/badge/Python-3.8+-blue?style=for-the-badge&logo=python&logoColor=white" alt="Python">
-    <img src="https://img.shields.io/badge/Telegram-MTProto-blue?style=for-the-badge&logo=telegram&logoColor=white" alt="Telegram">
-  </p>
+<img src="assets/acbot_pfp.png" width="180" alt="AuthorBot">
 
-  <p>
-    <a href="https://authorche.top">🌐 Website</a> •
-    <a href="https://authorche.top/ubot.html">📖 Installation Guide</a> •
-    <a href="https://authorche.top/donate.html">💌 Donate</a>
-  </p>
+# AuthorBot
+
+### Telegram userbot, built around modules, automation and modern Telegram UI
+
+[![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![Telegram](https://img.shields.io/badge/Telegram-MTProto%20%2B%20Bot%20API-26A5E4?logo=telegram&logoColor=white)](https://core.telegram.org/)
+[![License](https://img.shields.io/badge/License-AGPLv3-663399)](LICENSE)
+[![Rich Messages](https://img.shields.io/badge/Rich%20Messages-Bot%20API%2010.x-111827)](https://core.telegram.org/bots/api#rich-messages)
+
+**AuthorBot** — модульний Telegram userbot від **Author C**.  
+Працює як розширення вашого Telegram-акаунта та окремий inline/public bot-інтерфейс.
+
+[Website](https://authorche.top) · [Installation](https://authorche.top/ubot.html) · [Telegram](https://t.me/wsinfo) · [Module guide](docs/MODULE_DEVELOPMENT.md)
+
 </div>
 
 ---
 
-## ✨ Основні переваги (Features)
+## Що вміє AuthorBot
 
-AuthorBot — це вершина еволюції юзерботів, створена на базі стабільних оновлень та новітнього Telegram API.
+| Напрям | Можливості |
+|---|---|
+| **Модулі** | Динамічне встановлення, оновлення, локальний cache, dependency install, aliases |
+| **Inline UI** | Форми, списки, галереї, callback-кнопки, inline queries |
+| **Rich Messages** | Rich HTML/Markdown, headings, tables, details, media blocks, rich buttons, streaming drafts |
+| **Безпека** | Owner/security masks, targeted rules, blacklist, API flood protection, без прихованого owner-доступу |
+| **Дані** | Локальна JSON DB з атомарним записом і backup; optional Redis із fallback на диск |
+| **Оновлення** | Fetch + deterministic reset до upstream branch без merge-conflict loop |
+| **Backup** | Backup/restore конфігурації та модулів |
+| **Termux** | Ізольоване Python virtualenv, autostart, кольоровий banner |
+| **Public bot** | `/start`, `/help`, `/about`, `/projects` із Rich Message оформленням |
 
-*   🇺🇦 **Повна підтримка української мови:** Нативний переклад всіх інтерфейсів.
-*   ⚡️ **HerokuTL 2.1.0:** Надшвидке ядро з повною підтримкою реакцій, відео-стікерів та кастомних емодзі.
-*   🔒 **Висока безпека:** Інтегроване нативне кешування, оптимізація бази даних та захист сесій.
-*   🎨 **Красивий UI/UX & Веб-Логін:** Брендований інтерфейс авторизації безпосередньо у вашому браузері.
-*   🤖 **AI-Екосистема:** Вбудовані розумні модулі, які використовують Gemini та Groq.
-*   👨‍👦 **NoNick (Мульти-аккаунт):** Дозволяє підключати окремі акаунти під юзербот, зберігаючи основний акаунт чистим.
+### Основний каталог модулів
 
----
-
-## 📱 Встановлення на Android (Termux)
-
-> [!IMPORTANT]
-> Використовуйте Termux **тільки з F-Droid**, версія з Play Store є застарілою! [Завантажити APK тут](https://f-droid.org/repo/com.termux_118.apk).
-
-**1.** Отримайте **API ID** та **API HASH** на [my.telegram.org](https://my.telegram.org).  
-**2.** Відкрийте Termux та виконайте цю команду:
-
-```bash
-termux-wake-lock && pkg upgr -y && pkg i wget ncurses-utils python openssl git -y && clear && . <(wget -qO- https://raw.githubusercontent.com/VadymYem/AuthorBot/refs/heads/main/termux.sh)
-```
-**3.** Дотримуйтесь інструкцій на екрані та пройдіть авторизацію за допомогою веб-інтерфейсу або через термінал.
-
----
-
-## 💻 Встановлення на Ubuntu / Debian / VPS
-
-```bash
-sudo apt update && sudo apt upgrade -y
-sudo apt install git python3 python3-pip -y
-git clone https://github.com/VadymYem/AuthorBot
-cd AuthorBot
-pip install -r requirements.txt
-pip install -r optional_requirements.txt  # опціональні пакети
-python3 -m acbot --proxy-pass
-```
-*`--proxy-pass` необхідний для доступу до веб-панелі авторизації, якщо ви запускаєте бота на віддаленому сервері (VPS).*
-
----
-
-## 🔧 Корисні аргументи запуску
-
-| Аргумент | Опис |
-|----------|------|
-| `--proxy-pass` | Відкриває веб-панель для авторизації на VPS |
-| `--root` | Дозволяє запуск від root-користувача |
-| `--wipe` або `-w` | Повне видалення сесій, баз даних та модулів |
-| `--data-root <path>` | Вказує кастомну директорію для даних |
-
----
-
-## 🧠 Авторські ШІ Модулі
-
-AuthorBot містить ексклюзивні розумні модулі. Для їх активації введіть ці команди в `Збережене` (Saved Messages):
+AuthorBot використовує як primary repository:
 
 ```text
-.dlmod downloads/ai_mods/AIContext.py
-.dlmod downloads/ai_mods/AIDev.py
-.dlmod downloads/ai_mods/GiftClaimer.py
+https://github.com/hikariatama/host/raw/master
 ```
 
-### 1. `AIContext` — Аналіз переписок
-Використовує штучний інтелект (Gemini / Groq) для розуміння контексту чату.
-*   `.sum [кількість повідомлень] [питання]` — Генерує підсумок розмови або відповідає на запитання щодо контексту переписки.
-
-### 2. `AIDev` — Нейро-розробник
-Вбудований помічник для створення нових модулів.
-*   `.gen [опис модуля]` — Напише і автоматично встановить код модуля прямо в Telegram.
-*   Підтримує швидку генерацію через `.aim`.
-
-### 3. `GiftClaimer` — Збирач подарунків
-Автоматичний, швидкий перехоплювач подарунків у Telegram каналах. Блискавично забирає Telegram Gifts щойно вони з'являються.
-
-> [!TIP]  
-> Налаштувати API ключі для ШІ (Gemini/Groq) можна командою `.cfg AIContext` або `.cfg AIDev`.
+Додаткові repositories можна налаштовувати через конфіг Loader.
 
 ---
 
-<div align="center">
-  <p><i>Розроблено з ❤️ AuthorChe.</i></p>
-</div>
+## Android / Termux
+
+> Рекомендовано актуальний Termux із F-Droid або GitHub releases.
+
+```bash
+termux-wake-lock
+pkg update -y
+pkg install -y wget git python openssl
+clear
+bash -c "$(wget -qO- https://raw.githubusercontent.com/VadymYem/AuthorBot/main/termux.sh)"
+```
+
+Інсталятор:
+
+- встановлює системні залежності;
+- клонує чистий upstream;
+- створює `.venv`;
+- встановлює Python requirements без забруднення глобального Python;
+- конфігурує Termux autostart;
+- запускає `python -m acbot`.
+
+Після встановлення:
+
+```bash
+cd ~/AuthorBot
+./.venv/bin/python -m acbot
+```
+
+---
+
+## Linux / VPS
+
+```bash
+git clone https://github.com/VadymYem/AuthorBot.git
+cd AuthorBot
+bash install.sh
+```
+
+---
+
+## Public companion bot
+
+Під час налаштування inline-режиму AuthorBot створює або використовує BotFather-бота. Для автоматично створеного бота використовується ім’я **Author Bot off** і випадковий username формату:
+
+```text
+author_<random>_off_AC_bot
+```
+
+Публічно доступні команди:
+
+- `/start` — головна Rich Message сторінка;
+- `/help` — довідка;
+- `/about` — інформація про Author C;
+- `/projects` — проєкти та офіційні ресурси.
+
+Редактори з дозволеними Telegram ID можуть оновлювати ці сторінки командами `/setstart`, `/sethelp`, `/setabout`, `/setprojects`. Контент зберігається локально в DB конкретного встановлення.
+
+---
+
+## Telegram Rich Messages
+
+AuthorBot не прив’язує Rich Messages до старої версії aiogram. Для нових Bot API методів є окремий transport:
+
+```python
+await self.inline.rich.send(
+    self._client.tg_id,
+    html="<h1>Hello from AuthorBot</h1><p>Native Rich Message.</p>",
+)
+```
+
+Підтримуються:
+
+- Rich HTML і Rich Markdown;
+- explicit blocks;
+- media references;
+- `sendRichMessage`;
+- `sendRichMessageDraft`;
+- нові rich buttons;
+- direct raw Bot API methods через `self.inline.rich.request(...)`.
+
+Для тесту після запуску:
+
+```text
+.richdemo
+```
+
+Повний приклад модуля: [docs/MODULE_DEVELOPMENT.md](docs/MODULE_DEVELOPMENT.md).
+
+---
+
+## Архітектура
+
+```text
+acbot/
+├── inline/             Bot API, forms, galleries, Rich Messages
+├── modules/            core modules
+├── langpacks/          translations
+├── web/                local web authorization/config UI
+├── database.py         local + optional Redis persistence
+├── dispatcher.py       command/watchers dispatch
+├── loader.py           module registration and lifecycle
+├── security.py         permission model
+└── main.py             Telegram client lifecycle
+```
+
+External modules завантажуються окремо та не повинні змінювати core-файли.
+
+---
+
+## Безпека
+
+AuthorBot не повинен:
+
+- логувати BotFather token, API hash, session auth key або паролі;
+- автоматично додавати сторонні Telegram ID до owner-групи;
+- передавати локальну DB сторонньому сервісу без явної конфігурації;
+- виконувати remote code поза свідомо встановленими Python-модулями.
+
+Сесії, DB та локальні налаштування не комітяться в Git. Для Redis діє fallback на локальний атомарний snapshot.
+
+Докладніше: [SECURITY.md](SECURITY.md).
+
+---
+
+## Розробка модулів
+
+Документація містить:
+
+- структуру модуля;
+- commands / watchers / inline handlers / callbacks;
+- DB і config;
+- security;
+- Rich Messages;
+- правила dependency loading;
+- стабільне очищення ресурсів у `on_unload`.
+
+→ **[Module Development Guide](docs/MODULE_DEVELOPMENT.md)**
+
+---
+
+## Автор
+
+**Author C**
+
+- Website: https://authorche.top
+- Telegram: https://t.me/wsinfo
+- AuthorGram: https://t.me/authorgram_apk
+- Google Play: https://play.google.com/store/apps/details?id=toss.authorgram.apk
+
+---
+
+## License
+
+GNU Affero General Public License v3.0. Див. [LICENSE](LICENSE).

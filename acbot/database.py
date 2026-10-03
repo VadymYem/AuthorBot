@@ -4,6 +4,8 @@
 #  https://www.gnu.org/licenses/agpl-3.0.html
 import asyncio
 import collections
+import contextlib
+import copy
 import json
 import logging
 import os
@@ -12,6 +14,7 @@ import time
 try:
     import redis
 except ImportError as e:
+    redis = None
     if "RAILWAY" in os.environ:
         raise e
 
@@ -58,7 +61,7 @@ class Database(dict):
         self._revisions: typing.List[dict] = []
         self._assets: int = None
         self._me: User = None
-        self._redis: redis.Redis = None
+        self._redis: typing.Any = None
         self._saving_task: asyncio.Future = None
 
     def __repr__(self):
@@ -73,33 +76,58 @@ class Database(dict):
             pipe.execute()
 
     async def remote_force_save(self) -> bool:
-        """Force save database to remote endpoint without waiting"""
+        """Force save database to remote endpoint without waiting."""
         if not self._redis:
             return False
 
-        await utils.run_sync(self._redis_save_sync)
+        try:
+            await utils.run_sync(self._redis_save_sync)
+        except Exception:
+            logger.exception("Failed to publish database to Redis")
+            return False
+
         logger.debug("Published db to Redis")
         return True
 
     async def _redis_save(self) -> bool:
-        """Save database to redis"""
+        """Save database to Redis with debouncing."""
         if not self._redis:
             return False
 
-        await asyncio.sleep(5)
-        await utils.run_sync(self._redis_save_sync)
-        logger.debug("Published db to Redis")
-        self._saving_task = None
-        return True
+        try:
+            await asyncio.sleep(5)
+            await utils.run_sync(self._redis_save_sync)
+            logger.debug("Published db to Redis")
+            return True
+        except Exception:
+            logger.exception("Failed to publish database to Redis")
+            return False
+        finally:
+            self._saving_task = None
 
     async def redis_init(self) -> bool:
-        """Init redis database"""
-        if REDIS_URI := (
-            os.environ.get("REDIS_URL") or main.get_config_key("redis_uri")
-        ):
-            self._redis = redis.Redis.from_url(REDIS_URI)
-        else:
+        """Initialize Redis. Local JSON remains the durable fallback."""
+        redis_uri = os.environ.get("REDIS_URL") or main.get_config_key("redis_uri")
+        if not redis_uri:
             return False
+
+        if redis is None:
+            logger.error("Redis is configured, but the redis package is not installed")
+            return False
+
+        try:
+            client = redis.Redis.from_url(
+                redis_uri,
+                socket_connect_timeout=5,
+                socket_timeout=5,
+            )
+            await utils.run_sync(client.ping)
+        except Exception:
+            logger.exception("Redis is unavailable; using local database")
+            return False
+
+        self._redis = client
+        return True
 
     async def init(self):
         """Asynchronous initialization unit"""
@@ -128,26 +156,54 @@ class Database(dict):
             )
 
     def read(self):
-        """Read database and stores it in self"""
+        """Read database, preferring Redis and falling back to local snapshots."""
         if self._redis:
             try:
-                self.update(
-                    **json.loads(
-                        self._redis.get(
-                            str(self._client.tg_id),
-                        ).decode(),
-                    )
-                )
+                raw = self._redis.get(str(self._client.tg_id))
+                if raw:
+                    self.update(**json.loads(raw.decode()))
+                    return
             except Exception:
-                logger.exception("Error reading redis database")
-            return
+                logger.exception("Error reading Redis database; falling back to disk")
 
+        for path in (self._db_file, self._db_file.with_suffix(".json.bak")):
+            try:
+                self.update(**json.loads(path.read_text(encoding="utf-8")))
+                return
+            except json.decoder.JSONDecodeError:
+                logger.warning("Database file %s is corrupted", path)
+            except FileNotFoundError:
+                continue
+            except Exception:
+                logger.exception("Database read failed for %s", path)
+
+        logger.debug("No readable database snapshot found; starting with an empty database")
+
+    def _save_local_atomic(self) -> bool:
+        """Persist a complete local snapshot atomically."""
+        tmp = self._db_file.with_suffix(".json.tmp")
+        backup = self._db_file.with_suffix(".json.bak")
         try:
-            self.update(**json.loads(self._db_file.read_text()))
-        except json.decoder.JSONDecodeError:
-            logger.warning("Database read failed! Creating new one...")
-        except FileNotFoundError:
-            logger.debug("Database file not found, creating new one...")
+            payload = json.dumps(self, indent=4, ensure_ascii=False)
+            with open(tmp, "w", encoding="utf-8") as handle:
+                handle.write(payload)
+                handle.flush()
+                os.fsync(handle.fileno())
+            with contextlib.suppress(Exception):
+                os.chmod(tmp, 0o600)
+            if self._db_file.exists():
+                with contextlib.suppress(Exception):
+                    backup.write_bytes(self._db_file.read_bytes())
+                    os.chmod(backup, 0o600)
+            os.replace(tmp, self._db_file)
+            with contextlib.suppress(Exception):
+                os.chmod(self._db_file, 0o600)
+            return True
+        except Exception:
+            logger.exception("Database save failed!")
+            with contextlib.suppress(Exception):
+                tmp.unlink()
+            return False
 
     def process_db_autofix(self, db: dict) -> bool:
         if not utils.is_serializable(db):
@@ -172,7 +228,7 @@ class Database(dict):
                 )
                 continue
 
-            for subkey in value:
+            for subkey in list(value):
                 if not isinstance(subkey, (str, int)):
                     del db[key][subkey]
                     logger.warning(
@@ -209,24 +265,18 @@ class Database(dict):
             )
 
         if self._next_revision_call < time.time():
-            self._revisions += [dict(self)]
+            self._revisions += [copy.deepcopy(dict(self))]
             self._next_revision_call = time.time() + 3
 
         while len(self._revisions) > 15:
-            self._revisions.pop()
+            self._revisions.pop(0)
 
-        if self._redis:
-            if not self._saving_task:
-                self._saving_task = asyncio.ensure_future(self._redis_save())
-            return True
+        local_saved = self._save_local_atomic()
 
-        try:
-            self._db_file.write_text(json.dumps(self, indent=4))
-        except Exception:
-            logger.exception("Database save failed!")
-            return False
+        if self._redis and not self._saving_task:
+            self._saving_task = asyncio.ensure_future(self._redis_save())
 
-        return True
+        return local_saved
 
     async def store_asset(self, message: Message) -> int:
         """

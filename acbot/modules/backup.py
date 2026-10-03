@@ -34,7 +34,7 @@ class AuthorBotBackupMod(loader.Module):
         if not self.get("period"):
             await self.inline.bot.send_photo(
                 self.tg_id,
-                photo="https://github.com/VadymYem/AuthorBot/raw/master/assets/acbot_pfp.png",
+                photo="https://raw.githubusercontent.com/VadymYem/AuthorBot/main/assets/acbot_pfp.png",
                 caption=self.strings("period"),
                 reply_markup=self.inline.generate_markup(
                     utils.chunks(

@@ -255,7 +255,7 @@ class CoreMod(loader.Module):
 
         await self.client.send_file(
             message.peer_id,
-            "https://github.com/VadymYem/AuthorBot/blob/421a04d850ac990525f1987646609d86622fd990/assets/acbot_pfp.png",
+            "https://raw.githubusercontent.com/VadymYem/AuthorBot/main/assets/acbot_pfp.png",
             caption=self.strings["installation"].format('{}', prefix=self.get_prefix()), reply_to=getattr(message, "reply_to_msg_id", None),)
     
         await message.delete()

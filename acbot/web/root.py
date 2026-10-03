@@ -10,7 +10,6 @@ import string
 import time
 
 import aiohttp_jinja2
-import requests
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from aiohttp import web
 from herokutl.errors import (
@@ -353,7 +352,7 @@ class Web:
 
         text = await request.text()
 
-        logger.debug("2FA code received for QR login: %s", text)
+        logger.debug("2FA password received for QR login")
 
         try:
             await self._pending_client._on_login(
@@ -478,46 +477,23 @@ class Web:
             )
         )
 
-        ips = request.headers.get("X-FORWARDED-FOR", None) or request.remote
-        cities = []
+        ips = str(request.headers.get("X-FORWARDED-FOR", None) or request.remote or "unknown")
 
+        # Do not send visitor IP addresses to third-party geolocation services.
+        # Keep only a local per-IP rate limiter for authorization requests.
         for ip in re.findall(r"[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}", ips):
             if ip not in self._ratelimit:
                 self._ratelimit[ip] = []
 
-            if (
-                len(
-                    list(
-                        filter(lambda x: time.time() - x < 3 * 60, self._ratelimit[ip])
-                    )
-                )
-                >= 3
-            ):
+            recent = [
+                stamp
+                for stamp in self._ratelimit[ip]
+                if time.time() - stamp < 3 * 60
+            ]
+            if len(recent) >= 3:
                 return web.Response(status=429)
 
-            self._ratelimit[ip] = list(
-                filter(lambda x: time.time() - x < 3 * 60, self._ratelimit[ip])
-            )
-
-            self._ratelimit[ip] += [time.time()]
-            try:
-                res = (
-                    await utils.run_sync(
-                        requests.get,
-                        f"https://freegeoip.app/json/{ip}",
-                    )
-                ).json()
-                cities += [
-                    f"<i>{utils.get_lang_flag(res['country_code'])} {res['country_name']} {res['region_name']} {res['city']} {res['zip_code']}</i>"
-                ]
-            except Exception:
-                pass
-
-        cities = (
-            ("<b>🏢 Possible cities:</b>\n\n" + "\n".join(cities) + "\n")
-            if cities
-            else ""
-        )
+            self._ratelimit[ip] = recent + [time.time()]
 
         ops = []
 
@@ -528,7 +504,7 @@ class Web:
                     user[1].tg_id,
                     (
                         "🔐 <b>Click button below to confirm web application"
-                        f" ops</b>\n\n<b>Client IP</b>: {ips}\n{cities}\n<i>If you did"
+                        f" ops</b>\n\n<b>Client IP</b>: {utils.escape_html(ips)}\n<i>If you did"
                         " not request any codes, simply ignore this message</i>"
                     ),
                     disable_web_page_preview=True,

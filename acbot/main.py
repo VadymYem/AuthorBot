@@ -824,7 +824,7 @@ class AuthorBot:
 
             await client.acbot_inline.bot.send_photo(
                 logging.getLogger().handlers[0].get_logid_by_client(client.tg_id),
-                "https://raw.githubusercontent.com/VadymYem/AuthorBot/421a04d850ac990525f1987646609d86622fd990/assets/acbot_pfp.png",
+                "https://raw.githubusercontent.com/VadymYem/AuthorBot/main/assets/acbot_pfp.png",
                 caption=(
                     "✍️ <b>AuthorBot {} started!</b>\n\n🌳 <b>GitHub commit SHA: <a"
                     ' href="https://github.com/VadymYem/AuthorBot/commit/{}">{}</a></b>\n✊'
