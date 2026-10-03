@@ -22,10 +22,12 @@ class TermuxInstallerTests(unittest.TestCase):
         self.app = root / "Author Bot — тест"
         (self.app / "scripts").mkdir(parents=True)
         shutil.copy(ROOT / "termux.sh", self.app / "termux.sh")
+        shutil.copy(ROOT / "bootstrap-termux.sh", self.app / "bootstrap-termux.sh")
         shutil.copy(ROOT / "scripts/termux-runtime.sh", self.app / "scripts/termux-runtime.sh")
         self.prefix = root / "prefix"
         self.bin = self.prefix / "bin"
         self.bin.mkdir(parents=True)
+        (self.bin / "bash").symlink_to(shutil.which("bash"))
         self.profile = root / "profile"
         self.profile.write_text("export KEEP_ME=yes\n", encoding="utf-8")
         self.calls = root / "calls.jsonl"
@@ -39,6 +41,8 @@ class TermuxInstallerTests(unittest.TestCase):
             "MOCK_CALLS": str(self.calls),
         }
         self.env.pop("NO_AUTOSTART", None)
+        for name in ("AUTHORBOT_BOOTSTRAPPED", "AUTHORBOT_LOG_INITIALIZED", "AUTHORBOT_PROGRESS_FILE"):
+            self.env.pop(name, None)
         mock = f"#!{sys.executable}\n" + '''import json, os, sys
 from pathlib import Path
 import shutil
@@ -49,6 +53,8 @@ with open(os.environ["MOCK_CALLS"], "a", encoding="utf-8") as log:
 if name == "pkg" and os.environ.get("MOCK_FAIL_PKG"):
     print("package failure")
     sys.exit(7)
+if name == "pkg":
+    print("MOCK PACKAGE NOISE", file=sys.stderr)
 if name == "git":
     if os.environ.get("MOCK_FAIL_GIT"):
         print("git failure")
@@ -70,6 +76,17 @@ if name == "proot-distro":
     elif args and args[0] == "login" and os.environ.get("MOCK_FAIL_GUEST"):
         print("dependency failure")
         sys.exit(8)
+    elif args and args[0] == "login" and "install" in args:
+        import time
+        progress = Path(args[2].split(":/opt/authorbot")[0]) / ".install-progress"
+        for stage in range(4, 8):
+            temporary = progress.with_suffix(".tmp")
+            temporary.write_text(f"{stage}|{stage}/8 · Test stage\\n")
+            temporary.replace(progress)
+            time.sleep(0.23)
+    elif args and args[0] == "login" and "run" in args and os.environ.get("MOCK_AUTH"):
+        print("API INPUT: ", end="", flush=True)
+        print("AUTH_OK=" + input())
 '''
         for name in ("pkg", "proot-distro", "git"):
             path = self.bin / name
@@ -161,7 +178,9 @@ if name == "proot-distro":
         self.env["MOCK_FAIL_PKG"] = "1"
         result = self.install()
         self.assertNotEqual(result.returncode, 0)
-        self.assertIn("package failure", result.stdout)
+        self.assertNotIn("package failure", result.stdout + result.stderr)
+        self.assertIn("Журнал:", result.stderr)
+        self.assertIn("package failure", Path(self.env["AUTHORBOT_LOG_FILE"]).read_text())
         self.assertEqual(self.profile.read_text(), "export KEEP_ME=yes\n")
         self.assertFalse((self.bin / "authorbot").exists())
         self.assertFalse(any(call[0] == "proot-distro" for call in self.recorded()))
@@ -170,7 +189,8 @@ if name == "proot-distro":
         self.env["MOCK_FAIL_GUEST"] = "1"
         result = self.install()
         self.assertNotEqual(result.returncode, 0)
-        self.assertIn("dependency failure", result.stdout)
+        self.assertNotIn("dependency failure", result.stdout + result.stderr)
+        self.assertIn("dependency failure", Path(self.env["AUTHORBOT_LOG_FILE"]).read_text())
         self.assertEqual(self.profile.read_text(), "export KEEP_ME=yes\n")
         self.assertFalse((self.bin / "authorbot").exists())
 
@@ -194,6 +214,49 @@ if name == "proot-distro":
         self.profile.write_text(content)
         self.assertNotEqual(self.install().returncode, 0)
         self.assertEqual(self.profile.read_text(), content)
+
+    def test_progress_finishes_only_after_checks_without_package_noise(self):
+        result = self.install()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertNotIn("MOCK PACKAGE NOISE", result.stdout + result.stderr)
+        self.assertIn("MOCK PACKAGE NOISE", Path(self.env["AUTHORBOT_LOG_FILE"]).read_text())
+        for stage in range(1, 9):
+            self.assertIn(f"{stage}/8", result.stdout)
+        self.assertIn("100%", result.stdout)
+        self.assertFalse((self.app / ".install-progress").exists())
+
+    def test_bootstrap_does_not_discard_earlier_log_or_terminal_input(self):
+        (self.app / ".git").mkdir()
+        self.env["AUTHORBOT_APP_DIR"] = str(self.app)
+        self.env.pop("AUTHORBOT_INSTALL_ONLY")
+        self.env["MOCK_AUTH"] = "1"
+        result = subprocess.run(["bash", str(ROOT / "bootstrap-termux.sh")],
+                                env=self.env, input="12345\n", capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("AUTH_OK=12345", result.stdout)
+        self.assertEqual(sum(call[0] == "pkg" for call in self.recorded()), 2)
+
+    def test_failed_install_never_reports_one_hundred_percent(self):
+        self.env["MOCK_FAIL_GUEST"] = "1"
+        result = self.install()
+        self.assertNotEqual(result.returncode, 0)
+        self.assertNotIn("100%", result.stdout)
+
+    def test_terminal_ui_keeps_keyboard_and_restores_cursor(self):
+        from startupcheck import terminal_process
+        self.env["TERM"] = "xterm-256color"
+        self.env.pop("AUTHORBOT_INSTALL_ONLY")
+        self.env["MOCK_AUTH"] = "1"
+        code, output, sent = terminal_process(["bash", str(self.app / "termux.sh")],
+            cwd=self.app, env=self.env, prompt="API INPUT:", answer="24680\n", columns=28)
+        self.assertEqual(code, 0, output)
+        self.assertTrue(sent, output)
+        self.assertIn("AUTH_OK=24680", output)
+        self.assertIn("AuthorBot", output)
+        self.assertIn("by AuthorChe", output)
+        self.assertIn("100%", output)
+        self.assertIn("\033[?25h", output)
+        self.assertNotIn("MOCK PACKAGE NOISE", output)
 
 
 if __name__ == "__main__":

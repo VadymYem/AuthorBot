@@ -3,7 +3,7 @@ set -euo pipefail
 
 APP_NAME="AuthorBot"
 MODULE_NAME="acbot"
-REPO_URL="${AUTHORBOT_REPO_URL:-https://github.com/AuthorGramProject/AuthorBot.git}"
+REPO_URL="${AUTHORBOT_REPO_URL:-https://github.com/VadymYem/AuthorBot.git}"
 VENV_DIR="${AUTHORBOT_VENV_DIR:-.venv}"
 LOG_FILE="${AUTHORBOT_INSTALL_LOG:-$PWD/authorbot-install.log}"
 
@@ -95,8 +95,8 @@ install_python_packages() {
 
 : >"$LOG_FILE"
 clear 2>/dev/null || true
-printf '\033[1;35mAuthor Bot\033[0m  \033[2mby Author C\033[0m\n'
-printf '\033[0;36mGitHub:\033[0m https://github.com/AuthorGramProject/AuthorBot\n'
+printf '\033[1;35mAuthor Bot\033[0m  \033[2mby AuthorChe\033[0m\n'
+printf '\033[0;36mGitHub:\033[0m https://github.com/VadymYem/AuthorBot\n'
 printf '\033[0;36mWeb:\033[0m    https://authorche.top\n\n'
 
 install_system_packages
@@ -108,6 +108,8 @@ install_python_packages "$PYTHON"
 info "Running AuthorBot self-check..."
 run "$VENV_DIR/bin/python" scripts/selfcheck.py || fail "AuthorBot self-check failed." 6
 run "$VENV_DIR/bin/python" scripts/runtimecheck.py || fail "AuthorBot runtime checks failed." 6
+run "$VENV_DIR/bin/python" scripts/startupcheck.py || fail "AuthorBot startup checks failed." 6
+run "$VENV_DIR/bin/python" -c 'from acbot.runtime_state import mark_dependencies_ready; mark_dependencies_ready()'
 touch .setup_complete
 ok "AuthorBot installation complete."
 exec "$VENV_DIR/bin/python" -m "$MODULE_NAME" "$@"

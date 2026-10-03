@@ -874,7 +874,7 @@ class AuthorBot:
                 bot_photo(),
                 caption=(
                     "✍️ <b>AuthorBot {} started!</b>\n\n🌳 <b>GitHub commit SHA: <a"
-                    ' href="https://github.com/AuthorGramProject/AuthorBot/commit/{}">{}</a></b>\n✊'
+                    ' href="https://github.com/VadymYem/AuthorBot/commit/{}">{}</a></b>\n✊'
                     " <b>Update status: {}</b>\n<b>{}</b>".format(
                         ".".join(list(map(str, list(__version__)))),
                         build,

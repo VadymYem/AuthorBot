@@ -30,6 +30,8 @@ COPY . .
 
 RUN python scripts/selfcheck.py \
     && python scripts/runtimecheck.py \
+    && python scripts/startupcheck.py \
+    && python -c 'from acbot.runtime_state import mark_dependencies_ready; mark_dependencies_ready()' \
     && mkdir -p /data \
     && chmod 700 /data
 

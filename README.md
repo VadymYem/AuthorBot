@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="assets/authorbot_banner.svg" width="100%" alt="AuthorBot — by Author C">
+<img src="assets/authorbot_banner.svg" width="100%" alt="AuthorBot — by AuthorChe">
 
 # AuthorBot
 
@@ -10,7 +10,7 @@
 [![Telegram](https://img.shields.io/badge/Telegram-MTProto%20%2B%20Bot%20API-26A5E4?logo=telegram&logoColor=white)](https://core.telegram.org/)
 [![License](https://img.shields.io/badge/License-AGPLv3-663399)](LICENSE)
 [![Rich Messages](https://img.shields.io/badge/Rich%20Messages-Bot%20API%2010.x-111827)](https://core.telegram.org/bots/api#rich-messages)
-[![Verify](https://github.com/AuthorGramProject/AuthorBot/actions/workflows/verify.yml/badge.svg)](https://github.com/AuthorGramProject/AuthorBot/actions/workflows/verify.yml)
+[![Verify](https://github.com/VadymYem/AuthorBot/actions/workflows/verify.yml/badge.svg)](https://github.com/VadymYem/AuthorBot/actions/workflows/verify.yml)
 
 **AuthorBot** — модульний Telegram userbot від **Author C**.  
 Працює як розширення вашого Telegram-акаунта та окремий inline/public bot-інтерфейс.
@@ -55,16 +55,28 @@ https://github.com/hikariatama/host/raw/master
 (
   set -e
   termux-wake-lock
-  pkg update -y
-  pkg install -y curl
+  log="$HOME/authorbot-install.log"
+  printf 'AuthorBot by AuthorChe · Підготовка встановлення…\n'
+  if ! { pkg update -y && pkg install -y curl; } >"$log" 2>&1; then
+    printf 'Не вдалося підготувати Termux. Журнал: %s\n' "$log"
+    exit 1
+  fi
   installer="$(mktemp "$PREFIX/tmp/authorbot-bootstrap.XXXXXX")"
   trap 'rm -f "$installer"' EXIT
-  curl -fL --retry 3 https://raw.githubusercontent.com/AuthorGramProject/AuthorBot/main/bootstrap-termux.sh -o "$installer"
+  if ! curl -fsSL --retry 3 https://raw.githubusercontent.com/VadymYem/AuthorBot/main/bootstrap-termux.sh -o "$installer" 2>>"$log"; then
+    printf 'Не вдалося завантажити інсталятор. Журнал: %s\n' "$log"
+    exit 1
+  fi
+  export AUTHORBOT_LOG_INITIALIZED=1
   bash "$installer"
 )
 ```
 
 Вставте блок після появи запрошення `~ $` і дочекайтеся завершення. Він автоматично встановлює Git і PRoot-Distro, клонує або оновлює `~/AuthorBot`, готує Debian із Python 3.11, установлює всі бібліотеки, перевіряє їх та запускає бот. Під час першого входу потрібно ввести дані Telegram. Root і ручне налаштування Debian не потрібні.
+
+На екрані — логотип, **AuthorBot by AuthorChe**, офіційні ресурси й відсотковий прогрес восьми етапів. Відсоток показує завершені етапи, а не прогноз часу: швидкість мережі та встановлення пакетів відрізняється. Технічний вивід зберігається в журналі; у разі невдачі показується коротке повідомлення з його шляхом. Дані Telegram вводяться у тому самому відкритому терміналі після 100%.
+
+Офіційний репозиторій проєкту — **https://github.com/VadymYem/AuthorBot**. Копії для редагування не є джерелом офіційних посилань чи оновлень.
 
 Цей спосіб завантаження призначений для публічного репозиторію. Для приватної копії спочатку клонуйте її через власну Git-автентифікацію, потім виконайте `bash ~/AuthorBot/termux.sh`.
 
@@ -91,7 +103,7 @@ git -C ~/AuthorBot pull --ff-only
 bash ~/AuthorBot/termux.sh
 ```
 
-Сесії та база даних залишаються у `~/AuthorBot`; інсталятор не скидає локальні зміни Git. Вивід встановлення видно в терміналі та записано в `~/authorbot-install.log`. `NO_AUTOSTART=1` вимикає додавання автозапуску до профілю, `AUTHORBOT_INSTALL_ONLY=1` завершує встановлення без запуску бота.
+Сесії та база даних залишаються у `~/AuthorBot`; інсталятор не скидає локальні зміни Git. Повний журнал встановлення — `~/authorbot-install.log`. `NO_AUTOSTART=1` вимикає додавання автозапуску до профілю, `AUTHORBOT_INSTALL_ONLY=1` завершує встановлення без запуску бота. `AUTHORBOT_REPO_URL` дозволяє явно вибрати власну копію при новому клонуванні.
 
 ---
 
@@ -100,7 +112,7 @@ bash ~/AuthorBot/termux.sh
 Production-профіль для Linux/VPS тестується на **Python 3.10 та 3.11**. Для чистої установки:
 
 ```bash
-git clone https://github.com/AuthorGramProject/AuthorBot.git
+git clone https://github.com/VadymYem/AuthorBot.git
 cd AuthorBot
 bash install.sh
 ```

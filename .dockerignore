@@ -107,6 +107,8 @@ celerybeat.pid
 # Environments
 .env
 .venv
+.venv-proot/
+.install-progress*
 env/
 venv/
 ENV/

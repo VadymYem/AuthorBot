@@ -191,3 +191,4 @@ config-*.json.tmp
 
 # Dependency state generated at runtime.
 .requirements_hash
+.install-progress*

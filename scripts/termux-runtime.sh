@@ -6,6 +6,11 @@ APP_DIR=/opt/authorbot
 VPY="$APP_DIR/.venv-proot/bin/python"
 cd "$APP_DIR"
 
+progress() {
+  printf '%s|%s\n' "$1" "$2" >"$APP_DIR/.install-progress.tmp"
+  mv "$APP_DIR/.install-progress.tmp" "$APP_DIR/.install-progress"
+}
+
 case "${1:-}" in
   install)
     # Refuse a reused container with a different distro instead of altering it.
@@ -17,6 +22,7 @@ case "${1:-}" in
     # A failed reinstall must not reuse a success marker from another runtime.
     rm -f "$APP_DIR/.venv-proot/.setup_complete"
     export DEBIAN_FRONTEND=noninteractive
+    progress 4 '4/8 · Системні бібліотеки'
     # PRoot cannot perform a real privilege drop to Debian's _apt account.
     # Keep APT under the emulated guest root; signature verification stays enabled.
     apt-get -o APT::Sandbox::User=root update
@@ -25,13 +31,18 @@ case "${1:-}" in
       python3.11 python3.11-venv python3.11-dev \
       libcairo2-dev libffi-dev libjpeg-dev libwebp-dev zlib1g-dev
     python3.11 -m venv "$APP_DIR/.venv-proot"
+    progress 5 '5/8 · Основні бібліотеки'
     "$VPY" -m pip install --upgrade pip setuptools wheel
     "$VPY" -m pip install -r requirements.txt
+    progress 6 '6/8 · Додаткові бібліотеки'
     "$VPY" -m pip install -r optional_requirements.txt
+    progress 7 '7/8 · Перевірка середовища'
     "$VPY" -m pip check
     "$VPY" scripts/selfcheck.py
     "$VPY" scripts/runtimecheck.py
+    "$VPY" scripts/startupcheck.py
     "$VPY" -m acbot --help >/dev/null
+    "$VPY" -c 'from acbot.runtime_state import mark_dependencies_ready; mark_dependencies_ready()'
     touch "$APP_DIR/.venv-proot/.setup_complete"
     ;;
   run)

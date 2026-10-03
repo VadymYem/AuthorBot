@@ -202,7 +202,7 @@ class acbotInfoMod(loader.Module):
 
         me = f'<b><a href="tg://user?id={self._me.id}">{utils.escape_html(get_display_name(self._me))}</a></b>'
         version = f'<i>{".".join(list(map(str, list(main.__version__))))}</i>'
-        build = f'<a href="https://github.com/AuthorGramProject/AuthorBot/commit/{ver}">#{ver[:8]}</a>'  # fmt: skip
+        build = f'<a href="https://github.com/VadymYem/AuthorBot/commit/{ver}">#{ver[:8]}</a>'  # fmt: skip
         prefix = f"«<code>{utils.escape_html(self.get_prefix())}</code>»"
         platform = utils.get_named_platform()
         uptime = utils.formatted_uptime()

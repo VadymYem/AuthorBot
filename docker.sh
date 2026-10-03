@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-REPO_URL="${AUTHORBOT_REPO_URL:-https://github.com/AuthorGramProject/AuthorBot.git}"
+REPO_URL="${AUTHORBOT_REPO_URL:-https://github.com/VadymYem/AuthorBot.git}"
 APP_DIR="${AUTHORBOT_DIR:-$HOME/AuthorBot}"
 EXTERNAL_PORT="${EXTERNAL_PORT:-8085}"
 BIND_ADDRESS="${BIND_ADDRESS:-127.0.0.1}"

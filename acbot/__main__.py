@@ -1,7 +1,6 @@
 """Entry point. Checks the runtime and starts AuthorBot."""
 
 import getpass
-import hashlib
 import os
 import shutil
 import subprocess
@@ -10,10 +9,10 @@ import traceback
 from pathlib import Path
 
 from ._internal import restart
+from .runtime_state import dependencies_ready, mark_dependencies_ready
 
 ROOT = Path(__file__).resolve().parents[1]
 REQUIREMENTS = ROOT / "requirements.txt"
-REQUIREMENTS_HASH = ROOT / ".requirements_hash"
 
 
 def get_data_root() -> Path:
@@ -66,13 +65,6 @@ def wipe_data():
     raise SystemExit(0)
 
 
-def get_file_hash(path: Path) -> str | None:
-    try:
-        return hashlib.sha256(path.read_bytes()).hexdigest()
-    except FileNotFoundError:
-        return None
-
-
 def deps() -> None:
     """Install core requirements into the interpreter that runs AuthorBot."""
     result = subprocess.run(
@@ -98,10 +90,8 @@ def deps() -> None:
         print(result.stdout)
         raise RuntimeError("Dependency installation failed")
 
-    REQUIREMENTS_HASH.write_text(
-        get_file_hash(REQUIREMENTS) or "",
-        encoding="utf-8",
-    )
+    subprocess.run([sys.executable, "-m", "pip", "check"], check=True)
+    mark_dependencies_ready()
 
 
 def ensure_root_policy() -> None:
@@ -175,16 +165,16 @@ except ImportError:
     traceback.print_exc()
     raise SystemExit(1)
 
-for flag in ("AUTHORBOT_DO_NOT_RESTART", "AUTHORBOT_DO_NOT_RESTART2"):
-    os.environ.pop(flag, None)
-
-previous_hash = None
-if REQUIREMENTS_HASH.exists():
-    previous_hash = REQUIREMENTS_HASH.read_text(encoding="utf-8").strip()
-
-if previous_hash != get_file_hash(REQUIREMENTS):
+if not dependencies_ready():
     print("🔄 requirements.txt changed; updating dependencies...")
     deps()
     restart()
 
-main.acbot.main()
+for flag in ("AUTHORBOT_DO_NOT_RESTART", "AUTHORBOT_DO_NOT_RESTART2"):
+    os.environ.pop(flag, None)
+
+try:
+    main.acbot.main()
+except EOFError:
+    print("\nВвід у терміналі закрито. Запусти authorbot у відкритому Termux, щоб продовжити вхід.")
+    raise SystemExit(2)

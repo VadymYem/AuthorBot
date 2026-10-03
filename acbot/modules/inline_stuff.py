@@ -39,7 +39,7 @@ START_RICH = """<h1>AuthorBot</h1>
 </details>
 
 <tg-button-row align="center">
-<tg-button type="url" style="primary" url="https://github.com/AuthorGramProject/AuthorBot">GitHub</tg-button>
+<tg-button type="url" style="primary" url="https://github.com/VadymYem/AuthorBot">GitHub</tg-button>
 <tg-button type="url" style="success" url="https://authorche.top/ubot.html">Встановити</tg-button>
 </tg-button-row>
 <tg-button-row align="center">
@@ -63,7 +63,7 @@ HELP_RICH = """<h1>AuthorBot • Довідка</h1>
 <blockquote expandable>Встановлені модулі можуть додавати власні публічні inline-команди. Їх доступність визначається самим модулем і політикою безпеки власника userbot.</blockquote>
 
 <tg-button-row align="center">
-<tg-button type="url" style="primary" url="https://github.com/AuthorGramProject/AuthorBot">Документація</tg-button>
+<tg-button type="url" style="primary" url="https://github.com/VadymYem/AuthorBot">Документація</tg-button>
 <tg-button type="url" url="https://t.me/wsinfo">Оновлення</tg-button>
 </tg-button-row>"""
 
@@ -95,7 +95,7 @@ PROJECTS_RICH = """<h1>Проєкти Author C</h1>
 <h2>AuthorBot</h2>
 <p>Модульний Telegram userbot: автоматизація, inline-форми, керування модулями, backup, security, Rich Messages і self-update.</p>
 <tg-button-row>
-<tg-button type="url" style="primary" url="https://github.com/AuthorGramProject/AuthorBot">GitHub</tg-button>
+<tg-button type="url" style="primary" url="https://github.com/VadymYem/AuthorBot">GitHub</tg-button>
 <tg-button type="url" url="https://authorche.top/ubot.html">Сторінка</tg-button>
 </tg-button-row>
 
@@ -122,7 +122,7 @@ FALLBACK = {
         "<b>AuthorBot</b>\n\n"
         "Модульний Telegram userbot від Author C.\n\n"
         "<b>Команди:</b> /start · /help · /about · /projects\n\n"
-        "GitHub: https://github.com/AuthorGramProject/AuthorBot\n"
+        "GitHub: https://github.com/VadymYem/AuthorBot\n"
         "Web: https://authorche.top"
     ),
     "help": (
@@ -278,7 +278,7 @@ class InlineStuff(loader.Module):
 
         keyboard = InlineKeyboardMarkup(row_width=2)
         keyboard.add(
-            InlineKeyboardButton("GitHub", url="https://github.com/AuthorGramProject/AuthorBot"),
+            InlineKeyboardButton("GitHub", url="https://github.com/VadymYem/AuthorBot"),
             InlineKeyboardButton("Website", url="https://authorche.top"),
         )
         await message.answer(

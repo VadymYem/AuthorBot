@@ -46,6 +46,9 @@ jobs:
       - name: Check Termux installer control flow
         run: python scripts/termuxcheck.py
 
+      - name: Verify foreground restart and first interactive login
+        run: python scripts/startupcheck.py
+
       - name: Install and verify optional dependencies
         if: matrix.dependencies == 'full'
         run: |

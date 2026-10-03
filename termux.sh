@@ -2,30 +2,27 @@
 set -euo pipefail
 
 APP_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
-LOG_FILE="${AUTHORBOT_LOG_FILE:-$HOME/authorbot-install.log}"
 PROFILE="${AUTHORBOT_PROFILE:-$HOME/.bash_profile}"
 DISTRO="authorbot"
 MARKER="# >>> AuthorBot autostart >>>"
-
-fail() {
-  printf '\nПомилка встановлення. Журнал: %s\n' "$LOG_FILE" >&2
-}
-trap fail ERR
-run() { "$@" 2>&1 | tee -a "$LOG_FILE"; }
 
 if ! command -v pkg >/dev/null || [ -z "${PREFIX:-}" ]; then
   printf 'Цей інсталятор потрібно запускати у Termux.\n' >&2
   exit 2
 fi
-if [ ! -f "$APP_DIR/scripts/termux-runtime.sh" ]; then
+if [ ! -f "$APP_DIR/scripts/termux-runtime.sh" ] || [ ! -f "$APP_DIR/bootstrap-termux.sh" ]; then
   printf 'Потрібна повна копія репозиторію AuthorBot.\n' >&2
   exit 2
 fi
 
-: >"$LOG_FILE"
-printf 'AuthorBot: Termux → Debian Bookworm → Python 3.11\n\n'
-run pkg update -y
-run pkg install -y git proot-distro
+source "$APP_DIR/bootstrap-termux.sh"
+ui_init
+if [ -z "${AUTHORBOT_BOOTSTRAPPED:-}" ]; then
+  ui_stage 1 '1/8 · Підготовка Termux'
+  ui_run pkg update -y
+  ui_run pkg install -y git proot-distro
+  ui_stage 2 '2/8 · Перевірка AuthorBot'
+fi
 
 # OCI image tags are supported by PRoot-Distro 5 and newer.
 # Some supported releases print help to stderr; capture both streams fully.
@@ -34,16 +31,20 @@ if [[ "$INSTALL_HELP" != *"--name"* ]]; then
   printf 'Онови PRoot-Distro: pkg upgrade proot-distro\n' >&2
   exit 3
 fi
-CONTAINERS="$(proot-distro list --quiet)"
+ui_stage 3 '3/8 · Встановлення Debian'
+CONTAINERS="$(proot-distro list --quiet 2>>"$LOG_FILE")"
 if ! grep -Fxq "$DISTRO" <<< "$CONTAINERS"; then
-  run proot-distro install debian:bookworm --name "$DISTRO"
+  ui_run proot-distro install debian:bookworm --name "$DISTRO"
 fi
 
 # Source and session files stay in the existing Termux checkout.
 # The guest has its own venv; the Termux Python version is irrelevant.
-run proot-distro login --bind "$APP_DIR:/opt/authorbot" "$DISTRO" -- \
+export AUTHORBOT_PROGRESS_FILE="$APP_DIR/.install-progress"
+rm -f "$AUTHORBOT_PROGRESS_FILE"
+ui_run proot-distro login --bind "$APP_DIR:/opt/authorbot" "$DISTRO" -- \
   /bin/bash /opt/authorbot/scripts/termux-runtime.sh install
 
+ui_stage 8 '8/8 · Налаштування запуску'
 LAUNCHER="$PREFIX/bin/authorbot"
 {
   printf '#!%s/bin/bash\n' "$PREFIX"
@@ -55,7 +56,7 @@ chmod 700 "$LAUNCHER"
 
 if [ -z "${NO_AUTOSTART:-}" ]; then
   # Replace only our old managed block and preserve all other profile content.
-  python - "$PROFILE" "$MARKER" <<'PY'
+  python - "$PROFILE" "$MARKER" >>"$LOG_FILE" 2>&1 <<'PY'
 import os
 import sys
 import tempfile
@@ -96,7 +97,8 @@ finally:
 PY
 fi
 
-printf '\nВстановлення завершено. Для наступного запуску: authorbot\n'
+ui_finish
 if [ -z "${AUTHORBOT_INSTALL_ONLY:-}" ]; then
+  # Foreground exec preserves the terminal throughout setup and later restarts.
   exec "$LAUNCHER" "$@"
 fi

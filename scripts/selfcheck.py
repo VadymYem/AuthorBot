@@ -115,6 +115,9 @@ def check_required_files() -> None:
         "assets/bot_pfp.jpg",
         "assets/authorbot_banner.svg",
         "acbot/__main__.py",
+        "acbot/runtime_state.py",
+        "bootstrap-termux.sh",
+        "scripts/startupcheck.py",
         "acbot/inline/rich.py",
     ):
         if not (ROOT / relative).is_file():

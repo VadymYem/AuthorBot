@@ -1,9 +1,7 @@
 import asyncio
-import atexit
 import logging
 import os
 import random
-import signal
 import sys
 from pathlib import Path
 
@@ -29,17 +27,6 @@ def get_startup_callback() -> callable:
     return _restart_process
 
 
-def die():
-    """Platform-dependent way to terminate the current process group."""
-    if "DOCKER" in os.environ:
-        raise SystemExit(0)
-
-    try:
-        os.killpg(os.getpgid(os.getpid()), signal.SIGTERM)
-    except Exception:
-        raise SystemExit(0)
-
-
 def restart():
     if "--sandbox" in sys.argv:
         raise SystemExit(0)
@@ -63,12 +50,9 @@ def restart():
     else:
         os.environ["AUTHORBOT_DO_NOT_RESTART2"] = "1"
 
-    if "DOCKER" in os.environ:
-        atexit.register(_restart_process)
-    else:
-        signal.signal(signal.SIGTERM, _restart_process)
-
-    die()
+    # Replace only AuthorBot. Killing the process group also terminates the
+    # Termux shell/PRoot supervisor and detaches the new process from stdin.
+    _restart_process()
 
 
 def print_banner(banner: str):
