@@ -1,105 +1,99 @@
 #!/data/data/com.termux/files/usr/bin/bash
 set -euo pipefail
 
-APP_DIR="$HOME/AuthorBot"
-REPO_URL="${AUTHORBOT_REPO_URL:-https://github.com/AuthorGramProject/AuthorBot.git}"
-LOG_FILE="$HOME/authorbot-install.log"
-PROFILE="$HOME/.bash_profile"
+APP_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
+LOG_FILE="${AUTHORBOT_LOG_FILE:-$HOME/authorbot-install.log}"
+PROFILE="${AUTHORBOT_PROFILE:-$HOME/.bash_profile}"
+DISTRO="authorbot"
 MARKER="# >>> AuthorBot autostart >>>"
 
-banner_bootstrap() {
-  clear 2>/dev/null || true
-  printf '\033[1;35m'
-  printf '    _         _   _                 ____        _   \n'
-  printf '   / \\  _   _| |_| |__   ___  _ __ | __ )  ___ | |_ \n'
-  printf '  / _ \\| | | | __| `_ \\ / _ \\| `__||  _ \\ / _ \\| __|\n'
-  printf ' / ___ \\ |_| | |_| | | | (_) | |   | |_) | (_) | |_ \n'
-  printf '/_/   \\_\\__,_|\\__|_| |_|\\___/|_|   |____/ \\___/ \\__|\n'
-  printf '\033[0m'
-  printf '                 \033[2mby Author C\033[0m\n\n'
-  printf '\033[0;36mGitHub:\033[0m https://github.com/AuthorGramProject/AuthorBot\n'
-  printf '\033[0;36mWeb:\033[0m    https://authorche.top\n\n'
-}
-
-step() { printf '\033[0;96m%s\033[0m\n' "$1"; }
-ok() { printf '\033[0;32m%s\033[0m\n' "$1"; }
 fail() {
-  printf '\033[1;31m%s\033[0m\n' "$1" >&2
-  [ -f "$LOG_FILE" ] && tail -n 120 "$LOG_FILE" >&2 || true
-  exit "${2:-1}"
+  printf '\nПомилка встановлення. Журнал: %s\n' "$LOG_FILE" >&2
 }
-run() { "$@" >>"$LOG_FILE" 2>&1; }
+trap fail ERR
+run() { "$@" 2>&1 | tee -a "$LOG_FILE"; }
 
-banner_bootstrap
+if ! command -v pkg >/dev/null || [ -z "${PREFIX:-}" ]; then
+  printf 'Цей інсталятор потрібно запускати у Termux.\n' >&2
+  exit 2
+fi
+if [ ! -f "$APP_DIR/scripts/termux-runtime.sh" ]; then
+  printf 'Потрібна повна копія репозиторію AuthorBot.\n' >&2
+  exit 2
+fi
+
 : >"$LOG_FILE"
-step "Installing base packages..."
+printf 'AuthorBot: Termux → Debian Bookworm → Python 3.11\n\n'
 run pkg update -y
-run pkg install -y build-essential ffmpeg git libcairo libffi libjpeg-turbo libwebp ncurses-utils openssl python
-ok "Base packages ready."
+run pkg install -y git proot-distro
 
-step "Preparing source code..."
-if [ -d "$APP_DIR/.git" ]; then
-  run git -C "$APP_DIR" remote set-url origin "$REPO_URL"
-  run git -C "$APP_DIR" fetch --prune origin
-  BRANCH="$(git -C "$APP_DIR" symbolic-ref --quiet --short refs/remotes/origin/HEAD 2>/dev/null | sed 's#^origin/##' || true)"
-  [ -n "$BRANCH" ] || BRANCH="main"
-  run git -C "$APP_DIR" reset --hard "origin/$BRANCH"
-  cd "$APP_DIR"
-  ok "Existing AuthorBot updated; local sessions and database were preserved."
-elif [ -e "$APP_DIR" ]; then
-  fail "$APP_DIR already exists but is not a Git repository. Move it aside before installation." 3
-else
-  run git clone --depth=1 "$REPO_URL" "$APP_DIR" || fail "Source code download failed." 3
-  cd "$APP_DIR"
-  ok "Source code downloaded."
+# OCI image tags are supported by PRoot-Distro 5 and newer.
+if ! proot-distro install --help | grep -q -- '--name'; then
+  printf 'Онови PRoot-Distro: pkg upgrade proot-distro\n' >&2
+  exit 3
 fi
-[ -f assets/download.txt ] && while IFS= read -r line; do printf '%b\n' "$line"; done < assets/download.txt || true
-
-step "Creating isolated Python environment..."
-python -m venv .venv >>"$LOG_FILE" 2>&1 || fail "Could not create virtual environment." 4
-VPY="$APP_DIR/.venv/bin/python"
-run "$VPY" -m pip install --upgrade pip setuptools wheel
-
-step "Installing Pillow and Python requirements..."
-export CFLAGS="-I${PREFIX}/include/"
-if [ "$(uname -m)" = "aarch64" ]; then
-  export LDFLAGS="-L/system/lib64/ -L${PREFIX}/lib"
-else
-  export LDFLAGS="-L/system/lib/ -L${PREFIX}/lib"
+if ! proot-distro list --quiet | grep -Fxq "$DISTRO"; then
+  run proot-distro install debian:bookworm --name "$DISTRO"
 fi
-run "$VPY" -m pip install --upgrade Pillow --no-cache-dir
-run "$VPY" -m pip install --upgrade -r requirements.txt --no-cache-dir --disable-pip-version-check || fail "Requirements installation failed." 5
-if [ -f optional_requirements.txt ]; then
-  run "$VPY" -m pip install --upgrade -r optional_requirements.txt --no-cache-dir --disable-pip-version-check || true
-fi
-run "$VPY" -m pip check || fail "Python dependency conflicts detected." 5
-ok "Python environment ready."
 
-step "Running AuthorBot self-check..."
-run "$VPY" scripts/selfcheck.py || fail "AuthorBot self-check failed." 6
-run "$VPY" scripts/runtimecheck.py || fail "AuthorBot runtime checks failed." 6
-ok "Self-check passed."
-touch .setup_complete
+# Source and session files stay in the existing Termux checkout.
+# The guest has its own venv; the Termux Python version is irrelevant.
+run proot-distro login --bind "$APP_DIR:/opt/authorbot" "$DISTRO" -- \
+  /bin/bash /opt/authorbot/scripts/termux-runtime.sh install
+
+LAUNCHER="$PREFIX/bin/authorbot"
+{
+  printf '#!%s/bin/bash\n' "$PREFIX"
+  printf 'set -euo pipefail\n'
+  printf 'APP_DIR=%q\n' "$APP_DIR"
+  printf 'exec proot-distro login --bind "$APP_DIR:/opt/authorbot" authorbot -- /bin/bash /opt/authorbot/scripts/termux-runtime.sh run "$@"\n'
+} >"$LAUNCHER"
+chmod 700 "$LAUNCHER"
 
 if [ -z "${NO_AUTOSTART:-}" ]; then
-  step "Configuring Termux autostart..."
-  : >"$PREFIX/etc/motd"
-  touch "$PROFILE"
-  if ! grep -Fq "$MARKER" "$PROFILE"; then
-    cat >>"$PROFILE" <<'PROFILE_BLOCK'
+  # Replace only our old managed block and preserve all other profile content.
+  python - "$PROFILE" "$MARKER" <<'PY'
+import os
+import sys
+import tempfile
+from pathlib import Path
 
+path = Path(sys.argv[1])
+start = sys.argv[2]
+end = "# <<< AuthorBot autostart <<<"
+lines = path.read_text(encoding="utf-8").splitlines(keepends=True) if path.exists() else []
+kept = []
+inside = False
+for line in lines:
+    if line.strip() == start:
+        inside = True
+    elif inside and line.strip() == end:
+        inside = False
+    elif not inside:
+        kept.append(line)
+if inside:
+    raise RuntimeError("Незавершений блок AuthorBot у профілі; профіль не змінено")
+block = '''
 # >>> AuthorBot autostart >>>
-if [ -x "$HOME/AuthorBot/.venv/bin/python" ]; then
-  clear
-  [ -x "$HOME/AuthorBot/banner.sh" ] && "$HOME/AuthorBot/banner.sh"
-  cd "$HOME/AuthorBot" || return
-  exec "$HOME/AuthorBot/.venv/bin/python" -m acbot
+if command -v authorbot >/dev/null 2>&1; then
+  authorbot
 fi
 # <<< AuthorBot autostart <<<
-PROFILE_BLOCK
-  fi
-  ok "Autostart enabled without overwriting existing shell profile."
+'''
+path.parent.mkdir(parents=True, exist_ok=True)
+with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", dir=path.parent, delete=False) as handle:
+    temporary = Path(handle.name)
+    handle.write("".join(kept).rstrip("\n") + "\n" + block)
+try:
+    if path.exists():
+        temporary.chmod(path.stat().st_mode & 0o777)
+    os.replace(temporary, path)
+finally:
+    temporary.unlink(missing_ok=True)
+PY
 fi
 
-printf '\n\033[1;32mAuthorBot is starting...\033[0m\n'
-exec "$VPY" -m acbot
+printf '\nВстановлення завершено. Для наступного запуску: authorbot\n'
+if [ -z "${AUTHORBOT_INSTALL_ONLY:-}" ]; then
+  exec "$LAUNCHER" "$@"
+fi

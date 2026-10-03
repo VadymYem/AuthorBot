@@ -60,7 +60,7 @@ def check_shell() -> None:
     bash = shutil.which("bash")
     if not bash:
         return
-    for relative in ("install.sh", "termux.sh", "banner.sh", "docker.sh"):
+    for relative in ("install.sh", "termux.sh", "scripts/termux-runtime.sh", "banner.sh", "docker.sh"):
         path = ROOT / relative
         if not path.exists():
             continue

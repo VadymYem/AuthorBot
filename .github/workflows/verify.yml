@@ -43,6 +43,9 @@ jobs:
       - name: Run repository self-check
         run: python scripts/selfcheck.py
 
+      - name: Check Termux installer control flow
+        run: python scripts/termuxcheck.py
+
       - name: Install and verify optional dependencies
         if: matrix.dependencies == 'full'
         run: |
@@ -79,3 +82,32 @@ jobs:
 
       - name: Verify startup with optional dependencies inside Docker
         run: docker run --rm authorbot-ci python -m acbot --help
+
+  termux-runtime:
+    name: Debian Bookworm runtime through PRoot
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Install PRoot-Distro
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y proot
+          python -m pip install proot-distro
+
+      - name: Install the same Debian image used by Termux
+        run: proot-distro install debian:bookworm --name authorbot
+
+      - name: Verify guest dependencies and offline regression checks
+        run: |
+          proot-distro login --bind "$PWD:/opt/authorbot" authorbot -- /bin/bash /opt/authorbot/scripts/termux-runtime.sh install
+
+      - name: Verify the guest startup command
+        run: |
+          proot-distro login --bind "$PWD:/opt/authorbot" authorbot -- /bin/bash /opt/authorbot/scripts/termux-runtime.sh run --help

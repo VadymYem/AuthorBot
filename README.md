@@ -32,7 +32,7 @@
 | **Дані** | Локальна JSON DB з атомарним записом і backup; optional Redis із fallback на диск |
 | **Оновлення** | Fetch + deterministic reset до upstream branch без merge-conflict loop |
 | **Backup** | Backup/restore конфігурації та модулів |
-| **Termux** | Ізольоване Python virtualenv, autostart, кольоровий banner |
+| **Termux** | Debian Bookworm / Python 3.11 через PRoot, virtualenv, autostart |
 | **Public bot** | `/start`, `/help`, `/about`, `/projects` із Rich Message оформленням |
 
 ### Основний каталог модулів
@@ -49,12 +49,12 @@ https://github.com/hikariatama/host/raw/master
 
 ## Android / Termux
 
-> Потрібен Termux із F-Droid або GitHub releases. Для приватного репозиторію використовуйте налаштовану Git-автентифікацію. Android-сумісність залежить від версії Python і наявності коліс залежностей; серверні перевірки виконуються на Python 3.10–3.11.
+> Потрібен Termux із F-Droid або GitHub releases. Для приватного репозиторію використовуйте налаштовану Git-автентифікацію. Інсталятор використовує Debian Bookworm із Python 3.11 через PRoot-Distro 5+, без root. Системний Python Termux 3.13 не використовується для бота. На перше встановлення потрібні додатковий час і вільне місце для Debian та бібліотек.
 
 ```bash
 termux-wake-lock
 pkg update -y
-pkg install -y wget git python openssl
+pkg install -y git proot-distro
 clear
 git clone https://github.com/AuthorGramProject/AuthorBot.git
 cd AuthorBot
@@ -63,10 +63,10 @@ bash termux.sh
 
 Інсталятор:
 
-- встановлює системні залежності;
-- клонує чистий upstream;
-- створює `.venv`;
-- встановлює Python requirements без забруднення глобального Python;
+- встановлює окреме середовище Debian Bookworm;
+- використовує вже завантажений репозиторій;
+- створює `.venv-proot` із Python 3.11;
+- встановлює основні й додаткові requirements та зупиняється у разі помилки;
 - перевіряє залежності та виконує тести запуску перед стартом;
 - конфігурує Termux autostart;
 - запускає `python -m acbot`.
@@ -74,9 +74,17 @@ bash termux.sh
 Після встановлення:
 
 ```bash
-cd ~/AuthorBot
-./.venv/bin/python -m acbot
+authorbot
 ```
+
+Для оновлення спочатку зупиніть бот, потім:
+
+```bash
+git -C ~/AuthorBot pull --ff-only
+bash ~/AuthorBot/termux.sh
+```
+
+Сесії та база даних залишаються у `~/AuthorBot`; інсталятор не скидає локальні зміни Git. Вивід встановлення видно в терміналі та записано в `~/authorbot-install.log`. `NO_AUTOSTART=1` вимикає додавання автозапуску до профілю, `AUTHORBOT_INSTALL_ONLY=1` завершує встановлення без запуску бота.
 
 ---
 

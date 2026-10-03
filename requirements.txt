@@ -19,4 +19,4 @@ redis>=5.0,<7
 pydub==0.25.1
 
 # Server/VPS production runtime: Python 3.10-3.11.
-# Termux uses the current Termux Python and builds Android wheels locally.
+# Termux uses Debian Bookworm / Python 3.11 through PRoot-Distro.
