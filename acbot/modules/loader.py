@@ -35,7 +35,9 @@ from ..compat import geek
 from ..inline.types import InlineCall
 from ..types import CoreOverwriteError, CoreUnloadError
 
-logger = logging.getLogger(__name__)\n\nDEFAULT_MODULES_REPO = "https://github.com/hikariatama/host/raw/master"
+logger = logging.getLogger(__name__)
+
+DEFAULT_MODULES_REPO = "https://github.com/hikariatama/host/raw/master"
 
 
 class FakeOne:

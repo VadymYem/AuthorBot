@@ -100,10 +100,9 @@ class APIRatelimiterMod(loader.Module):
                     ]
                 ),
                 on_change=lambda: self._client.forbid_constructors(
-                    map(
-                        lambda x: CONSTRUCTORS[x],
-                        self.config["forbidden_constructors"],
-                    )
+                    CONSTRUCTORS[name]
+                    for name in self.config["forbidden_methods"]
+                    if name in CONSTRUCTORS
                 ),
             ),
         )
@@ -173,9 +172,10 @@ class APIRatelimiterMod(loader.Module):
                             ),
                         )
 
-                        # It is intented to use time.sleep instead of asyncio.sleep
-                        time.sleep(int(self.config["local_floodwait"]))
-                        self._lock = False
+                        try:
+                            await asyncio.sleep(int(self.config["local_floodwait"]))
+                        finally:
+                            self._lock = False
 
             return await old_call(sender, request, ordered, flood_sleep_threshold)
 
@@ -211,36 +211,32 @@ class APIRatelimiterMod(loader.Module):
         )
 
     @property
-    def _debugger(self) -> WebDebugger:
-        return logging.getLogger().handlers[0].web_debugger
-
-    async def _show_pin(self, call: InlineCall):
-        await call.answer(f"Werkzeug PIN: {self._debugger.pin}", show_alert=True)
+    def _debugger(self) -> typing.Optional[WebDebugger]:
+        handler = next(
+            (
+                handler
+                for handler in logging.getLogger().handlers
+                if hasattr(handler, "web_debugger")
+            ),
+            None,
+        )
+        return getattr(handler, "web_debugger", None)
 
     @loader.command()
     async def debugger(self, message: Message):
-        if not self._debugger:
+        """— show the local read-only traceback viewer, if enabled."""
+        debugger = self._debugger
+        if not debugger:
             await utils.answer(message, self.strings("debugger_disabled"))
             return
 
-        await self.inline.form(
-            message=message,
-            text=self.strings("web_pin"),
-            reply_markup=[
-                [
-                    {
-                        "text": self.strings("web_pin_btn"),
-                        "callback": self._show_pin,
-                    }
-                ],
-                [
-                    {"text": self.strings("proxied_url"), "url": self._debugger.url},
-                    {
-                        "text": self.strings("local_url"),
-                        "url": f"http://127.0.0.1:{self._debugger.port}",
-                    },
-                ],
-            ],
+        await utils.answer(
+            message,
+            (
+                "<b>🐞 Local traceback viewer</b>\n\n"
+                f"<code>{utils.escape_html(debugger.url)}</code>\n"
+                "<i>It is bound to 127.0.0.1 and does not allow Python evaluation.</i>"
+            ),
         )
 
     async def _finish(self, call: InlineCall):

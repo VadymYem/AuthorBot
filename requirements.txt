@@ -5,16 +5,17 @@ aiofiles==24.1.0
 gitpython==3.1.50
 meval==2.5
 aiohttp_jinja2==1.5
-aiohttp==3.8.3
-Jinja2==3.0.3
-requests==2.32.3
+aiohttp==3.8.6
+Jinja2==3.1.6
+requests==2.33.1
 aiogram==2.25.2
 grapheme==0.6.0
 emoji>=1.7
-werkzeug==2.2.2
+werkzeug==2.2.3
 rsa==4.9
 ruamel.yaml==0.17.21
 certifi>=2024.8.30
 redis>=5.0,<7
 
-# Python 3.10+
+# Server/VPS production runtime: Python 3.10-3.11.
+# Termux uses the current Termux Python and builds Android wheels locally.

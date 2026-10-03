@@ -6,10 +6,11 @@
 
 ### Telegram userbot, built around modules, automation and modern Telegram UI
 
-[![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![Python](https://img.shields.io/badge/Server_Python-3.10–3.11-3776AB?logo=python&logoColor=white)](https://www.python.org/)
 [![Telegram](https://img.shields.io/badge/Telegram-MTProto%20%2B%20Bot%20API-26A5E4?logo=telegram&logoColor=white)](https://core.telegram.org/)
 [![License](https://img.shields.io/badge/License-AGPLv3-663399)](LICENSE)
-[![Rich Messages](https://img.shields.io/badge/Rich%20Messages-Bot%20API%2010.x-111827)](https://core.telegram.org/bots/api#rich-messages)\n[![Verify](https://github.com/VadymYem/AuthorBot/actions/workflows/verify.yml/badge.svg)](https://github.com/VadymYem/AuthorBot/actions/workflows/verify.yml)
+[![Rich Messages](https://img.shields.io/badge/Rich%20Messages-Bot%20API%2010.x-111827)](https://core.telegram.org/bots/api#rich-messages)
+[![Verify](https://github.com/VadymYem/AuthorBot/actions/workflows/verify.yml/badge.svg)](https://github.com/VadymYem/AuthorBot/actions/workflows/verify.yml)
 
 **AuthorBot** — модульний Telegram userbot від **Author C**.  
 Працює як розширення вашого Telegram-акаунта та окремий inline/public bot-інтерфейс.
@@ -78,11 +79,21 @@ cd ~/AuthorBot
 
 ## Linux / VPS
 
+Production-профіль для Linux/VPS тестується на **Python 3.10 та 3.11**. Для чистої установки:
+
 ```bash
 git clone https://github.com/VadymYem/AuthorBot.git
 cd AuthorBot
 bash install.sh
 ```
+
+### Docker
+
+```bash
+bash docker.sh
+```
+
+Docker за замовчуванням публікує web UI тільки на `127.0.0.1:8085` і генерує окремий випадковий пароль у приватному `.env`. Для свідомого зовнішнього bind встановіть `BIND_ADDRESS=0.0.0.0` та використовуйте сильний `AUTHORBOT_WEB_PASSWORD`.
 
 ---
 
@@ -107,7 +118,7 @@ author_<random>_off_AC_bot
 
 ## Telegram Rich Messages
 
-AuthorBot не прив’язує Rich Messages до старої версії aiogram. Для нових Bot API методів є окремий transport:
+AuthorBot має окремий transport для сучасних Rich Message методів Bot API, тому підтримка `sendRichMessage` і `sendRichMessageDraft` не залежить від можливостей старого inline framework:
 
 ```python
 await self.inline.rich.send(

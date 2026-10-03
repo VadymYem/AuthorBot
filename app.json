@@ -1,36 +1,29 @@
 {
-    "name": "AuthorBot",
-    "description": "Telegram userbot",
-    "logo": "https://raw.githubusercontent.com/VadymYem/AuthorBot/main/assets/bot_pfp.jpg",
-    "keywords": [
-        "telegram",
-        "userbot"
-    ],
-    "env": {
-        "heroku_api_token": {
-            "description": "Heroku API Token. You can get one at https://dashboard.heroku.com/account"
-        }
+  "name": "AuthorBot",
+  "description": "Modular Telegram userbot by Author C",
+  "logo": "https://raw.githubusercontent.com/VadymYem/AuthorBot/main/assets/bot_pfp.jpg",
+  "keywords": [
+    "telegram",
+    "userbot",
+    "automation",
+    "rich-messages"
+  ],
+  "env": {
+    "AUTHORBOT_WEB_USER": {
+      "description": "Username for AuthorBot web authentication",
+      "value": "authorbot"
     },
-    "addons": [
-        {
-            "plan": "heroku-postgresql"
-        }
-    ],
-    "buildpacks": [
-        {
-            "url": "https://github.com/heroku/heroku-buildpack-python"
-        },
-        {
-            "url": "https://github.com/hikariatama/heroku-buildpack"
-        },
-        {
-            "url": "https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest"
-        },
-        {
-            "url": "https://github.com/jontewks/puppeteer-heroku-buildpack"
-        },
-        {
-            "url": "https://github.com/heroku/heroku-buildpack-apt"
-        }
-    ]
+    "AUTHORBOT_WEB_PASSWORD": {
+      "description": "Password for AuthorBot web authentication",
+      "generator": "secret"
+    }
+  },
+  "buildpacks": [
+    {
+      "url": "https://github.com/heroku/heroku-buildpack-apt"
+    },
+    {
+      "url": "heroku/python"
+    }
+  ]
 }

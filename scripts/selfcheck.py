@@ -75,6 +75,32 @@ def check_shell() -> None:
             ERRORS.append(f"Shell: {relative}: {output}")
 
 
+
+def check_brand_assets() -> None:
+    for relative in (
+        "assets/acbot_pfp.jpg",
+        "assets/bot_pfp.jpg",
+        "assets/authorbot_banner.jpg",
+    ):
+        path = ROOT / relative
+        if not path.is_file():
+            ERRORS.append(f"Missing branding asset: {relative}")
+            continue
+
+        try:
+            data = path.read_bytes()
+        except OSError as exc:
+            ERRORS.append(f"Branding asset: {relative}: {exc}")
+            continue
+
+        if len(data) < 4096:
+            ERRORS.append(f"Branding asset is unexpectedly small: {relative}")
+        if not data.startswith(b"\xff\xd8"):
+            ERRORS.append(f"Branding asset is not a JPEG: {relative}")
+        if not data.endswith(b"\xff\xd9"):
+            ERRORS.append(f"Branding asset is truncated: {relative}")
+
+
 def check_required_files() -> None:
     for relative in (
         "requirements.txt",
@@ -94,6 +120,7 @@ def main() -> int:
     check_json()
     check_shell()
     check_required_files()
+    check_brand_assets()
 
     if ERRORS:
         print("AuthorBot self-check failed:", file=sys.stderr)

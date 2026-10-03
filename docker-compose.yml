@@ -3,15 +3,21 @@ services:
     build:
       context: .
     restart: unless-stopped
+    init: true
     stop_signal: SIGINT
+    stop_grace_period: 30s
     stdin_open: true
     tty: true
     ports:
-      - "${EXTERNAL_PORT:-8085}:8080"
+      - "${BIND_ADDRESS:-127.0.0.1}:${EXTERNAL_PORT:-8085}:8080"
     volumes:
       - authorbot-data:/data
     environment:
       DOCKER: "1"
+      AUTHORBOT_WEB_BIND: "0.0.0.0"
+      AUTHORBOT_WEB_USER: "${AUTHORBOT_WEB_USER:-authorbot}"
+      AUTHORBOT_WEB_PASSWORD: "${AUTHORBOT_WEB_PASSWORD:-}"
+      AUTHORBOT_PUBLIC_URL: "${AUTHORBOT_PUBLIC_URL:-}"
     command:
       - python
       - -m

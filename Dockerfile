@@ -1,4 +1,4 @@
-FROM python:3.13-slim-bookworm
+FROM python:3.11-slim-bookworm
 
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
@@ -23,7 +23,8 @@ WORKDIR /app
 COPY requirements.txt optional_requirements.txt ./
 RUN python -m pip install --upgrade pip setuptools wheel \
     && python -m pip install -r requirements.txt \
-    && (python -m pip install -r optional_requirements.txt || true)
+    && (python -m pip install -r optional_requirements.txt || true) \
+    && python -m pip check
 
 COPY . .
 

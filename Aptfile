@@ -1,1 +1,6 @@
-nodejs
+ffmpeg
+libcairo2
+libffi-dev
+libjpeg-dev
+libwebp-dev
+openssh-client

@@ -40,9 +40,9 @@ Do not include live tokens, session files, passwords, API hashes or private data
 
 ## Web setup
 
-On the first initialization, when no Telegram account is attached yet, the web setup is protected with HTTP Basic authentication. AuthorBot generates a high-entropy one-time startup password unless `AUTHORBOT_WEB_USER` and `AUTHORBOT_WEB_PASSWORD` are provided explicitly.
+The web UI is always protected with HTTP Basic authentication, including after a Telegram account has been initialized. Telegram confirmation is an additional authorization layer, not a replacement for HTTP authentication. AuthorBot generates a high-entropy startup password when `AUTHORBOT_WEB_PASSWORD` is not configured.
 
-After an account is initialized, sensitive web operations continue to use the Telegram confirmation flow. Browser session cookies are HttpOnly, SameSite=Strict, time-limited, and marked Secure when the request is delivered over HTTPS.
+Docker publishes the web UI on `127.0.0.1` by default. External binding must be enabled explicitly. Browser session cookies are HttpOnly, SameSite=Strict, time-limited, and marked Secure when the request is delivered over HTTPS.
 
 ## Debugger
 

@@ -24,7 +24,6 @@ import inspect
 import logging
 import os
 import secrets
-import subprocess
 
 import aiohttp_jinja2
 import jinja2
@@ -45,10 +44,11 @@ class Web(root.Web):
         self.running = asyncio.Event()
         self.ready = asyncio.Event()
         self.client_data = {}
-        self._setup_web_user = os.environ.get("AUTHORBOT_WEB_USER", "authorbot")
-        self._setup_web_password = os.environ.get("AUTHORBOT_WEB_PASSWORD") or secrets.token_urlsafe(18)
+        self._setup_web_user = os.environ.get("AUTHORBOT_WEB_USER", "authorbot").strip() or "authorbot"
+        configured_password = os.environ.get("AUTHORBOT_WEB_PASSWORD", "").strip()
+        self._setup_web_password = configured_password or secrets.token_urlsafe(18)
 
-        if "AUTHORBOT_WEB_PASSWORD" not in os.environ:
+        if not configured_password:
             print(
                 "\n🔐 First-run AuthorBot web authentication\n"
                 f"User: {self._setup_web_user}\n"
@@ -57,12 +57,9 @@ class Web(root.Web):
             )
 
         @web.middleware
-        async def first_setup_auth(request, handler):
-            # Once at least one Telegram account is initialized, AuthorBot's
-            # Telegram-confirmation flow is the primary authorization layer.
-            if self.client_data:
-                return await handler(request)
-
+        async def web_basic_auth(request, handler):
+            # Web UI always stays behind Basic Auth. Telegram confirmation is an
+            # additional authorization layer, not a replacement for HTTP auth.
             header = request.headers.get("Authorization", "")
             if header.startswith("Basic "):
                 try:
@@ -86,7 +83,7 @@ class Web(root.Web):
                 },
             )
 
-        self.app = web.Application(middlewares=[first_setup_auth])
+        self.app = web.Application(middlewares=[web_basic_auth])
         self.proxypasser = proxypass.ProxyPasser()
         aiohttp_jinja2.setup(
             self.app,
@@ -112,41 +109,45 @@ class Web(root.Web):
             self.ready.set()
 
     async def get_url(self, proxy_pass: bool) -> str:
-        url = None
+        explicit_url = os.environ.get("AUTHORBOT_PUBLIC_URL", "").strip()
+        if explicit_url:
+            self.url = explicit_url.rstrip("/")
+            return self.url
 
         if all(option in os.environ for option in {"LAVHOST", "USER", "SERVER"}):
-            return f"https://{os.environ['USER']}.{os.environ['SERVER']}.lavhost.ml"
+            self.url = f"https://{os.environ['USER']}.{os.environ['SERVER']}.lavhost.ml"
+            return self.url
 
         if proxy_pass:
-            with contextlib.suppress(Exception):
+            try:
                 url = await asyncio.wait_for(
                     self.proxypasser.get_url(self.port),
-                    timeout=10,
+                    timeout=20,
                 )
+            except Exception:
+                logger.warning("Unable to obtain reverse-tunnel URL", exc_info=True)
+            else:
+                if url:
+                    self.url = url
+                    return url
 
-        if not url:
-            ip = (
-                "127.0.0.1"
-                if "DOCKER" not in os.environ
-                else subprocess.run(
-                    ["hostname", "-i"],
-                    stdout=subprocess.PIPE,
-                    check=True,
-                )
-                .stdout.decode("utf-8")
-                .strip()
-            )
+        host = os.environ.get("AUTHORBOT_WEB_BIND", "").strip()
+        if not host:
+            host = "0.0.0.0" if "DOCKER" in os.environ else "127.0.0.1"
 
-            url = f"http://{ip}:{self.port}"
-
-        self.url = url
-        return url
+        display_host = "127.0.0.1" if host in {"0.0.0.0", "::"} else host
+        self.url = f"http://{display_host}:{self.port}"
+        return self.url
 
     async def start(self, port: int, proxy_pass: bool = False):
         self.runner = web.AppRunner(self.app)
         await self.runner.setup()
         self.port = os.environ.get("PORT", port)
-        site = web.TCPSite(self.runner, None, self.port)
+        host = os.environ.get("AUTHORBOT_WEB_BIND", "").strip()
+        if not host:
+            host = "0.0.0.0" if "DOCKER" in os.environ else "127.0.0.1"
+
+        site = web.TCPSite(self.runner, host, self.port)
         await site.start()
 
         await self.get_url(proxy_pass)
