@@ -104,6 +104,8 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y build-essential libtalloc-dev
           git clone --depth 1 --branch v5.1.107.96 https://github.com/termux/proot.git "$RUNNER_TEMP/authorbot-proot"
+          # This job runs a native 64-bit guest and needs only the native loader.
+          sed -i '/#define HAS_LOADER_32BIT true/d' "$RUNNER_TEMP/authorbot-proot/src/arch.h"
           make -C "$RUNNER_TEMP/authorbot-proot/src" -j2
           sudo install -m755 "$RUNNER_TEMP/authorbot-proot/src/proot" /usr/local/bin/proot
           python -m pip install proot-distro

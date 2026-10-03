@@ -14,6 +14,8 @@ case "${1:-}" in
       printf 'Потрібен Debian Bookworm; отримано %s.\n' "${PRETTY_NAME:-unknown}" >&2
       exit 3
     fi
+    # A failed reinstall must not reuse a success marker from another runtime.
+    rm -f "$APP_DIR/.venv-proot/.setup_complete"
     export DEBIAN_FRONTEND=noninteractive
     # PRoot cannot perform a real privilege drop to Debian's _apt account.
     # Keep APT under the emulated guest root; signature verification stays enabled.
@@ -30,11 +32,11 @@ case "${1:-}" in
     "$VPY" scripts/selfcheck.py
     "$VPY" scripts/runtimecheck.py
     "$VPY" -m acbot --help >/dev/null
-    touch .setup_complete
+    touch "$APP_DIR/.venv-proot/.setup_complete"
     ;;
   run)
     shift
-    if [ ! -x "$VPY" ] || [ ! -f .setup_complete ]; then
+    if [ ! -x "$VPY" ] || [ ! -f "$APP_DIR/.venv-proot/.setup_complete" ]; then
       printf 'Спочатку виконай bash termux.sh у Termux.\n' >&2
       exit 4
     fi
