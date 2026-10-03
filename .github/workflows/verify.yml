@@ -102,7 +102,10 @@ jobs:
       - name: Install PRoot-Distro
         run: |
           sudo apt-get update
-          sudo apt-get install -y proot
+          sudo apt-get install -y build-essential libtalloc-dev
+          git clone --depth 1 --branch v5.1.107.96 https://github.com/termux/proot.git "$RUNNER_TEMP/authorbot-proot"
+          make -C "$RUNNER_TEMP/authorbot-proot/src" -j2
+          sudo install -m755 "$RUNNER_TEMP/authorbot-proot/src/proot" /usr/local/bin/proot
           python -m pip install proot-distro
 
       - name: Install the same Debian image used by Termux
@@ -110,7 +113,6 @@ jobs:
 
       - name: Verify Debian archive keyring
         run: |
-          proot-distro login authorbot -- /bin/ls -l /usr/share/keyrings/debian-archive-keyring.gpg
           proot-distro login authorbot -- /usr/bin/apt-get -o APT::Sandbox::User=root -o Debug::Acquire::gpgv=true update
 
       - name: Verify guest dependencies and offline regression checks
