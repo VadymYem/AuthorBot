@@ -41,6 +41,7 @@ class TermuxInstallerTests(unittest.TestCase):
         self.env.pop("NO_AUTOSTART", None)
         mock = f"#!{sys.executable}\n" + '''import json, os, sys
 from pathlib import Path
+import shutil
 name = Path(sys.argv[0]).name
 args = sys.argv[1:]
 with open(os.environ["MOCK_CALLS"], "a", encoding="utf-8") as log:
@@ -48,9 +49,21 @@ with open(os.environ["MOCK_CALLS"], "a", encoding="utf-8") as log:
 if name == "pkg" and os.environ.get("MOCK_FAIL_PKG"):
     print("package failure")
     sys.exit(7)
+if name == "git":
+    if os.environ.get("MOCK_FAIL_GIT"):
+        print("git failure")
+        sys.exit(9)
+    if args and args[0] == "clone":
+        destination = Path(args[-1])
+        shutil.copytree(os.environ["MOCK_BOOTSTRAP_SOURCE"], destination)
+        (destination / ".git").mkdir()
 if name == "proot-distro":
     if args == ["install", "--help"]:
-        print("--name NAME")
+        stream = sys.stderr if os.environ.get("MOCK_HELP_STDERR") else sys.stdout
+        print("--name NAME", file=stream)
+        if os.environ.get("MOCK_LONG_HELP"):
+            print("x" * 200000, file=stream)
+        sys.exit(int(os.environ.get("MOCK_HELP_STATUS", "0")))
     elif args == ["list", "--quiet"]:
         if os.environ.get("MOCK_EXISTING"):
             print("authorbot")
@@ -58,7 +71,7 @@ if name == "proot-distro":
         print("dependency failure")
         sys.exit(8)
 '''
-        for name in ("pkg", "proot-distro"):
+        for name in ("pkg", "proot-distro", "git"):
             path = self.bin / name
             path.write_text(mock, encoding="utf-8")
             path.chmod(0o700)
@@ -69,6 +82,46 @@ if name == "proot-distro":
 
     def recorded(self):
         return [json.loads(line) for line in self.calls.read_text().splitlines()]
+
+    def bootstrap(self):
+        return subprocess.run(["bash", str(ROOT / "bootstrap-termux.sh")],
+                              env=self.env, capture_output=True, text=True)
+
+    def test_bootstrap_installs_into_a_new_checkout(self):
+        destination = self.app.parent / "new checkout"
+        self.env["AUTHORBOT_APP_DIR"] = str(destination)
+        self.env["MOCK_BOOTSTRAP_SOURCE"] = str(self.app)
+        result = self.bootstrap()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertTrue((destination / ".git").is_dir())
+        self.assertTrue((self.bin / "authorbot").exists())
+        self.assertTrue(any(call[:2] == ["git", "clone"] for call in self.recorded()))
+
+    def test_bootstrap_updates_existing_checkout_without_reset(self):
+        (self.app / ".git").mkdir()
+        self.env["AUTHORBOT_APP_DIR"] = str(self.app)
+        result = self.bootstrap()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn(["git", "-C", str(self.app), "fetch", "origin", "main"], self.recorded())
+        self.assertIn(["git", "-C", str(self.app), "merge", "--ff-only", "origin/main"], self.recorded())
+        self.assertFalse(any("reset" in call for call in self.recorded()))
+
+    def test_bootstrap_stops_on_git_failure(self):
+        (self.app / ".git").mkdir()
+        self.env["AUTHORBOT_APP_DIR"] = str(self.app)
+        self.env["MOCK_FAIL_GIT"] = "1"
+        result = self.bootstrap()
+        self.assertNotEqual(result.returncode, 0)
+        self.assertFalse((self.bin / "authorbot").exists())
+        self.assertEqual(self.profile.read_text(), "export KEEP_ME=yes\n")
+
+    def test_bootstrap_preserves_existing_non_repository_directory(self):
+        self.env["AUTHORBOT_APP_DIR"] = str(self.app)
+        result = self.bootstrap()
+        self.assertNotEqual(result.returncode, 0)
+        self.assertTrue((self.app / "termux.sh").is_file())
+        self.assertFalse((self.app / ".git").exists())
+        self.assertFalse(any(call[0] == "git" for call in self.recorded()))
 
     def test_new_install_and_launcher_preserve_path_and_arguments(self):
         result = self.install()
@@ -86,6 +139,23 @@ if name == "proot-distro":
         self.env["MOCK_EXISTING"] = "1"
         self.assertEqual(self.install().returncode, 0)
         self.assertFalse(any(call[:3] == ["proot-distro", "install", "debian:bookworm"] for call in self.recorded()))
+
+    def test_supported_help_on_stderr_is_accepted(self):
+        self.env["MOCK_HELP_STDERR"] = "1"
+        result = self.install()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertTrue((self.bin / "authorbot").exists())
+
+    def test_long_help_does_not_trigger_pipefail(self):
+        self.env["MOCK_LONG_HELP"] = "1"
+        result = self.install()
+        self.assertEqual(result.returncode, 0, result.stderr)
+
+    def test_help_exit_status_does_not_hide_supported_option(self):
+        self.env["MOCK_HELP_STDERR"] = "1"
+        self.env["MOCK_HELP_STATUS"] = "1"
+        result = self.install()
+        self.assertEqual(result.returncode, 0, result.stderr)
 
     def test_package_failure_stops_before_guest_and_profile_changes(self):
         self.env["MOCK_FAIL_PKG"] = "1"

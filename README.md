@@ -52,14 +52,21 @@ https://github.com/hikariatama/host/raw/master
 > Потрібен Termux із F-Droid або GitHub releases. Для приватного репозиторію використовуйте налаштовану Git-автентифікацію. Інсталятор використовує Debian Bookworm із Python 3.11 через PRoot-Distro 5+, без root. Системний Python Termux 3.13 не використовується для бота. На перше встановлення потрібні додатковий час і вільне місце для Debian та бібліотек.
 
 ```bash
-termux-wake-lock
-pkg update -y
-pkg install -y git proot-distro
-clear
-git clone https://github.com/AuthorGramProject/AuthorBot.git
-cd AuthorBot
-bash termux.sh
+(
+  set -e
+  termux-wake-lock
+  pkg update -y
+  pkg install -y curl
+  installer="$(mktemp "$PREFIX/tmp/authorbot-bootstrap.XXXXXX")"
+  trap 'rm -f "$installer"' EXIT
+  curl -fL --retry 3 https://raw.githubusercontent.com/AuthorGramProject/AuthorBot/main/bootstrap-termux.sh -o "$installer"
+  bash "$installer"
+)
 ```
+
+Вставте блок після появи запрошення `~ $` і дочекайтеся завершення. Він автоматично встановлює Git і PRoot-Distro, клонує або оновлює `~/AuthorBot`, готує Debian із Python 3.11, установлює всі бібліотеки, перевіряє їх та запускає бот. Під час першого входу потрібно ввести дані Telegram. Root і ручне налаштування Debian не потрібні.
+
+Цей спосіб завантаження призначений для публічного репозиторію. Для приватної копії спочатку клонуйте її через власну Git-автентифікацію, потім виконайте `bash ~/AuthorBot/termux.sh`.
 
 Інсталятор:
 

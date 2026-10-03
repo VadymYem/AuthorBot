@@ -28,11 +28,14 @@ run pkg update -y
 run pkg install -y git proot-distro
 
 # OCI image tags are supported by PRoot-Distro 5 and newer.
-if ! proot-distro install --help | grep -q -- '--name'; then
+# Some supported releases print help to stderr; capture both streams fully.
+INSTALL_HELP="$(proot-distro install --help 2>&1 || true)"
+if [[ "$INSTALL_HELP" != *"--name"* ]]; then
   printf 'Онови PRoot-Distro: pkg upgrade proot-distro\n' >&2
   exit 3
 fi
-if ! proot-distro list --quiet | grep -Fxq "$DISTRO"; then
+CONTAINERS="$(proot-distro list --quiet)"
+if ! grep -Fxq "$DISTRO" <<< "$CONTAINERS"; then
   run proot-distro install debian:bookworm --name "$DISTRO"
 fi
 
