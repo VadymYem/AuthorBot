@@ -392,6 +392,7 @@ updater:
   restarting_caption: "<emoji document_id=5328274090262275771>🕗</emoji> <b>Your AuthorBot is restarting...</b>"
   downloading: "<emoji document_id=5328274090262275771>🕗</emoji> <b>Downloading updates...</b>"
   installing: "<emoji document_id=5328274090262275771>🕗</emoji> <b>Installing updates...</b>"
+  update_failed: "❌ <b>Update failed and was rolled back safely.</b>\n<i>The previous AuthorBot version was preserved. Check logs before retrying.</i>"
   success: "<emoji document_id=5326015457155620929>⏱</emoji> <b>Restart successful! {}</b>\n<i>But still loading modules...</i>\n<i>Restart took {}s</i>"
   origin_cfg_doc: "Git origin URL, for where to update from"
   btn_restart: "🔄 Restart"

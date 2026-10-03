@@ -4,7 +4,7 @@ preview = true
 
 [tool.poetry]
 name = "acbot"
-version = "1.10.5"
+version = "1.10.6"
 description = "Modular Telegram userbot by Author C"
 authors = ["Author C <https://authorche.top>"]
 license = "AGPL-3.0-only"

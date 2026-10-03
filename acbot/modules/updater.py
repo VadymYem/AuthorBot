@@ -35,6 +35,7 @@ class UpdaterMod(loader.Module):
     strings = {"name": "Updater"}
 
     def __init__(self):
+        self._pre_update_commit = None
         self.config = loader.ModuleConfig(
             loader.ConfigValue(
                 "GIT_ORIGIN_URL",
@@ -184,6 +185,7 @@ class UpdaterMod(loader.Module):
         # replaced by the upstream state; user data and untracked modules are not
         # removed.
         previous_commit = repo.head.commit.hexsha if repo.head.is_valid() else None
+        self._pre_update_commit = previous_commit
         repo.git.checkout("-B", target.remote_head, target.commit.hexsha)
         repo.git.reset("--hard", target.commit.hexsha)
 
@@ -200,6 +202,7 @@ class UpdaterMod(loader.Module):
                 logger.error("Downloaded update failed self-check:\n%s", check.stdout)
                 if previous_commit:
                     repo.git.reset("--hard", previous_commit)
+                self._pre_update_commit = None
                 raise GitCommandError(
                     "selfcheck",
                     check.returncode,
@@ -211,32 +214,61 @@ class UpdaterMod(loader.Module):
 
     @staticmethod
     def req_common():
-        """Install dependencies into the interpreter that currently runs AuthorBot."""
+        """Install required dependencies; optional ones stay best-effort."""
         logger.debug("Installing updated requirements...")
         root = os.path.dirname(utils.get_base_dir())
-        files = [
-            os.path.join(root, "requirements.txt"),
-            os.path.join(root, "optional_requirements.txt"),
-        ]
-        try:
-            for requirements in files:
-                if not os.path.isfile(requirements):
-                    continue
-                subprocess.run(
-                    [
-                        sys.executable,
-                        "-m",
-                        "pip",
-                        "install",
-                        "--upgrade",
-                        "-r",
-                        requirements,
-                        "--disable-pip-version-check",
-                    ],
-                    check=True,
+        required = os.path.join(root, "requirements.txt")
+        optional = os.path.join(root, "optional_requirements.txt")
+
+        if os.path.isfile(required):
+            subprocess.run(
+                [
+                    sys.executable,
+                    "-m",
+                    "pip",
+                    "install",
+                    "--upgrade",
+                    "-r",
+                    required,
+                    "--disable-pip-version-check",
+                ],
+                check=True,
+            )
+
+        if os.path.isfile(optional):
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    "-m",
+                    "pip",
+                    "install",
+                    "--upgrade",
+                    "-r",
+                    optional,
+                    "--disable-pip-version-check",
+                ],
+                check=False,
+            )
+            if result.returncode:
+                logger.warning(
+                    "Some optional dependencies could not be installed; "
+                    "core update remains valid"
                 )
-        except subprocess.CalledProcessError:
-            logger.exception("Requirements installation failed")
+
+    def _rollback_update(self):
+        """Restore the pre-update commit after a failed dependency step."""
+        previous = self._pre_update_commit
+        self._pre_update_commit = None
+        if not previous:
+            return
+
+        try:
+            repo = Repo(os.path.dirname(utils.get_base_dir()))
+            repo.git.reset("--hard", previous)
+            logger.warning("Rolled AuthorBot back to %s", previous[:8])
+        except Exception:
+            logger.exception("Failed to roll AuthorBot back to %s", previous[:8])
+
 
     @loader.command()
     async def update(self, message: Message):
@@ -276,9 +308,9 @@ class UpdaterMod(loader.Module):
         msg_obj: typing.Union[InlineCall, Message],
         hard: bool = False,
     ):
-        # We don't really care about asyncio at this point, as we are shutting down
+        # Kept for callback compatibility with older versions.
         if hard:
-            os.system(f"cd {utils.get_base_dir()} && cd .. && git reset --hard HEAD")
+            logger.warning("Legacy hard-update fallback requested")
 
         try:
             if "LAVHOST" in os.environ:
@@ -296,7 +328,7 @@ class UpdaterMod(loader.Module):
                     ),
                 )
                 await self.process_restart_message(msg_obj)
-                os.system("lavhost update")
+                subprocess.run(["lavhost", "update"], check=False)
                 return
 
             with contextlib.suppress(Exception):
@@ -310,13 +342,18 @@ class UpdaterMod(loader.Module):
             if req_update:
                 self.req_common()
 
+            self._pre_update_commit = None
             await self.restart_common(msg_obj)
+        except subprocess.CalledProcessError:
+            self._rollback_update()
+            logger.exception("Required dependency installation failed; update rolled back")
+            with contextlib.suppress(Exception):
+                await utils.answer(msg_obj, self.strings("update_failed"))
         except GitCommandError:
-            if not hard:
-                await self.inline_update(msg_obj, True)
-                return
-
-            logger.critical("Got update loop. Update manually via .terminal")
+            self._rollback_update()
+            logger.exception("Git update failed; previous version preserved")
+            with contextlib.suppress(Exception):
+                await utils.answer(msg_obj, self.strings("update_failed"))
 
     @loader.command()
     async def source(self, message: Message):
