@@ -1,0 +1,12 @@
+Pillow
+psutil
+tgcrypto
+requests
+emoji
+moviepy
+python-ffmpeg
+ffmpeg
+bs4
+uvloop
+orjson
+deep-translator
