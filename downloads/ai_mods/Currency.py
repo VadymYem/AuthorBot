@@ -15,15 +15,18 @@ class CurrencyMod(loader.Module):
         await utils.answer(message, "⏳ <b>Отримую дані...</b>")
 
         try:
-            async with aiohttp.ClientSession() as session:
+            async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=20)) as session:
                 # Отримання курсу валют ПриватБанку
                 async with session.get("https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5") as resp:
+                    resp.raise_for_status()
                     fiat_data = await resp.json()
 
                 # Отримання курсу криптовалют з Binance
                 async with session.get("https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT") as resp:
+                    resp.raise_for_status()
                     btc_data = await resp.json()
                 async with session.get("https://api.binance.com/api/v3/ticker/price?symbol=ETHUSDT") as resp:
+                    resp.raise_for_status()
                     eth_data = await resp.json()
 
             res_text = "<b>📊 Актуальний курс валют:</b>\n\n"

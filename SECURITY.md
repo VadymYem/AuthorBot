@@ -36,3 +36,18 @@ https://github.com/hikariatama/host/raw/master
 - https://authorche.top
 
 Do not include live tokens, session files, passwords, API hashes or private database dumps in public issues.
+
+
+## Web setup
+
+On the first initialization, when no Telegram account is attached yet, the web setup is protected with HTTP Basic authentication. AuthorBot generates a high-entropy one-time startup password unless `AUTHORBOT_WEB_USER` and `AUTHORBOT_WEB_PASSWORD` are provided explicitly.
+
+After an account is initialized, sensitive web operations continue to use the Telegram confirmation flow. Browser session cookies are HttpOnly, SameSite=Strict, time-limited, and marked Secure when the request is delivered over HTTPS.
+
+## Debugger
+
+The traceback viewer is bound to `127.0.0.1` only and Werkzeug interactive evaluation is disabled. It does not create a public reverse tunnel and cannot execute Python expressions from the browser.
+
+## Module repository credentials
+
+Loader Basic Auth credentials are sent only to the configured primary module repository. They are never forwarded automatically to additional repositories or arbitrary module URLs.

@@ -86,7 +86,7 @@ class PublicInlineMod(loader.Module):
             "title": "AuthorBot",
             "description": "Public inline example",
             "message": "<b>Hello from a public inline command.</b>",
-            "thumb": "https://authorche.top/poems/logo.jpg",
+            "thumb": "https://raw.githubusercontent.com/VadymYem/AuthorBot/main/assets/bot_pfp.jpg",
         }
 ```
 

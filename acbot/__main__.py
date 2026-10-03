@@ -1,10 +1,4 @@
-"""Entry point. Checks for user and starts main script"""
-
-# ©️ Dan G. && AuthorChe
-# This file is a part of AuthorBot Userbot
-# 🌐 https://github.com/VadymYem/AuthorBot
-# You can redistribute it and/or modify it under the terms of the GNU AGPLv3
-# 🔑 https://www.gnu.org/licenses/agpl-3.0.html
+"""Entry point. Checks the runtime and starts AuthorBot."""
 
 import getpass
 import hashlib
@@ -12,12 +6,17 @@ import os
 import shutil
 import subprocess
 import sys
+import traceback
 from pathlib import Path
 
 from ._internal import restart
 
+ROOT = Path(__file__).resolve().parents[1]
+REQUIREMENTS = ROOT / "requirements.txt"
+REQUIREMENTS_HASH = ROOT / ".requirements_hash"
 
-def get_data_root():
+
+def get_data_root() -> Path:
     for index, arg in enumerate(sys.argv):
         if arg == "--data-root" and index + 1 < len(sys.argv):
             return Path(sys.argv[index + 1]).expanduser()
@@ -25,11 +24,7 @@ def get_data_root():
         if arg.startswith("--data-root="):
             return Path(arg.split("=", maxsplit=1)[1]).expanduser()
 
-    return Path(
-        "/data"
-        if "DOCKER" in os.environ
-        else os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-    )
+    return Path("/data" if "DOCKER" in os.environ else ROOT)
 
 
 def wipe_data():
@@ -42,7 +37,7 @@ def wipe_data():
     )
     if input("> ").strip().lower() not in {"yes", "y"}:
         print("Cancelled")
-        sys.exit(0)
+        raise SystemExit(0)
 
     data_root = get_data_root()
     patterns = (
@@ -57,126 +52,139 @@ def wipe_data():
 
     for pattern in patterns:
         for path in data_root.glob(pattern):
-            if not path.is_file():
-                continue
-
-            path.unlink()
-            removed += 1
+            if path.is_file():
+                path.unlink()
+                removed += 1
 
     for dirname in dirs:
         path = data_root / dirname
-        if not path.is_dir():
-            continue
-
-        shutil.rmtree(path)
-        removed += 1
+        if path.is_dir():
+            shutil.rmtree(path)
+            removed += 1
 
     print(f"Removed files: {removed}")
-    sys.exit(0)
+    raise SystemExit(0)
 
 
-wipe_data()
-
-
-def get_file_hash(filename):
-    hasher = hashlib.sha256()
+def get_file_hash(path: Path) -> str | None:
     try:
-        with open(filename, "rb") as f:
-            hasher.update(f.read())
-        return hasher.hexdigest()
+        return hashlib.sha256(path.read_bytes()).hexdigest()
     except FileNotFoundError:
         return None
 
 
-def deps():
-    subprocess.run(
+def deps() -> None:
+    """Install core requirements into the interpreter that runs AuthorBot."""
+    result = subprocess.run(
         [
             sys.executable,
             "-m",
             "pip",
             "install",
             "--upgrade",
-            "-q",
             "--disable-pip-version-check",
             "--no-warn-script-location",
             "-r",
-            "requirements.txt",
+            str(REQUIREMENTS),
         ],
-        check=True,
+        cwd=ROOT,
+        check=False,
         timeout=600,
-        capture_output=True,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
     )
-    with open(".requirements_hash", "w") as f:
-        f.write(get_file_hash("requirements.txt"))
+    if result.returncode:
+        print(result.stdout)
+        raise RuntimeError("Dependency installation failed")
+
+    REQUIREMENTS_HASH.write_text(
+        get_file_hash(REQUIREMENTS) or "",
+        encoding="utf-8",
+    )
 
 
-if (
-    getpass.getuser() == "root"
-    and "--root" not in " ".join(sys.argv)
-    and not {"-h", "--help"} & set(sys.argv)
-    and all(trigger not in os.environ for trigger in {"DOCKER", "GOORM", "NO_SUDO"})
-):
+def ensure_root_policy() -> None:
+    if (
+        getpass.getuser() != "root"
+        or "--root" in sys.argv
+        or {"-h", "--help"} & set(sys.argv)
+        or any(trigger in os.environ for trigger in {"DOCKER", "GOORM", "NO_SUDO"})
+    ):
+        return
+
     print("🚫" * 15)
-    print("You attempted to run AuthorBot on behalf of root user")
-    print("Please, create a new user and restart script")
-    print("If this action was intentional, pass --root argument instead")
+    print("You attempted to run AuthorBot as root.")
+    print("Prefer a regular user, or pass --root if this is intentional.")
+    print("Type force_insecure to continue, or no_sudo to suppress this check.")
     print("🚫" * 15)
-    print()
-    print("Type force_insecure to ignore this warning")
-    print("Type no_sudo if your system has no sudo (Debian vibes)")
-    inp = input("> ").lower()
-    if inp != "force_insecure":
-        sys.exit(1)
-    elif inp == "no_sudo":
+
+    answer = input("> ").strip().lower()
+    if answer == "no_sudo":
         os.environ["NO_SUDO"] = "1"
-        print("Added NO_SUDO in your environment variables")
         restart()
 
-if sys.version_info < (3, 8, 0):
-    print("🚫 Error: you must use at least Python version 3.8.0")
-elif __package__ != "acbot":  # In case they did python __main__.py
-    print("🚫 Error: you cannot run this as a script; you must execute as a package")
-else:
+    if answer != "force_insecure":
+        raise SystemExit(1)
+
+
+def ensure_dependencies() -> None:
     try:
         import herokutl
-    except Exception:
-        pass
-    else:
-        try:
-            import herokutl  # noqa: F811
-
-            if tuple(map(int, herokutl.__version__.split("."))) < (2, 1, 0):
-                raise ImportError
-        except ImportError:
-            print("🔄 Installing dependencies...")
-            deps()
-            restart()
+    except ModuleNotFoundError:
+        print("🔄 Installing dependencies...")
+        deps()
+        restart()
 
     try:
-        from . import log
+        version = tuple(map(int, herokutl.__version__.split(".")))
+    except Exception:
+        version = (0, 0, 0)
 
-        log.init()
-
-        from . import main
-    except ImportError as e:
-        print(f"{str(e)}\n🔄 Attempting dependencies installation... Just wait ⏱")
+    if version < (2, 1, 0):
+        print("🔄 Updating HerokuTL and dependencies...")
         deps()
         restart()
 
-    if "AUTHORBOT_DO_NOT_RESTART" in os.environ:
-        del os.environ["AUTHORBOT_DO_NOT_RESTART"]
 
-    if "AUTHORBOT_DO_NOT_RESTART2" in os.environ:
-        del os.environ["AUTHORBOT_DO_NOT_RESTART2"]
+wipe_data()
+ensure_root_policy()
 
-    prev_hash = None
-    if os.path.exists(".requirements_hash"):
-        with open(".requirements_hash") as f:
-            prev_hash = f.read().strip()
+if sys.version_info < (3, 10):
+    print("🚫 Error: AuthorBot requires Python 3.10 or newer.")
+    raise SystemExit(1)
 
-    if prev_hash != get_file_hash("requirements.txt"):
-        print("🔄 Detected changes in requirements.txt, updating dependencies...")
-        deps()
-        restart()
+if __package__ != "acbot":
+    print("🚫 Error: run AuthorBot as a package: python -m acbot")
+    raise SystemExit(1)
 
-    main.acbot.main()  # Execute main function
+ensure_dependencies()
+
+try:
+    from . import log
+
+    log.init()
+
+    from . import main
+except ModuleNotFoundError:
+    print("🔄 A Python dependency is missing; reinstalling core requirements...")
+    deps()
+    restart()
+except ImportError:
+    print("🚫 AuthorBot encountered an internal import error:")
+    traceback.print_exc()
+    raise SystemExit(1)
+
+for flag in ("AUTHORBOT_DO_NOT_RESTART", "AUTHORBOT_DO_NOT_RESTART2"):
+    os.environ.pop(flag, None)
+
+previous_hash = None
+if REQUIREMENTS_HASH.exists():
+    previous_hash = REQUIREMENTS_HASH.read_text(encoding="utf-8").strip()
+
+if previous_hash != get_file_hash(REQUIREMENTS):
+    print("🔄 requirements.txt changed; updating dependencies...")
+    deps()
+    restart()
+
+main.acbot.main()

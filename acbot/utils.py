@@ -26,6 +26,7 @@ import json
 import logging
 import os
 import random
+import secrets
 import re
 import shlex
 import signal
@@ -649,6 +650,7 @@ async def set_avatar(
             await run_sync(
                 requests.get,
                 avatar,
+                timeout=15,
             )
         ).content
     elif isinstance(avatar, bytes):
@@ -1100,9 +1102,8 @@ def rand(size: int, /) -> str:
     :param size: Length of string
     :return: Random string
     """
-    return "".join(
-        [random.choice("abcdefghijklmnopqrstuvwxyz1234567890") for _ in range(size)]
-    )
+    alphabet = "abcdefghijklmnopqrstuvwxyz1234567890"
+    return "".join(secrets.choice(alphabet) for _ in range(size))
 
 
 def smart_split(

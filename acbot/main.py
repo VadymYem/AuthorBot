@@ -19,7 +19,6 @@
 
 import argparse
 import asyncio
-import socket
 import collections
 import contextlib
 import importlib
@@ -199,40 +198,56 @@ def run_config():
     return configurator.api_config(IS_TERMUX or None)
 
 
-def get_config_key(key: str) -> typing.Union[str, bool]:
-    """
-    Parse and return key from config
-    :param key: Key name in config
-    :return: Value of config key or `False`, if it doesn't exist
-    """
+def _read_config() -> dict:
+    """Read the global config without letting a partial write break startup."""
     try:
-        return json.loads(CONFIG_PATH.read_text()).get(key, False)
+        data = json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
+        return data if isinstance(data, dict) else {}
     except FileNotFoundError:
-        return False
+        return {}
+    except (json.JSONDecodeError, OSError):
+        logging.exception("Unable to read %s; using an empty config", CONFIG_PATH)
+        return {}
 
 
-def save_config_key(key: str, value: str) -> bool:
-    """
-    Save `key` with `value` to config
-    :param key: Key name in config
-    :param value: Desired value in config
-    :return: `True` on success, otherwise `False`
-    """
-    try:
-        # Try to open our newly created json config
-        config = json.loads(CONFIG_PATH.read_text())
-    except FileNotFoundError:
-        # If it doesn't exist, just default config to none
-        # It won't cause problems, bc after new save
-        # we will create new one
-        config = {}
+def get_config_key(key: str) -> typing.Any:
+    """Return a value from the global config, or False if it doesn't exist."""
+    return _read_config().get(key, False)
 
-    # Assign config value
+
+def save_config_key(key: str, value: typing.Any) -> bool:
+    """Atomically persist a global configuration value."""
+    config = _read_config()
     config[key] = value
-    # And save config
-    CONFIG_PATH.write_text(json.dumps(config, indent=4))
-    return True
 
+    CONFIG_PATH.parent.mkdir(parents=True, exist_ok=True)
+    tmp = CONFIG_PATH.with_suffix(".json.tmp")
+    backup = CONFIG_PATH.with_suffix(".json.bak")
+    payload = json.dumps(config, indent=4, ensure_ascii=False)
+
+    try:
+        with open(tmp, "w", encoding="utf-8") as handle:
+            handle.write(payload)
+            handle.flush()
+            os.fsync(handle.fileno())
+
+        with contextlib.suppress(OSError):
+            os.chmod(tmp, 0o600)
+
+        if CONFIG_PATH.exists():
+            with contextlib.suppress(OSError):
+                backup.write_bytes(CONFIG_PATH.read_bytes())
+                os.chmod(backup, 0o600)
+
+        os.replace(tmp, CONFIG_PATH)
+        with contextlib.suppress(OSError):
+            os.chmod(CONFIG_PATH, 0o600)
+        return True
+    except OSError:
+        logging.exception("Unable to save global config")
+        with contextlib.suppress(OSError):
+            tmp.unlink()
+        return False
 
 def gen_port(cfg: str = "port", no8080: bool = False) -> int:
     """
@@ -249,13 +264,11 @@ def gen_port(cfg: str = "port", no8080: bool = False) -> int:
 
     # If we didn't get port from config, generate new one
     # First, try to randomly get port
-    while port := random.randint(1024, 65536):
-        if socket.socket(socket.AF_INET, socket.SOCK_STREAM).connect_ex(
-            ("localhost", port)
-        ):
-            break
-
-    return port
+    while True:
+        port = random.randint(1024, 65535)
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as probe:
+            if probe.connect_ex(("127.0.0.1", port)):
+                return port
 
 
 def parse_arguments() -> dict:
@@ -339,7 +352,12 @@ def parse_arguments() -> dict:
         help="Do not print colorful output using ANSI escapes",
     )
     arguments = parser.parse_args()
-    logging.debug(arguments)
+    safe_arguments = vars(arguments).copy()
+    if safe_arguments.get("proxy_secret"):
+        safe_arguments["proxy_secret"] = "<redacted>"
+    if safe_arguments.get("phone"):
+        safe_arguments["phone"] = f"<{len(safe_arguments['phone'])} phone(s)>"
+    logging.debug("Arguments: %s", safe_arguments)
     return arguments
 
 
@@ -388,6 +406,11 @@ class AuthorBot:
             BASE_DIR = self.arguments.data_root
             BASE_PATH = Path(BASE_DIR)
             CONFIG_PATH = BASE_PATH / "config.json"
+
+        BASE_PATH.mkdir(parents=True, exist_ok=True)
+        with contextlib.suppress(OSError):
+            os.chmod(BASE_PATH, 0o700)
+
         self.loop = asyncio.get_event_loop()
 
         self.clients = SuperList()
@@ -440,41 +463,51 @@ class AuthorBot:
         ]
 
     def _get_api_token(self):
-        """Get API Token from disk or environment"""
+        """Load Telegram API credentials without logging secret values."""
         api_token_type = collections.namedtuple("api_token", ("ID", "HASH"))
 
-        # Try to retrieve credintials from config, or from env vars
-        try:
-            # Legacy migration
-            if not get_config_key("api_id"):
-                api_id, api_hash = (
-                    line.strip()
-                    for line in (Path(BASE_DIR) / "api_token.txt")
-                    .read_text()
-                    .splitlines()
-                )
-                save_config_key("api_id", int(api_id))
-                save_config_key("api_hash", api_hash)
-                (Path(BASE_DIR) / "api_token.txt").unlink()
-                logging.debug("Migrated api_token.txt to config.json")
+        api_id = get_config_key("api_id")
+        api_hash = get_config_key("api_hash")
 
-            api_token = api_token_type(
-                get_config_key("api_id"),
-                get_config_key("api_hash"),
-            )
-        except FileNotFoundError:
+        legacy = Path(BASE_DIR) / "api_token.txt"
+        if (not api_id or not api_hash) and legacy.is_file():
             try:
-                from . import api_token
-            except ImportError:
-                try:
-                    api_token = api_token_type(
-                        os.environ["api_id"],
-                        os.environ["api_hash"],
-                    )
-                except KeyError:
-                    api_token = None
+                lines = [line.strip() for line in legacy.read_text(encoding="utf-8").splitlines()]
+                if len(lines) >= 2:
+                    api_id, api_hash = int(lines[0]), lines[1]
+                    save_config_key("api_id", api_id)
+                    save_config_key("api_hash", api_hash)
+                    legacy.unlink()
+                    logging.debug("Migrated legacy Telegram API credentials")
+            except (OSError, ValueError):
+                logging.exception("Unable to migrate legacy API credentials")
 
-        self.api_token = api_token
+        if api_id and api_hash:
+            self.api_token = api_token_type(int(api_id), str(api_hash))
+            return
+
+        try:
+            from . import api_token as bundled_api_token
+        except ImportError:
+            bundled_api_token = None
+
+        if bundled_api_token is not None:
+            bundled_id = getattr(bundled_api_token, "ID", None)
+            bundled_hash = getattr(bundled_api_token, "HASH", None)
+            if bundled_id and bundled_hash:
+                self.api_token = api_token_type(int(bundled_id), str(bundled_hash))
+                return
+
+        env_id = os.environ.get("api_id")
+        env_hash = os.environ.get("api_hash")
+        if env_id and env_hash:
+            try:
+                self.api_token = api_token_type(int(env_id), env_hash)
+                return
+            except ValueError:
+                logging.error("Environment variable api_id must be an integer")
+
+        self.api_token = None
 
     def _init_web(self):
         """Initialize web"""
@@ -541,9 +574,12 @@ class AuthorBot:
         session.auth_key = client.session.auth_key
 
         session.save()
+        session_path = Path(BASE_DIR) / f"acbot-{telegram_id}.session"
+        with contextlib.suppress(OSError):
+            os.chmod(session_path, 0o600)
 
         if not delay_restart:
-            client.disconnect()
+            await client.disconnect()
             restart()
 
         client.session = session
@@ -553,7 +589,7 @@ class AuthorBot:
         await client.acbot_db.init()
 
         if delay_restart:
-            client.disconnect()
+            await client.disconnect()
             await asyncio.sleep(3600)  # Will be restarted from web anyway
 
     async def _web_banner(self):
@@ -824,7 +860,7 @@ class AuthorBot:
 
             await client.acbot_inline.bot.send_photo(
                 logging.getLogger().handlers[0].get_logid_by_client(client.tg_id),
-                "https://raw.githubusercontent.com/VadymYem/AuthorBot/main/assets/acbot_pfp.png",
+                "https://raw.githubusercontent.com/VadymYem/AuthorBot/main/assets/authorbot_banner.jpg",
                 caption=(
                     "✍️ <b>AuthorBot {} started!</b>\n\n🌳 <b>GitHub commit SHA: <a"
                     ' href="https://github.com/VadymYem/AuthorBot/commit/{}">{}</a></b>\n✊'

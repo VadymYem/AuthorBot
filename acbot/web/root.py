@@ -463,6 +463,26 @@ class Web:
 
         return web.Response()
 
+    def _session_response(self, request: web.Request, session: str) -> web.Response:
+        """Issue an authenticated browser session without exposing it to JavaScript."""
+        if session not in self._sessions:
+            self._sessions = (self._sessions + [session])[-32:]
+
+        response = web.Response(
+            body=session,
+            headers={"Cache-Control": "no-store"},
+        )
+        forwarded_proto = request.headers.get("X-Forwarded-Proto", "").lower()
+        response.set_cookie(
+            "session",
+            session,
+            httponly=True,
+            samesite="Strict",
+            secure=request.secure or forwarded_proto == "https",
+            max_age=12 * 60 * 60,
+        )
+        return response
+
     async def web_auth(self, request: web.Request) -> web.Response:
         if self._check_session(request):
             return web.Response(body=request.cookies.get("session", "unauthorized"))
@@ -523,10 +543,10 @@ class Web:
         session = f"acbot_{utils.rand(16)}"
 
         if not ops:
-            # If no auth message was sent, just leave it empty
-            # probably, request was a bug and user doesn't have
-            # inline bot or did not authorize any sessions
-            return web.Response(body=session)
+            # First initialization is protected by the HTTP Basic challenge
+            # in web/core.py. Keep its browser session valid after the first
+            # Telegram client appears.
+            return self._session_response(request, session)
 
         if not await main.acbot.wait_for_web_auth(token):
             for op in ops:
@@ -536,6 +556,4 @@ class Web:
         for op in ops:
             await op()
 
-        self._sessions += [session]
-
-        return web.Response(body=session)
+        return self._session_response(request, session)

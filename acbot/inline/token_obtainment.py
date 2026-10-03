@@ -83,7 +83,7 @@ class TokenObtainment(InlineUnit):
                 await fw_protect()
                 from .. import main
 
-                m = await conv.send_file(main.BASE_PATH / "assets" / "bot_pfp.png")
+                m = await conv.send_file(main.BASE_PATH / "assets" / "bot_pfp.jpg")
                 r = await conv.get_response()
 
                 logger.debug(">> <Photo>")
@@ -227,7 +227,7 @@ class TokenObtainment(InlineUnit):
                         from .. import main
 
                         m = await conv.send_file(
-                            main.BASE_PATH / "assets" / "bot_pfp.png"
+                            main.BASE_PATH / "assets" / "bot_pfp.jpg"
                         )
                         r = await conv.get_response()
 

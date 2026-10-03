@@ -1,40 +1,37 @@
-FROM python:3.11-slim-bullseye
+FROM python:3.13-slim-bookworm
 
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
-    PIP_NO_CACHE_DIR=off \
-    PIP_DISABLE_PIP_VERSION_CHECK=on \
-    PIP_DEFAULT_TIMEOUT=100 \
-    POETRY_VERSION=1.8.3 \
-    POETRY_HOME="/opt/poetry" \
-    POETRY_VIRTUALENVS_CREATE=false \
-    POETRY_NO_INTERACTION=1 \
-    DOCKER=1 \
-    PATH="$POETRY_HOME/bin:$PATH"
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    PIP_NO_CACHE_DIR=1 \
+    DOCKER=1
 
-# Install system dependencies
 RUN apt-get update && apt-get install --no-install-recommends -y \
-    curl \
     build-essential \
     ffmpeg \
     git \
+    libcairo2 \
+    libffi-dev \
+    libjpeg62-turbo-dev \
+    libwebp-dev \
+    openssh-client \
+    openssl \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Poetry
-RUN curl -sSL https://install.python-poetry.org | python -
+WORKDIR /app
 
-WORKDIR /data/AuthorBot
+COPY requirements.txt optional_requirements.txt ./
+RUN python -m pip install --upgrade pip setuptools wheel \
+    && python -m pip install -r requirements.txt \
+    && (python -m pip install -r optional_requirements.txt || true)
 
-# Copy dependency files first
-COPY poetry.lock pyproject.toml ./
-
-# Install project dependencies globally (since virtualenvs-create=false)
-RUN /opt/poetry/bin/poetry lock --no-update && /opt/poetry/bin/poetry install --only main --no-root
-
-# Copy the rest of the application
 COPY . .
 
-# Expose the API port
+RUN python scripts/selfcheck.py \
+    && mkdir -p /data \
+    && chmod 700 /data
+
+VOLUME ["/data"]
 EXPOSE 8080
 
-CMD ["python3", "-m", "acbot", "--root"]
+CMD ["python", "-m", "acbot", "--root", "--data-root", "/data"]

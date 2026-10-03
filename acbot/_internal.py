@@ -1,4 +1,3 @@
-
 import asyncio
 import atexit
 import logging
@@ -6,49 +5,53 @@ import os
 import random
 import signal
 import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
 
 
 async def fw_protect():
     await asyncio.sleep(random.randint(1000, 3000) / 1000)
 
 
-def get_startup_callback() -> callable:
-    return lambda *_: os.execl(
+def _restart_process(*_):
+    os.chdir(ROOT)
+    os.execl(
         sys.executable,
         sys.executable,
         "-m",
-        os.path.relpath(os.path.abspath(os.path.dirname(os.path.abspath(__file__)))),
+        "acbot",
         *sys.argv[1:],
     )
 
 
+def get_startup_callback() -> callable:
+    return _restart_process
+
+
 def die():
-    """Platform-dependent way to kill the current process group"""
+    """Platform-dependent way to terminate the current process group."""
     if "DOCKER" in os.environ:
-        sys.exit(0)
-    else:
-        # This one is actually better, because it kills all subprocesses
-        # but it can't be used inside the Docker
-        try:
-            os.killpg(os.getpgid(os.getpid()), signal.SIGTERM)
-        except Exception:
-            sys.exit(0)
+        raise SystemExit(0)
+
+    try:
+        os.killpg(os.getpgid(os.getpid()), signal.SIGTERM)
+    except Exception:
+        raise SystemExit(0)
 
 
 def restart():
-    if "--sandbox" in " ".join(sys.argv):
-        exit(0)
+    if "--sandbox" in sys.argv:
+        raise SystemExit(0)
 
     if "AUTHORBOT_DO_NOT_RESTART2" in os.environ:
         print(
-            "Got in a loop, exiting\nYou probably need to manually remove existing"
-            " packages and then restart. Run `pip uninstall -y telethon"
-            " telethon-mod herokutl`, then restart  authorbot."
+            "Got in a restart loop. Remove conflicting packages manually and "
+            "restart AuthorBot."
         )
-        sys.exit(0)
+        raise SystemExit(1)
 
     logging.getLogger().setLevel(logging.CRITICAL)
-
     print("🔄 Restarting...")
 
     if "LAVHOST" in os.environ:
@@ -61,26 +64,14 @@ def restart():
         os.environ["AUTHORBOT_DO_NOT_RESTART2"] = "1"
 
     if "DOCKER" in os.environ:
-        atexit.register(get_startup_callback())
+        atexit.register(_restart_process)
     else:
-        # This one is requried for better way of killing to work properly,
-        # since we kill the process group using unix signals
-        signal.signal(signal.SIGTERM, get_startup_callback())
+        signal.signal(signal.SIGTERM, _restart_process)
 
     die()
 
 
 def print_banner(banner: str):
     print("\033[2J\033[3;1f")
-    with open(
-        os.path.abspath(
-            os.path.join(
-                os.path.dirname(__file__),
-                "..",
-                "assets",
-                banner,
-            )
-        ),
-        "r",
-    ) as f:
-        print(f.read())
+    path = ROOT / "assets" / banner
+    print(path.read_text(encoding="utf-8"))

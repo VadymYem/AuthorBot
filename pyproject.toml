@@ -4,34 +4,33 @@ preview = true
 
 [tool.poetry]
 name = "acbot"
-version = "1.9.0"
-description = "Telegram userbot focused on developer convenience"
-authors = ["authorche, t.me/wsinfo"]
-license = "GNU AGPLv3"
+version = "1.10.1"
+description = "Modular Telegram userbot by Author C"
+authors = ["Author C <https://authorche.top>"]
+license = "AGPL-3.0-only"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = ">=3.10,<3.14"
+herokutl = "2.1.0"
+pyaes = "*"
 aiofile = "3.8.1"
-gitpython = "3.1.27"
+aiofiles = "24.1.0"
+gitpython = "3.1.50"
 meval = "2.5"
 aiohttp-jinja2 = "1.5"
 aiohttp = "3.8.3"
 jinja2 = "3.0.3"
-requests = ">=2.32.3"
-aiogram = "2.25.1"
+requests = "2.32.3"
+aiogram = "2.25.2"
 grapheme = "0.6.0"
-emoji = "2.1.0"
+emoji = ">=1.7"
 werkzeug = "2.2.2"
-psutil = "5.9.4"
-tgcrypto = "1.2.5"
-herokutl = "2.1.0"
-ruamel-yaml = "0.17.21"
 rsa = "4.9"
-pydub = "0.25.1"
-translators = ">=5.9.0"
-
+ruamel-yaml = "0.17.21"
+certifi = ">=2024.8.30"
+redis = ">=5.0,<7"
 
 [build-system]
-requires = ["poetry-core"]
+requires = ["poetry-core>=1.8.0"]
 build-backend = "poetry.core.masonry.api"

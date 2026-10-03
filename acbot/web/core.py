@@ -17,10 +17,13 @@
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import asyncio
+import base64
 import contextlib
+import hmac
 import inspect
 import logging
 import os
+import secrets
 import subprocess
 
 import aiohttp_jinja2
@@ -42,7 +45,48 @@ class Web(root.Web):
         self.running = asyncio.Event()
         self.ready = asyncio.Event()
         self.client_data = {}
-        self.app = web.Application()
+        self._setup_web_user = os.environ.get("AUTHORBOT_WEB_USER", "authorbot")
+        self._setup_web_password = os.environ.get("AUTHORBOT_WEB_PASSWORD") or secrets.token_urlsafe(18)
+
+        if "AUTHORBOT_WEB_PASSWORD" not in os.environ:
+            print(
+                "\n🔐 First-run AuthorBot web authentication\n"
+                f"User: {self._setup_web_user}\n"
+                f"Password: {self._setup_web_password}\n"
+                "Set AUTHORBOT_WEB_USER/AUTHORBOT_WEB_PASSWORD to choose fixed credentials.\n"
+            )
+
+        @web.middleware
+        async def first_setup_auth(request, handler):
+            # Once at least one Telegram account is initialized, AuthorBot's
+            # Telegram-confirmation flow is the primary authorization layer.
+            if self.client_data:
+                return await handler(request)
+
+            header = request.headers.get("Authorization", "")
+            if header.startswith("Basic "):
+                try:
+                    decoded = base64.b64decode(header[6:], validate=True).decode("utf-8")
+                    username, password = decoded.split(":", 1)
+                except (ValueError, UnicodeDecodeError):
+                    username = password = ""
+
+                if hmac.compare_digest(username, self._setup_web_user) and hmac.compare_digest(
+                    password,
+                    self._setup_web_password,
+                ):
+                    return await handler(request)
+
+            return web.Response(
+                status=401,
+                text="AuthorBot setup authentication required",
+                headers={
+                    "WWW-Authenticate": 'Basic realm="AuthorBot setup", charset="UTF-8"',
+                    "Cache-Control": "no-store",
+                },
+            )
+
+        self.app = web.Application(middlewares=[first_setup_auth])
         self.proxypasser = proxypass.ProxyPasser()
         aiohttp_jinja2.setup(
             self.app,
@@ -127,5 +171,5 @@ class Web(root.Web):
     async def favicon(_):
         return web.Response(
             status=301,
-            headers={"Location": "https://authorche.top/poems/logo.jpg"},
+            headers={"Location": "https://raw.githubusercontent.com/VadymYem/AuthorBot/main/assets/bot_pfp.jpg"},
         )

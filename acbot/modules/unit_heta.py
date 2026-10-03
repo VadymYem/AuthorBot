@@ -106,13 +106,17 @@ class NewUnitHeta(loader.Module):
                         ),
                     }
                 ),
-                json.loads(
-                    (
-                        await utils.run_sync(
-                            requests.get,
-                            "https://heta.dan.tatar/modules.json",
-                        )
-                    ).text
+                (
+                    lambda response: (
+                        response.raise_for_status(),
+                        response.json(),
+                    )[1]
+                )(
+                    await utils.run_sync(
+                        requests.get,
+                        "https://heta.dan.tatar/modules.json",
+                        timeout=15,
+                    )
                 ),
             )
         )

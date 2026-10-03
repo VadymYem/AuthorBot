@@ -62,8 +62,10 @@ class SettingsMod(loader.Module):
                 m = await conv.send_message(msg)
                 r = await conv.get_response()
 
-                logger.debug(">> %s", m.raw_text)
-                logger.debug("<< %s", r.raw_text)
+                logger.debug(
+                    "BotFather uninstall step completed (%d chars)",
+                    len(getattr(r, "raw_text", "") or ""),
+                )
 
                 await fw_protect()
 

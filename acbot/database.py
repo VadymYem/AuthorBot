@@ -143,7 +143,7 @@ class Database(dict):
                 "assets",
                 "🌆 Your assets will be stored here",
                 archive=True,
-                avatar="https://raw.githubusercontent.com/hikariatama/assets/master/acbot-assets.png",
+                avatar="https://raw.githubusercontent.com/VadymYem/AuthorBot/main/assets/bot_pfp.jpg",
             )
         except ChannelsTooMuchError:
             self._assets = None

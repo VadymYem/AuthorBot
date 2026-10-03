@@ -1,13 +1,31 @@
-FROM python:3.8-slim-buster as main
-ENV OKTETO=true
-ENV GIT_PYTHON_REFRESH=quiet
-ENV PIP_NO_CACHE_DIR=1
-RUN apt update && apt install libcairo2 git ffmpeg libavcodec-dev libavutil-dev libavformat-dev libswscale-dev libavdevice-dev -y --no-install-recommends
-RUN rm -rf /var/lib/apt/lists /var/cache/apt/archives /tmp/*
-RUN git clone https://github.com/VadymYem/AuthorBot /AuthorBot
-WORKDIR /AuthorBot
-RUN pip install --no-warn-script-location --no-cache-dir -r requirements.txt
-RUN pip install --no-warn-script-location --no-cache-dir -r optional_requirements.txt
+FROM python:3.13-slim-bookworm
+
+ENV OKTETO=true \
+    PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    PIP_NO_CACHE_DIR=1
+
+RUN apt-get update && apt-get install --no-install-recommends -y \
+    build-essential \
+    ffmpeg \
+    git \
+    libcairo2 \
+    libffi-dev \
+    libjpeg62-turbo-dev \
+    libwebp-dev \
+    openssl \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+COPY requirements.txt optional_requirements.txt ./
+RUN python -m pip install --upgrade pip setuptools wheel \
+    && python -m pip install -r requirements.txt \
+    && (python -m pip install -r optional_requirements.txt || true)
+
+COPY . .
+RUN python scripts/selfcheck.py && mkdir -p /data && chmod 700 /data
+
+VOLUME ["/data"]
 EXPOSE 8080
-RUN mkdir /data
-CMD ["python3", "-m", "acbot"]
+CMD ["python", "-m", "acbot", "--root", "--data-root", "/data"]

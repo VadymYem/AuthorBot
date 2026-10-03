@@ -76,7 +76,7 @@ class acbotInfoMod(loader.Module):
             ),
             loader.ConfigValue(
                 "custom_banner",
-                "https://raw.githubusercontent.com/VadymYem/AuthorBot/main/assets/acbot_pfp.png",
+                "https://raw.githubusercontent.com/VadymYem/AuthorBot/main/assets/authorbot_banner.jpg",
                 lambda: self.strings("_cfg_cst_bnr"),
             ),
             loader.ConfigValue(
@@ -282,7 +282,7 @@ class acbotInfoMod(loader.Module):
             "description": self.strings("description"),
             msg_type: self._render_info(),
             self.config["custom_format"]: self.config["custom_banner"],
-            "thumb": "https://authorche.top/poems/logo.jpg",
+            "thumb": "https://raw.githubusercontent.com/VadymYem/AuthorBot/main/assets/bot_pfp.jpg",
             "reply_markup": btns,
         }
 

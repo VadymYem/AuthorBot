@@ -28,7 +28,6 @@ import sys
 import traceback
 import typing
 
-import requests
 from herokutl import events
 from herokutl.errors import FloodWaitError, RPCError
 from herokutl.tl.types import Message
@@ -130,9 +129,6 @@ class CommandDispatcher:
         )
 
         self.raw_handlers = []
-        self._external_bl: typing.List[int] = []
-
-        asyncio.ensure_future(self._external_bl_reload_loop())
 
     async def _handle_ratelimit(self, message: Message, func: callable) -> bool:
         if await self.security.check(message, security.OWNER):
@@ -323,16 +319,9 @@ class CommandDispatcher:
         whitelist_chats = self._db.get(main.__name__, "whitelist_chats", [])
         whitelist_modules = self._db.get(main.__name__, "whitelist_modules", [])
 
-        # ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
-        # It's not recommended to remove the security check below (external_bl)
-        # If you attempt to bypass this protection, you will be banned from the chat
-        # The protection from using userbots is multi-layer and this is one of the layers
-        # If you bypass it, the next (external) layer will trigger and you will be banned
-        # ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
-
+        chat_id = utils.get_chat_id(message)
         if (
-            (chat_id := utils.get_chat_id(message)) in self._external_bl
-            or chat_id in blacklist_chats
+            chat_id in blacklist_chats
             or (whitelist_chats and chat_id not in whitelist_chats)
         ):
             return False
@@ -626,16 +615,9 @@ class CommandDispatcher:
         whitelist_chats = self._db.get(main.__name__, "whitelist_chats", [])
         whitelist_modules = self._db.get(main.__name__, "whitelist_modules", [])
 
-        # ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
-        # It's not recommended to remove the security check below (external_bl)
-        # If you attempt to bypass this protection, you will be banned from the chat
-        # The protection from using userbots is multi-layer and this is one of the layers
-        # If you bypass it, the next (external) layer will trigger and you will be banned
-        # ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
-
+        chat_id = utils.get_chat_id(message)
         if (
-            (chat_id := utils.get_chat_id(message)) in self._external_bl
-            or chat_id in blacklist_chats
+            chat_id in blacklist_chats
             or (whitelist_chats and chat_id not in whitelist_chats)
         ):
             logger.debug("Message is blacklisted")
@@ -706,15 +688,3 @@ class CommandDispatcher:
             await func(message)
         except Exception as e:
             await exception_handler(e, message, *args)
-
-    async def _external_bl_reload_loop(self):
-        while True:
-            with contextlib.suppress(Exception):
-                self._external_bl = (
-                    await utils.run_sync(
-                        requests.get,
-                        "https://ubguard.dan.tatar/blacklist.json",
-                    )
-                ).json()["blacklist"]
-
-            await asyncio.sleep(60)

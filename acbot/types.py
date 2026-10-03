@@ -457,7 +457,7 @@ class Module:
         if not utils.check_url(url):
             _raise(ValueError("Invalid url for library"))
 
-        code = await utils.run_sync(requests.get, url)
+        code = await utils.run_sync(requests.get, url, timeout=20)
         code.raise_for_status()
         code = code.text
 

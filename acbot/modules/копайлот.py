@@ -4,8 +4,8 @@
 
 import asyncio
 import time
-from telethon import events
-from telethon.tl.types import Message
+from herokutl import events
+from herokutl.tl.types import Message
 from .. import loader, utils
 
 @loader.tds

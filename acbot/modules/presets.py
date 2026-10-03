@@ -115,7 +115,7 @@ class Presets(loader.Module):
     async def _menu(self):
         await self.inline.bot.send_photo(
             self._client.tg_id,
-            'https://raw.githubusercontent.com/hikariatama/AuthorBot/master/assets/acbot_inline.png',
+            'https://raw.githubusercontent.com/VadymYem/AuthorBot/main/assets/authorbot_banner.jpg',
             caption=self.strings('welcome'),
             reply_markup=self.inline.generate_markup(self._markup),
         )
@@ -206,7 +206,7 @@ class Presets(loader.Module):
     async def presets(self, message: Message):
         await self.inline.form(
             message=message,
-            photo='https://raw.githubusercontent.com/hikariatama/AuthorBot/master/assets/acbot_inline.png',
+            photo='https://raw.githubusercontent.com/VadymYem/AuthorBot/main/assets/authorbot_banner.jpg',
             text=self.strings('welcome').replace('/presets', self.get_prefix() + 'presets'),
             reply_markup=self._markup,
         )

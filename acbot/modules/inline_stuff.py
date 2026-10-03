@@ -19,6 +19,7 @@ logger = logging.getLogger(__name__)
 PUBLIC_BOT_EDITORS = {6316376597, 6802848305}
 
 START_RICH = """<h1>AuthorBot</h1>
+<figure><img src="https://raw.githubusercontent.com/VadymYem/AuthorBot/main/assets/authorbot_banner.jpg"/><figcaption>AuthorBot · by Author C</figcaption></figure>
 <blockquote>Модульний Telegram userbot від Author C — автоматизація, inline-інструменти, модулі, локальні налаштування та сучасний Telegram Bot API.</blockquote>
 
 <h3>Що тут є</h3>
@@ -303,6 +304,10 @@ class InlineStuff(loader.Module):
 
         command, _, args = text.partition(" ")
         command = command.split("@", maxsplit=1)[0].lower()
+
+        if command == "/start" and args.strip().lower() == "acbot init":
+            await message.answer("✅ <b>AuthorBot inline interface is ready.</b>")
+            return
 
         public_pages = {
             "/start": "start",

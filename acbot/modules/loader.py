@@ -220,6 +220,16 @@ class LoaderMod(loader.Module):
         logger.debug("Loading modules: %s", todo)
         return todo
 
+    def _auth_for_repo(self, url: str) -> typing.Optional[str]:
+        """Return configured Basic Auth only for the primary module repository."""
+        auth = self.config["basic_auth"]
+        if not auth:
+            return None
+
+        primary = (self.config["MODULES_REPO"] or DEFAULT_MODULES_REPO).rstrip("/")
+        candidate = url.rstrip("/")
+        return auth if candidate == primary or candidate.startswith(primary + "/") else None
+
     async def _get_repo(self, repo: str) -> str:
         repo = repo.strip("/")
 
@@ -231,8 +241,8 @@ class LoaderMod(loader.Module):
                 requests.get,
                 f"{repo}/full.txt",
                 auth=(
-                    tuple(self.config["basic_auth"].split(":", 1))
-                    if self.config["basic_auth"]
+                    tuple(self._auth_for_repo(repo).split(":", 1))
+                    if self._auth_for_repo(repo)
                     else None
                 ),
                 timeout=15,
@@ -323,7 +333,7 @@ class LoaderMod(loader.Module):
                 )
 
             try:
-                r = await self._storage.fetch(url, auth=self.config["basic_auth"])
+                r = await self._storage.fetch(url, auth=self._auth_for_repo(url))
             except requests.exceptions.HTTPError:
                 if message is not None:
                     await utils.answer(message, self.strings("no_module"))

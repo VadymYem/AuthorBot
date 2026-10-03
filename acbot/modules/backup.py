@@ -34,7 +34,7 @@ class AuthorBotBackupMod(loader.Module):
         if not self.get("period"):
             await self.inline.bot.send_photo(
                 self.tg_id,
-                photo="https://raw.githubusercontent.com/VadymYem/AuthorBot/main/assets/acbot_pfp.png",
+                photo="https://raw.githubusercontent.com/VadymYem/AuthorBot/main/assets/authorbot_banner.jpg",
                 caption=self.strings("period"),
                 reply_markup=self.inline.generate_markup(
                     utils.chunks(
@@ -66,7 +66,7 @@ class AuthorBotBackupMod(loader.Module):
             "📼 Your database backups will appear here",
             silent=True,
             archive=True,
-            avatar="https://authorche.top/poems/logo.jpg",
+            avatar="https://raw.githubusercontent.com/VadymYem/AuthorBot/main/assets/bot_pfp.jpg",
             _folder="acbot",
             invite_bot=True,
         )

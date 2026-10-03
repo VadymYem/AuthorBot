@@ -1,7 +1,6 @@
-
 import asyncio
+import contextlib
 import logging
-import os
 import re
 import typing
 
@@ -11,95 +10,92 @@ logger = logging.getLogger(__name__)
 
 
 class ProxyPasser:
+    """Creates a temporary localhost.run reverse tunnel for the setup web UI."""
+
     def __init__(self, change_url_callback: callable = lambda _: None):
         self._tunnel_url = None
         self._sproc = None
+        self._reader_tasks = []
         self._url_available = asyncio.Event()
-        self._url_available.set()
         self._lock = asyncio.Lock()
         self._change_url_callback = change_url_callback
 
-    async def _read_stream(
-        self,
-        callback: callable,
-        stream: typing.BinaryIO,
-        delay: int,
-    ) -> None:
-        for getline in iter(stream.readline, ""):
-            await asyncio.sleep(delay)
-            data_chunk = await getline
-            if await callback(data_chunk.decode("utf-8")):
-                if not self._url_available.is_set():
-                    self._url_available.set()
+    async def _read_stream(self, stream: asyncio.StreamReader) -> None:
+        while True:
+            data = await stream.readline()
+            if not data:
+                return
+
+            line = data.decode("utf-8", errors="replace").strip()
+            if line:
+                await self._process_stream(line)
 
     def kill(self):
-        try:
-            self._sproc.terminate()
-        except Exception:
-            logger.exception("Failed to kill proxy pass process")
-        else:
-            logger.debug("Proxy pass tunnel killed")
+        if self._sproc is None:
+            return
 
-    async def _process_stream(self, stdout_line: str) -> None:
-        logger.debug(stdout_line)
-        regex = r"tunneled.*?(https:\/\/.+)"
+        if self._sproc.returncode is None:
+            with contextlib.suppress(ProcessLookupError):
+                self._sproc.terminate()
 
-        if re.search(regex, stdout_line):
-            self._tunnel_url = re.search(regex, stdout_line)[1]
-            self._change_url_callback(self._tunnel_url)
-            logger.debug("Proxy pass tunneled: %s", self._tunnel_url)
-            self._url_available.set()
+        for task in self._reader_tasks:
+            task.cancel()
+        self._reader_tasks = []
+        self._sproc = None
+
+    async def _process_stream(self, output_line: str) -> None:
+        # Do not dump the whole SSH stream into logs. It may contain connection
+        # metadata that is irrelevant after the tunnel URL is parsed.
+        match = re.search(r"tunneled.*?(https://\S+)", output_line, re.IGNORECASE)
+        if not match:
+            return
+
+        self._tunnel_url = match.group(1).rstrip()
+        self._change_url_callback(self._tunnel_url)
+        logger.debug("Proxy pass tunnel is ready")
+        self._url_available.set()
+
+    async def _start_process(self, port: int) -> None:
+        self._url_available = asyncio.Event()
+        self._sproc = await asyncio.create_subprocess_exec(
+            "ssh",
+            "-o",
+            "StrictHostKeyChecking=no",
+            "-o",
+            "ExitOnForwardFailure=yes",
+            "-R",
+            f"80:127.0.0.1:{port}",
+            "nokey@localhost.run",
+            stdin=asyncio.subprocess.DEVNULL,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE,
+        )
+        self._reader_tasks = [
+            asyncio.create_task(self._read_stream(self._sproc.stdout)),
+            asyncio.create_task(self._read_stream(self._sproc.stderr)),
+        ]
+        utils.atexit(self.kill)
 
     async def get_url(self, port: int, no_retry: bool = False) -> typing.Optional[str]:
         async with self._lock:
-            if self._tunnel_url:
-                try:
-                    await asyncio.wait_for(self._sproc.wait(), timeout=0.05)
-                except asyncio.TimeoutError:
+            if self._tunnel_url and self._sproc is not None:
+                if self._sproc.returncode is None:
                     return self._tunnel_url
-                else:
-                    self.kill()
-
-            if "DOCKER" in os.environ:
-                # We're in a Docker container, so we can't use ssh
-                # Also, the concept of Docker is to keep
-                # everything isolated, so we can't proxy-pass to
-                # open web.
-                return None
-
-            logger.debug("Starting proxy pass shell for port %d", port)
-            self._sproc = await asyncio.create_subprocess_shell(
-                (
-                    "ssh -o StrictHostKeyChecking=no -R"
-                    f" 80:127.0.0.1:{port} nokey@localhost.run"
-                ),
-                stdin=asyncio.subprocess.PIPE,
-                stdout=asyncio.subprocess.PIPE,
-                stderr=asyncio.subprocess.PIPE,
-            )
-
-            utils.atexit(self.kill)
-
-            self._url_available = asyncio.Event()
-            logger.debug("Starting proxy pass reader for port %d", port)
-            asyncio.ensure_future(
-                self._read_stream(
-                    self._process_stream,
-                    self._sproc.stdout,
-                    1,
-                )
-            )
-
-            try:
-                await asyncio.wait_for(self._url_available.wait(), 15)
-            except asyncio.TimeoutError:
                 self.kill()
                 self._tunnel_url = None
-                if no_retry:
-                    return None
 
-                return await self.get_url(port, no_retry=True)
+            attempts = 1 if no_retry else 2
+            for _ in range(attempts):
+                try:
+                    await self._start_process(port)
+                    await asyncio.wait_for(self._url_available.wait(), timeout=15)
+                except (asyncio.TimeoutError, FileNotFoundError, OSError):
+                    logger.warning("Unable to create setup reverse tunnel", exc_info=True)
+                    self.kill()
+                    self._tunnel_url = None
+                    continue
 
-            logger.debug("Proxy pass tunnel url to port %d: %s", port, self._tunnel_url)
+                if self._tunnel_url:
+                    return self._tunnel_url
 
-            return self._tunnel_url
+            return None

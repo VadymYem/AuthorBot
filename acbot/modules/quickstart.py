@@ -99,7 +99,7 @@ class Quickstart(loader.Module):
             return
 
         try:
-            with open(main.BASE_PATH / "assets" / "bot_pfp.png", "rb") as avatar:
+            with open(main.BASE_PATH / "assets" / "bot_pfp.jpg", "rb") as avatar:
                 await self.inline.bot.send_photo(self._client.tg_id, photo=avatar)
         except Exception:
             logger.debug("Unable to send quickstart avatar", exc_info=True)

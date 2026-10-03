@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="assets/acbot_pfp.png" width="180" alt="AuthorBot">
+<img src="assets/authorbot_banner.jpg" width="100%" alt="AuthorBot — by Author C">
 
 # AuthorBot
 
@@ -9,7 +9,7 @@
 [![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
 [![Telegram](https://img.shields.io/badge/Telegram-MTProto%20%2B%20Bot%20API-26A5E4?logo=telegram&logoColor=white)](https://core.telegram.org/)
 [![License](https://img.shields.io/badge/License-AGPLv3-663399)](LICENSE)
-[![Rich Messages](https://img.shields.io/badge/Rich%20Messages-Bot%20API%2010.x-111827)](https://core.telegram.org/bots/api#rich-messages)
+[![Rich Messages](https://img.shields.io/badge/Rich%20Messages-Bot%20API%2010.x-111827)](https://core.telegram.org/bots/api#rich-messages)\n[![Verify](https://github.com/VadymYem/AuthorBot/actions/workflows/verify.yml/badge.svg)](https://github.com/VadymYem/AuthorBot/actions/workflows/verify.yml)
 
 **AuthorBot** — модульний Telegram userbot від **Author C**.  
 Працює як розширення вашого Telegram-акаунта та окремий inline/public bot-інтерфейс.

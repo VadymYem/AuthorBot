@@ -161,7 +161,7 @@ class AIContextMod(loader.Module):
         }
 
         try:
-            async with aiohttp.ClientSession() as session:
+            async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=90)) as session:
                 async with session.post(url, json=payload) as resp:
                     result = await resp.json()
                     
@@ -201,7 +201,7 @@ class AIContextMod(loader.Module):
         }
 
         try:
-            async with aiohttp.ClientSession() as session:
+            async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=90)) as session:
                 async with session.post(url, json=payload, headers=headers) as resp:
                     result = await resp.json()
                     if resp.status != 200: return None
@@ -221,7 +221,7 @@ class AIContextMod(loader.Module):
         }
 
         try:
-            async with aiohttp.ClientSession() as session:
+            async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=90)) as session:
                 async with session.post(url, json=payload, headers=headers) as resp:
                     result = await resp.json()
                     if resp.status != 200:

@@ -29,8 +29,7 @@ function auth(c) {
                         ),
                         void $(".auth").fadeOut(250)) :
                     a.startsWith("acbot_") ?
-                    ($.cookie("session", a),
-                        (auth_required = !1),
+                    ((auth_required = !1),
                         $(".authorized").hide().fadeIn(100),
                         $(".auth").fadeOut(250, () => {
                             $(".installation").fadeIn(250);

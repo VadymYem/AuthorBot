@@ -11,9 +11,10 @@ __pycache__/
 build/
 develop-eggs/
 dist/
-# downloads/
-downloads/
+# Keep only the curated bundled AI modules from downloads/.
+downloads/*
 !downloads/ai_mods/
+!downloads/ai_mods/**
 eggs/
 .eggs/
 lib/
@@ -166,3 +167,7 @@ config.json
 *.m4a
 *.mp3
 *.avi
+
+# Keep tracked AuthorBot branding assets inside container images.
+!assets/*.jpg
+!assets/*.png
