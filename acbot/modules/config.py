@@ -15,6 +15,7 @@ import functools
 import re
 import typing
 from math import ceil
+from types import SimpleNamespace
 
 from herokutl.tl.types import Message
 
@@ -998,14 +999,14 @@ class AuthorBotConfigMod(loader.Module):
     @loader.command(alias="cfg")
     async def configcmd(self, message: Message):
         args = utils.get_args_raw(message)
-        form = await self.inline.form(
-            self.strings("choose_core"), message, silent=True,
-            rich_html=self._rich_screen(self.strings("choose_core")),
-            reply_markup=[[{"text": self.strings("close_btn"), "action": "close"}]],
-            force_me=True, ttl=15 * 60,
-        )
-        if not form:
-            return
+        # Render the destination screen before sending. Opening configuration
+        # requires one inline result, without a placeholder and a second edit.
+        screen = {}
+
+        async def capture(text, **kwargs):
+            screen.update(text=text, **kwargs)
+
+        preview = SimpleNamespace(edit=capture)
         if self.lookup(args) and hasattr(self.lookup(args), "config"):
             mod = self.lookup(args)
             if isinstance(mod, loader.Library):
@@ -1013,10 +1014,12 @@ class AuthorBotConfigMod(loader.Module):
             else:
                 type_ = mod.__origin__.startswith("<core")
 
-            await self.inline__configure(form, args, obj_type=type_)
-            return
-
-        await self.inline__choose_category(form)
+            await self.inline__configure(preview, args, obj_type=type_)
+        else:
+            await self.inline__choose_category(preview)
+        await self.inline.form(
+            message=message, silent=True, force_me=True, ttl=15 * 60, **screen,
+        )
 
     @loader.command(alias="fcfg")
     async def fconfig(self, message: Message):

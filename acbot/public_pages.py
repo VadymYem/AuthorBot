@@ -7,19 +7,20 @@
 
 from html import escape
 
-from .translations import SUPPORTED_LANGUAGES, normalize_language, translator
+from .translations import normalize_language, translator
 
 PAGES = ("start", "help", "about", "author", "projects")
+PUBLIC_LANGUAGES = ("ua", "en", "ru", "de")
 GITHUB = "https://github.com/VadymYem/AuthorBot"
 WEBSITE = "https://authorche.top"
 TELEGRAM = "https://t.me/wsinfo"
 RESOURCES = (
     ("authorche.top", WEBSITE, "resource_site"),
-    ("Poems", WEBSITE + "/poems", "resource_poems"),
-    ("Links", WEBSITE + "/links", "resource_links"),
-    ("Resume", WEBSITE + "/resume", "resource_resume"),
+    ("authorche.top/poems", WEBSITE + "/poems", "resource_poems"),
+    ("authorche.top/links", WEBSITE + "/links", "resource_links"),
+    ("authorche.top/resume", WEBSITE + "/resume", "resource_resume"),
     ("@BlogOfAuthor", "https://t.me/BlogOfAuthor", "resource_blog"),
-    ("Blog", WEBSITE + "/blog", "resource_blog"),
+    ("authorche.top/blog", WEBSITE + "/blog", "resource_blog"),
     ("alerts.authorche.top", "https://alerts.authorche.top", "resource_alerts"),
 )
 TELEGRAM_BOTS = (
@@ -28,17 +29,15 @@ TELEGRAM_BOTS = (
     ("authorcloud_bot", "bot_cloud"), ("ac_rich_bot", "bot_rich"),
     ("authorche_nice_bot", "bot_handwrite"),
 )
-WALLETS = (
-    ("USDT · TON", "UQAF4Y20285wR89pguiWrI8hmWHYx1hTrVUhghEcfWRq4ks6"),
-    ("USDT · TRX", "TRp5sEtvVULfnZU26pxxc979s8v9nZGj1W"),
-    ("USDT · ETH", "0x129D3d671fAcF1bb90611b5193f169Ff248045dA"),
-    ("BTC", "bc1qjle0pg0yv0dcdx39ltk9trt7semwpzy2zlhj68"),
-    ("SOL", "DV4zuPMU86WGU7hGQkHQAQsLrp5rweRWHwQFZowTVHCw"),
-)
+
+
+def public_language(language: str = "en") -> str:
+    language = normalize_language(language or "en")
+    return language if language in PUBLIC_LANGUAGES else "en"
 
 
 def text(key: str, language: str = "en") -> str:
-    language = normalize_language(language)
+    language = public_language(language)
     key = f"public_pages.{key}"
     return translator.data.get(language, {}).get(key) or translator.data["en"][key]
 
@@ -88,10 +87,10 @@ def rich_page(page: str, language: str = "en", *, prefix: str = ".") -> str:
         raise ValueError("Unknown public page")
     t = lambda key: text(key, language)
     title = "AuthorBot" if page in {"start", "welcome", "about"} else t(page + "_label")
-    content = [heading(title, "by AuthorChe"), '<hr/>']
+    content = [heading(title, t("by_author")), '<hr/>']
     if page in {"start", "welcome", "about", "author"}:
         artwork = "author_artwork" if page == "author" else "bot_artwork"
-        caption = "AuthorChe" if page == "author" else "AuthorBot · by AuthorChe"
+        caption = "AuthorChe" if page == "author" else "AuthorBot · " + t("by_author")
         content.append(f'<figure><img src="tg://photo?id={artwork}"/><figcaption>{caption}</figcaption></figure>')
 
     if page in {"start", "welcome"}:
@@ -123,7 +122,7 @@ def rich_page(page: str, language: str = "en", *, prefix: str = ".") -> str:
                     '</tg-button-row>']
     elif page == "projects":
         content += [f'<p>{t("projects_intro")}</p>']
-        for name, key in (("AuthorGram", "project_gram"), ("AuthorBot", "project_bot"), ("Jarvis | AuthorAi", "project_ai"), ("Goose | AuthorBrowser", "project_browser"), ("Author AI", "project_platform")):
+        for name, key in (("AuthorGram", "project_gram"), ("AuthorBot", "project_bot")):
             content += [heading(name), f'<p>{t(key)}</p>']
             if key == "project_gram":
                 content.append('<tg-button-row align="center"><tg-button type="url" style="success" url="https://play.google.com/store/apps/details?id=toss.authorgram.apk">Google Play</tg-button><tg-button type="url" url="https://t.me/authorgram_apk">Telegram</tg-button></tg-button-row>')
@@ -132,16 +131,9 @@ def rich_page(page: str, language: str = "en", *, prefix: str = ".") -> str:
             for name, url, key in RESOURCES) + '</table>', heading(t("bots_title")),
             '<table bordered striped compact>' + ''.join(
                 f'<tr><td><a href="https://t.me/{name}">@{name}</a></td><td>{t(key)}</td></tr>'
-                for name, key in TELEGRAM_BOTS) + '</table>',
-            heading(t("support_title")),
-            f'<p><a href="{WEBSITE}/donate">{t("support_site")}</a> · <a href="https://t.me/acdonate_bot">@acdonate_bot</a> — {t("support_stars")}</p>',
-            f'<details><summary>{t("support_wallets")}</summary><table bordered compact>' + ''.join(
-                f'<tr><td>{network}</td><td><code>{address}</code></td></tr>'
-                for network, address in WALLETS) + '</table></details>',
-            heading(t("hobbies_title")), f'<p>{t("hobbies")}</p>',
-            f'<p>Vadym · 🎂 26.12 · 🇺🇦 Ukraine</p><blockquote>Vita brevis, ars longa.</blockquote>']
+                for name, key in TELEGRAM_BOTS) + '</table>']
 
-    content += ['<hr/>', buttons(language), '<footer>AuthorBot · by AuthorChe</footer>']
+    content += ['<hr/>', buttons(language), f'<footer>AuthorBot · {t("by_author")}</footer>']
     return '\n'.join(content)
 
 
@@ -157,11 +149,9 @@ def fallback_page(page: str, language: str = "en", *, prefix: str = ".") -> str:
         body = t("author_intro") + '\n\n' + t("author_vision")
         body += '\n\n' + t("author_story") + '\n\n' + t("author_reading")
     elif page == "projects":
-        body = '\n'.join(f'• {t(key)}' for key in ("project_gram", "project_bot", "project_ai", "project_browser", "project_platform"))
+        body = '\n'.join(f'• {t(key)}' for key in ("project_gram", "project_bot"))
         body += '\n\n' + '\n'.join(f'<a href="{url}">{name}</a> — {t(key)}' for name, url, key in RESOURCES)
         body += '\n\n' + '\n'.join(f'<a href="https://t.me/{name}">@{name}</a> — {t(key)}' for name, key in TELEGRAM_BOTS)
-        body += f'\n\n<a href="{WEBSITE}/donate">{t("support_title")}</a> · @acdonate_bot\n' + '\n'.join(f'{network}: <code>{address}</code>' for network, address in WALLETS)
-        body += '\n\n' + t("hobbies")
     else:
         body = t("public_help_intro")
     commands = '\n'.join(f'/{key} — {t(key + "_label")}' for key in PAGES)
@@ -170,7 +160,7 @@ def fallback_page(page: str, language: str = "en", *, prefix: str = ".") -> str:
             f'<code>{escape(prefix)}{cmd}</code> — {t(key)}' for cmd, key in (("help", "step_help"), ("setlang", "step_language"), ("dlmod &lt;url&gt;", "step_install"))
         )
     title = 'AuthorChe' if page == 'author' else 'AuthorBot'
-    return f'<b>{title}</b> · by AuthorChe\n\n{body}\n\n{commands}\n\n{WEBSITE}\n{TELEGRAM}\n{GITHUB}'
+    return f'<b>{title}</b> · {t("by_author")}\n\n{body}\n\n{commands}\n\n{WEBSITE}\n{TELEGRAM}\n{GITHUB}'
 
 
 def bot_commands(language: str = "en") -> list:

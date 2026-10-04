@@ -280,7 +280,9 @@ class Gallery(InlineUnit):
         try:
             m = await self._invoke_unit(unit_id, message)
         except ChatSendInlineForbiddenError:
+            await self._unload_unit(unit_id)
             await answer(self.translator.getkey("inline.inline403"))
+            return False
         except Exception:
             logger.exception("Error sending inline gallery")
 
@@ -307,10 +309,9 @@ class Gallery(InlineUnit):
 
             return await self.gallery(**kwargs)
 
-        await self._units[unit_id]["future"].wait()
-        del self._units[unit_id]["future"]
-
-        self._units[unit_id]["chat"] = utils.get_chat_id(m)
+        if unit_id not in self._units:
+            return False
+        self._units[unit_id]["chat"] = m.chat_id
         self._units[unit_id]["message_id"] = m.id
 
         if isinstance(message, Message) and message.out:
@@ -320,9 +321,9 @@ class Gallery(InlineUnit):
             await status_message.delete()
 
         if not isinstance(next_handler, ListGalleryHelper):
-            asyncio.ensure_future(self._load_gallery_photos(unit_id))
+            self._schedule_unit_task(unit_id, self._load_gallery_photos(unit_id))
 
-        return InlineMessage(self, unit_id, self._units[unit_id]["inline_message_id"])
+        return InlineMessage(self, unit_id, self._units[unit_id].get("inline_message_id"))
 
     async def _call_photo(
         self,
@@ -365,10 +366,14 @@ class Gallery(InlineUnit):
 
     async def _load_gallery_photos(self, unit_id: str):
         """Preloads photo. Should be called via ensure_future"""
-        unit = self._units[unit_id]
+        unit = self._units.get(unit_id)
+        if unit is None:
+            return
 
         photo_url = await self._call_photo(unit["next_handler"])
 
+        if unit_id not in self._units:
+            return
         self._units[unit_id]["photos"] += (
             [photo_url] if isinstance(photo_url, str) else photo_url
         )
@@ -378,7 +383,7 @@ class Gallery(InlineUnit):
         if unit.get("preload", False) and len(unit["photos"]) - unit[
             "current_index"
         ] < unit.get("preload", False):
-            asyncio.ensure_future(self._load_gallery_photos(unit_id))
+            self._schedule_unit_task(unit_id, self._load_gallery_photos(unit_id))
 
     async def _gallery_slideshow_loop(
         self,
@@ -388,9 +393,8 @@ class Gallery(InlineUnit):
         while True:
             await asyncio.sleep(7)
 
-            unit = self._units[unit_id]
-
-            if unit_id not in self._units or not unit.get("slideshow", False):
+            unit = self._units.get(unit_id)
+            if unit is None or not unit.get("slideshow", False):
                 return
 
             if unit["current_index"] + 1 >= len(unit["photos"]) and isinstance(
@@ -427,7 +431,8 @@ class Gallery(InlineUnit):
             await call.answer("🚫 Slideshow off")
             return
 
-        asyncio.ensure_future(
+        self._schedule_unit_task(
+            unit_id,
             self._gallery_slideshow_loop(
                 call,
                 unit_id,
@@ -542,7 +547,7 @@ class Gallery(InlineUnit):
                 < self._units[unit_id].get("preload", 0) // 2
             ):
                 logger.debug("Started preload for gallery %s", unit_id)
-                asyncio.ensure_future(self._load_gallery_photos(unit_id))
+                self._schedule_unit_task(unit_id, self._load_gallery_photos(unit_id))
 
         try:
             await self.bot.edit_message_media(

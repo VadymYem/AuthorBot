@@ -1011,7 +1011,7 @@ class AuthorBot:
         """Persist data and release this process's resources without restarting."""
         async def attempt(awaitable):
             try:
-                await asyncio.wait_for(awaitable, timeout=5)
+                return await asyncio.wait_for(awaitable, timeout=5)
             except (Exception, asyncio.CancelledError):
                 logging.debug("Resource cleanup interrupted during shutdown", exc_info=True)
 
@@ -1037,7 +1037,9 @@ class AuthorBot:
                 if inline is not None:
                     await attempt(inline._stop())
                     if getattr(inline, "bot", None) is not None:
-                        await attempt(inline.bot.close())
+                        session = await attempt(inline.bot.get_session())
+                        if session is not None:
+                            await attempt(session.close())
         # Disconnect last: handlers are cancelled by TelegramClient.disconnect.
         for client in self.clients:
             await attempt(client.disconnect())

@@ -646,7 +646,7 @@ $public_pages:
   about_backup_title: 💾 継続して使うために
   about_backup: 標準のバックアップ、設定の保存、自動更新で、作業環境を維持できます。
   about_language_title: 🌍 言語
-  about_language: ウクライナ語、英語、ロシア語、ドイツ語、日本語に対応。未翻訳のモジュール文字列は英語で表示します。
+  about_language: "公開ボットページはウクライナ語、英語、ロシア語、ドイツ語に対応しています。Telegram の表示言語で応答し、その他の言語には英語を使用します。"
   about_setup_title: AuthorBotの動作環境
   about_setup: Linuxサーバー、Docker、AndroidのTermuxで利用できます。自動TermuxインストーラーがDebianとPythonを準備し、依存関係を確認して、詳細をログに保存します。
   about_vision: 便利なコマンドから自分だけのTelegramワークフローへ。あなたとともに成長するツールキット。
@@ -655,13 +655,10 @@ $public_pages:
   author_intro: <b>AuthorChe</b>は、ウクライナの開発者<b>Vadym Yemelianov</b>の創作・技術ブランドです。音楽家、歌手、作曲家、詩人として活動し、デジタルプロジェクトを制作しています。
   author_vision: 音楽、言葉、コードは、アイデアを形にするさまざまな方法です。AuthorCheの技術プロジェクトはTelegram、Android、自動化、プライバシー、AIツールを結び、機能と使い心地の両方を大切にしています。
   author_world: ✦ 一人の作者。さまざまな創作。
-  author_projects: AuthorBot、AuthorGram、Jarvis | AuthorAi、Goose | AuthorBrowser、Author AIは、これらの関心をデジタルツールとして形にしています。<code>/projects</code>や公式サイト、Telegramチャンネルをご覧ください。
+  author_projects: "AuthorBot と AuthorGram は、これらの関心をデジタルツールにしています。<code>/projects</code> で公開プロジェクト、ウェブサイト、Telegram ボットを確認し、公式サイトと Telegram チャンネルで最新情報をご覧ください。"
   projects_intro: <b>AuthorChe</b>のデジタルプロジェクトをご紹介します。公式サイトとTelegramチャンネルでニュース、リリース、実験的な取り組みを公開しています。
   project_gram: <b>AuthorGram</b> — プライバシー、画面設定、マルチメディアに重点を置いたAndroid用Telegramクライアント。
   project_bot: <b>AuthorBot</b> — 自動化、インラインツール、アクセス管理、バックアップ、Rich Messagesを備えたモジュール型Telegramユーザーボット。
-  project_ai: <b>Jarvis | AuthorAi</b> — ローカルGGUFモデル、音声モード、ツール、ファイル、オフライン知識を扱うAndroid用AIエージェント。
-  project_browser: <b>Goose | AuthorBrowser</b> — メディアツール、広告ブロック、バックグラウンド再生、連携機能を備えたAndroidブラウザー。
-  project_platform: <b>Author AI</b> — エージェント、ツール、自動化の連携に対応するサーバー型AIプラットフォーム。
   ready: ✅ AuthorBotのインライン画面の準備ができました。
   sent_author: ✅ AuthorCheの紹介をインラインボットとの個人チャットに送りました。
   running: 起動中
@@ -686,12 +683,6 @@ $public_pages:
   bot_cloud: "Telegramの無料クラウド"
   bot_rich: "誰でも使える無料のRich Messages"
   bot_handwrite: "テキストを手書き風に変換"
-  support_title: "❤ 支援する"
-  support_site: "支援ページ"
-  support_stars: "Starsなどの支援方法"
-  support_wallets: "暗号資産のアドレス"
-  hobbies_title: "😋 趣味"
-  hobbies: "音楽、詩、プログラミング、サイクリング。"
   author_story_title: "✍️ 言葉からコードへ"
   author_story: "AuthorCheとして活動するVadym Yemelianovは、ウクライナのチェルカースィ出身です。歌の教師、歌手、作曲家、詩人、開発者として活動しています。愛、戦争、友情、哲学的な問いを描き、音楽とプログラミングでもアイデアを形にしています。"
   author_reading: "authorche.top/poemsには、さまざまな時期やテーマの詩と、小説「Автор і Кароока」へのリンクがあります。ブログでは個人的な観察や考えを紹介しています。AuthorBotとAuthorGramは、この創作世界の技術的な側面を日々のコミュニケーションにつなげます。"
@@ -704,6 +695,12 @@ $public_pages:
   time_label: "時刻"
   platform_label: "プラットフォーム"
 
+  by_author: "AuthorChe 作"
+  editor_help: "✅ 公開ヘルプは誰でも使えるコマンドだけを表示し、自動更新されます。"
+  editor_usage: "コマンドの後に Rich HTML を送信してください。Telegram の表示言語用に保存します。リセット: <code>/set{page} reset</code>"
+  editor_reset: "✅ <code>{page}</code> を Telegram の表示言語用にリセットしました。"
+  editor_saved: "✅ <code>/{page}</code> の Rich Message を Telegram の表示言語用に更新しました。確認: <code>/{page}</code>"
+  editor_private: "このページには非公開プロジェクトが含まれています。保存する前に削除してください。"
 
 Weather:
   city: "\U0001F324 <b>天気 · 既定の都市</b>\n<code>{}</code>"

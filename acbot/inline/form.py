@@ -382,13 +382,10 @@ class Form(InlineUnit):
             return False  # The menu was already closed while being sent.
         # Record the actual destination before waiting for Telegram's chosen
         # result update. Close remains usable even if that update is delayed.
-        unit["chat"] = utils.get_chat_id(m)
+        unit["chat"] = m.chat_id
         unit["message_id"] = m.id
-        try:
-            await asyncio.wait_for(unit["future"].wait(), timeout=10)
-        except asyncio.TimeoutError:
-            logger.debug("Chosen inline result delayed; using stored message IDs")
-        unit.pop("future", None)
+        # Chosen-result updates may arrive later or never. The message is
+        # already usable; its destination is enough to delete it immediately.
         if unit_id not in self._units:
             return False
 

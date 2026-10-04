@@ -69,35 +69,38 @@ class RuntimeTests(unittest.IsolatedAsyncioTestCase):
         call = SimpleNamespace(unit_id="unit", inline_message_id="encoded", answer=AsyncMock(), delete=message.delete)
         with patch("acbot.inline.utils.logger.warning") as warning:
             self.assertTrue(await manager._close_unit_handler(call))
-        manager.bot.delete_message.assert_awaited_once_with(chat_id=-100123, message_id=42)
+        manager.bot.delete_message.assert_not_awaited()
         manager._client.delete_messages.assert_awaited_once_with(-100123, [42])
         self.assertFalse(manager._units)
         self.assertFalse(manager._custom_map)
         manager.bot.edit_message_reply_markup.assert_not_awaited()
         warning.assert_not_called()
 
-    async def test_close_detaches_inline_controls_without_false_warning(self):
+    async def test_close_failure_preserves_message_and_controls_for_retry(self):
         manager = self._inline_manager()
-        call = SimpleNamespace(unit_id="unit", inline_message_id="encoded", answer=AsyncMock(), delete=AsyncMock(return_value=False))
-        with patch("acbot.inline.utils.logger.warning") as warning:
-            self.assertTrue(await manager._close_unit_handler(call))
-        manager.bot.edit_message_reply_markup.assert_awaited_once_with(inline_message_id="encoded", reply_markup=None)
-        self.assertFalse(manager._units)
-        self.assertFalse(manager._custom_map)
-        warning.assert_not_called()
-
-    async def test_close_failure_preserves_controls_for_retry(self):
-        manager = self._inline_manager()
-        manager.bot.edit_message_reply_markup.side_effect = RuntimeError("temporarily offline")
         call = SimpleNamespace(unit_id="unit", inline_message_id="encoded", answer=AsyncMock(), delete=AsyncMock(return_value=False))
         with self.assertLogs("acbot.inline.utils", level="WARNING") as logs:
             self.assertFalse(await manager._close_unit_handler(call))
         self.assertIn("retry", logs.output[0])
+        manager.bot.edit_message_reply_markup.assert_not_awaited()
         self.assertIn("unit", manager._units)
         self.assertIn("close-key", manager._custom_map)
 
+    async def test_failed_account_deletion_never_substitutes_bot_api_message_ids(self):
+        from acbot.inline.types import InlineMessage
+        manager = self._inline_manager()
+        manager._client.delete_messages.side_effect = RuntimeError("offline")
+        manager.bot.delete_message.side_effect = RuntimeError("Bad Request: message to delete not found")
+        with patch("acbot.inline.utils.resolve_inline_message_id", return_value=(None, None, None, None)):
+            self.assertFalse(await InlineMessage(manager, "unit", "encoded").delete())
+        self.assertIn("unit", manager._units)
+        self.assertIn("close-key", manager._custom_map)
+        manager._client.delete_messages.assert_awaited_once_with(-100123, [42])
+        manager.bot.delete_message.assert_not_awaited()
+
     async def test_close_is_idempotent_when_message_is_already_deleted(self):
         manager = self._inline_manager()
+        manager._units["unit"].pop("inline_message_id")
         manager.bot.delete_message.side_effect = RuntimeError("Bad Request: message to delete not found")
         self.assertTrue(await manager._delete_unit_message(unit_id="unit", chat_id=-100123, message_id=42))
         self.assertTrue(await manager._delete_unit_message(chat_id=-100123, message_id=42))
@@ -111,6 +114,101 @@ class RuntimeTests(unittest.IsolatedAsyncioTestCase):
         self.assertTrue(await manager._unload_unit("unit"))
         self.assertFalse(manager._units)
         self.assertFalse(manager._custom_map)
+
+    async def test_close_cancels_gallery_tasks_after_deleting_message(self):
+        from acbot.inline.types import InlineMessage
+        manager = self._inline_manager()
+        started = asyncio.Event()
+        stopped = asyncio.Event()
+        async def slideshow():
+            started.set()
+            try:
+                await asyncio.Event().wait()
+            finally:
+                stopped.set()
+        task = manager._schedule_unit_task('unit', slideshow())
+        await started.wait()
+        self.assertTrue(await InlineMessage(manager, 'unit', 'encoded').delete())
+        self.assertTrue(task.cancelled())
+        self.assertTrue(stopped.is_set())
+        self.assertFalse(manager._units)
+
+    async def test_forms_and_lists_keep_channel_ids_without_chosen_result(self):
+        from herokutl.tl.types import Message, PeerChannel
+        for kind in ('form', 'list'):
+            manager = self._inline_manager()
+            manager._units.clear()
+            manager._find_caller_sec_map = Mock(return_value=None)
+            sent = Message(id=42, peer_id=PeerChannel(123))
+            manager._invoke_unit = AsyncMock(return_value=sent)
+            manager.translator = SimpleNamespace(getkey=lambda key: key)
+            if kind == 'form':
+                result = await asyncio.wait_for(manager.form('Info', sent.chat_id, ttl=30,
+                    reply_markup=[[{'text': 'Close', 'action': 'close'}]]), .1)
+            else:
+                result = await asyncio.wait_for(manager.list(sent.chat_id, ['One', 'Two'], ttl=30), .1)
+            self.assertEqual(manager._units[result.unit_id]['chat'], -1000000000123)
+            await manager._chosen_inline_handler(SimpleNamespace(query=result.unit_id, inline_message_id='late-id'))
+            self.assertEqual(manager._units[result.unit_id]['inline_message_id'], 'late-id')
+            self.assertTrue(await result.delete())
+            manager._client.delete_messages.assert_awaited_once_with(-1000000000123, [42])
+            manager.bot.delete_message.assert_not_awaited()
+
+    async def test_public_command_catalog_registers_four_translations(self):
+        from acbot.public_pages import bot_commands
+        manager = self._inline_manager()
+        manager.rich = SimpleNamespace(request=AsyncMock())
+        await manager._set_public_commands()
+        calls = manager.rich.request.call_args_list
+        self.assertEqual(calls[0].kwargs['commands'], bot_commands('en'))
+        catalogs = {call.kwargs['language_code']: call.kwargs['commands']
+                    for call in calls if call.args[0] == 'setMyCommands' and 'language_code' in call.kwargs}
+        self.assertEqual(set(catalogs), {'uk', 'en', 'ru', 'de'})
+        for language in ('uk', 'en', 'ru', 'de'):
+            self.assertEqual(catalogs[language], bot_commands(language))
+        self.assertEqual(calls[-1].args, ('deleteMyCommands',))
+        self.assertEqual(calls[-1].kwargs, {'language_code': 'ja'})
+
+    async def test_public_editors_save_and_reset_only_their_language(self):
+        from acbot.modules.inline_stuff import InlineStuff, PUBLIC_BOT_EDITORS
+        from acbot.public_pages import text
+        mod = InlineStuff()
+        mod.set = Mock()
+        for code, language in (('uk', 'ua'), ('ru', 'ru'), ('de', 'de'), ('en', 'en')):
+            message = SimpleNamespace(from_user=SimpleNamespace(id=next(iter(PUBLIC_BOT_EDITORS)), language_code=code), answer=AsyncMock())
+            await mod._set_public_page(message, 'about', '<p>Updated page</p>')
+            mod.set.assert_called_with(f'public_about_rich_{language}', '<p>Updated page</p>')
+            self.assertEqual(message.answer.call_args.args[0], text('editor_saved', language).format(page='about'))
+            await mod._set_public_page(message, 'about', 'reset')
+            mod.set.assert_called_with(f'public_about_rich_{language}', None)
+            self.assertEqual(message.answer.call_args.args[0], text('editor_reset', language).format(page='about'))
+            mod.set.reset_mock()
+            await mod._set_public_page(message, 'projects', '<p>Jarvis | AuthorAi</p>')
+            mod.set.assert_not_called()
+            self.assertEqual(message.answer.call_args.args[0], text('editor_private', language))
+
+    async def test_every_public_page_uses_visitor_language_with_english_fallback(self):
+        from acbot.modules.inline_stuff import InlineStuff
+        from acbot.public_pages import PAGES, rich_page, fallback_page
+        mod = InlineStuff()
+        mod._db = SimpleNamespace(get=lambda *args: 'ua')
+        # Simulate an old single-language saved page with private projects.
+        mod.get = lambda key, default=None: '<p>Jarvis | AuthorAi</p>' if key.endswith('_rich') else default
+        mod.get_prefix = lambda: '.'
+        for code, language in (('uk-UA', 'ua'), ('ru', 'ru'), ('de-DE', 'de'), ('en', 'en'), ('ja', 'en'), ('fr', 'en'), (None, 'en')):
+            for page in PAGES:
+                message = SimpleNamespace(from_user=SimpleNamespace(language_code=code),
+                    chat=SimpleNamespace(id=123), answer=AsyncMock(return_value=SimpleNamespace(message_id=42)))
+                mod.inline = SimpleNamespace(rich=SimpleNamespace(send=AsyncMock(), request=AsyncMock()))
+                await mod._send_public_page(message, page, requested='ru')
+                if page == 'help':
+                    self.assertEqual(message.answer.call_args.args[0], fallback_page(page, language))
+                    self.assertEqual(mod.inline.rich.request.call_args.kwargs['rich_message']['html'], rich_page(page, language))
+                else:
+                    self.assertEqual(mod.inline.rich.send.call_args.kwargs['html'], rich_page(page, language))
+                    mod.inline.rich.send.side_effect = RuntimeError('unsupported rich')
+                    await mod._send_public_page(message, page, requested='ru')
+                    self.assertEqual(message.answer.call_args.args[0], fallback_page(page, language))
 
     async def test_inline_rich_form_and_classic_fallback_keep_controls(self):
         manager = self._inline_manager()
@@ -453,14 +551,14 @@ class RuntimeTests(unittest.IsolatedAsyncioTestCase):
 
     async def test_localized_public_pages_and_language_selection(self):
         from acbot import translations
-        from acbot.public_pages import rich_page, fallback_page, PAGES, bot_commands
-        from acbot.modules.inline_stuff import InlineStuff, LEGACY_DEFAULTS
+        from acbot.public_pages import rich_page, fallback_page, PAGES, PUBLIC_LANGUAGES, bot_commands
+        from acbot.modules.inline_stuff import InlineStuff
         from bs4 import BeautifulSoup
         from ruamel.yaml import YAML
         from string import Formatter
 
         base = YAML(typ="safe").load(ROOT / "acbot/langpacks/en.yml")
-        for language in translations.SUPPORTED_LANGUAGES:
+        for language in PUBLIC_LANGUAGES:
             pack = YAML(typ="safe").load(ROOT / f"acbot/langpacks/{language}.yml")
             self.assertEqual(set(pack["$public_pages"]), set(base["$public_pages"]))
             for page in (*PAGES, "welcome"):
@@ -484,11 +582,13 @@ class RuntimeTests(unittest.IsolatedAsyncioTestCase):
         mod._db = SimpleNamespace(get=lambda *args: "ua")
         visitor = SimpleNamespace(from_user=SimpleNamespace(language_code="de-DE"))
         self.assertEqual(mod._language(visitor), "de")
-        self.assertEqual(mod._language(visitor, "uk"), "ua")
+        self.assertEqual(mod._language(visitor, "uk"), "de")
+        for code, expected in (("uk-UA", "ua"), ("ru_RU", "ru"), ("en-US", "en"), ("ja", "en"), ("fr", "en"), (None, "en")):
+            self.assertEqual(mod._language(SimpleNamespace(from_user=SimpleNamespace(language_code=code))), expected)
         self.assertEqual(translations.normalize_language("jp"), "ja")
         self.assertIn("Deutsch", translations.SUPPORTED_LANGUAGES["de"])
         mod.get_prefix = lambda: "."
-        mod.get = lambda *args: '<h1>Custom page</h1>'
+        mod.get = lambda key, default=None: '<h1>Custom page</h1>' if key == "public_about_rich_de" else default
         self.assertEqual(mod._public_rich("about", "de"), '<h1>Custom page</h1>')
 
     async def test_quickstart_rich_and_classic_delivery(self):
@@ -526,7 +626,7 @@ class RuntimeTests(unittest.IsolatedAsyncioTestCase):
         mod.set.assert_not_called()
         message.from_user.id = 6316376597
         await mod._set_public_page(message, "author", "reset")
-        mod.set.assert_called_once_with("public_author_rich", None)
+        mod.set.assert_called_once_with("public_author_rich_en", None)
 
     async def test_running_banner_clears_before_ascii_and_status(self):
         import io
@@ -646,11 +746,15 @@ class RuntimeTests(unittest.IsolatedAsyncioTestCase):
             self.assertEqual(response.status, 401)
 
     async def test_public_help_is_a_fixed_allowlist_in_every_language(self):
-        from acbot.public_pages import rich_page, fallback_page, PAGES, RESOURCES, TELEGRAM_BOTS, WALLETS
+        from acbot.public_pages import rich_page, fallback_page, PAGES, RESOURCES, TELEGRAM_BOTS
         from acbot.modules.inline_stuff import InlineStuff
         mod = InlineStuff()
         mod.get = lambda *args: '<p>.eval .dlmod .config</p>'
         for lang in ('ua', 'en', 'de', 'ru', 'ja'):
+            for page in PAGES:
+                for html in (rich_page(page, lang), fallback_page(page, lang)):
+                    for private in ('Jarvis', 'AuthorAi', 'Goose', 'AuthorBrowser', 'Author AI'):
+                        self.assertNotIn(private, html)
             for html in (rich_page('help', lang, prefix='!'), fallback_page('help', lang, prefix='!'), mod._public_rich('help', lang)):
                 self.assertNotIn('.eval', html)
                 self.assertNotIn('!help', html)
@@ -662,8 +766,8 @@ class RuntimeTests(unittest.IsolatedAsyncioTestCase):
                     self.assertIn(url, html)
                 for name, key in TELEGRAM_BOTS:
                     self.assertIn(name, html)
-                for network, address in WALLETS:
-                    self.assertIn(address, html)
+                for unwanted in ("Jarvis", "AuthorAi", "Goose", "AuthorBrowser", "Author AI", "acdonate", "USDT", "Vita brevis", "26.12"):
+                    self.assertNotIn(unwanted, html)
 
     async def test_public_help_is_delivered_before_rich_api_finishes(self):
         from acbot.modules.inline_stuff import InlineStuff
@@ -718,9 +822,9 @@ class RuntimeTests(unittest.IsolatedAsyncioTestCase):
             await asyncio.wait_for(manager._callback_query_handler(allowed), 1)
         watcher.assert_not_awaited()
         self.assertFalse(manager._units)
-        manager.bot.delete_message.assert_awaited_once()
+        manager._client.delete_messages.assert_awaited_once()
 
-    async def test_close_times_out_hung_delete_and_still_detaches(self):
+    async def test_close_times_out_hung_delete_and_preserves_retry(self):
         manager = self._inline_manager()
         async def blocked():
             await asyncio.Event().wait()
@@ -728,10 +832,10 @@ class RuntimeTests(unittest.IsolatedAsyncioTestCase):
         wait_for = asyncio.wait_for
         async def short_wait(awaitable, timeout):
             return await wait_for(awaitable, min(timeout, .02))
-        with patch('acbot.inline.utils.asyncio.wait_for', side_effect=short_wait):
-            self.assertTrue(await manager._close_unit_handler(call))
-        manager.bot.edit_message_reply_markup.assert_awaited_once()
-        self.assertFalse(manager._units)
+        with patch('acbot.inline.utils.asyncio.wait_for', side_effect=short_wait), self.assertLogs('acbot.inline.utils', level='WARNING'):
+            self.assertFalse(await manager._close_unit_handler(call))
+        manager.bot.edit_message_reply_markup.assert_not_awaited()
+        self.assertIn('unit', manager._units)
 
     async def test_rich_config_hides_secrets_and_keeps_controls_after_save(self):
         from acbot.modules.config import AuthorBotConfigMod
@@ -767,7 +871,8 @@ class RuntimeTests(unittest.IsolatedAsyncioTestCase):
         kwargs = mod.inline.form.call_args.kwargs
         self.assertTrue(kwargs['force_me'])
         self.assertIn('rich_html', kwargs)
-        self.assertIn('rich_html', form.edit.call_args.kwargs)
+        form.edit.assert_not_awaited()
+        self.assertGreater(len(kwargs['reply_markup']), 1)
 
     async def test_rich_edit_falls_back_and_removes_obsolete_callbacks(self):
         manager = self._inline_manager()
@@ -852,7 +957,7 @@ class RuntimeTests(unittest.IsolatedAsyncioTestCase):
         server._stop_requested = asyncio.Event()
         server.clients = [SimpleNamespace(acbot_db=SimpleNamespace(save=Mock(), remote_force_save=AsyncMock()),
                         loader=SimpleNamespace(modules=[SimpleNamespace(on_unload=AsyncMock())],
-                        inline=SimpleNamespace(_stop=AsyncMock(), bot=SimpleNamespace(close=AsyncMock()))),
+                        inline=SimpleNamespace(_stop=AsyncMock(), bot=SimpleNamespace(get_session=AsyncMock(return_value=SimpleNamespace(close=AsyncMock())), close=AsyncMock()))),
                         disconnect=AsyncMock()) for _ in range(2)]
         first = server.request_stop()
         self.assertIs(first, server.request_stop())
@@ -864,7 +969,8 @@ class RuntimeTests(unittest.IsolatedAsyncioTestCase):
             client.acbot_db.remote_force_save.assert_awaited_once()
             client.loader.modules[0].on_unload.assert_awaited_once()
             client.loader.inline._stop.assert_awaited_once()
-            client.loader.inline.bot.close.assert_awaited_once()
+            client.loader.inline.bot.close.assert_not_awaited()
+            client.loader.inline.bot.get_session.return_value.close.assert_awaited_once()
             client.disconnect.assert_awaited_once()
 
     async def test_main_exits_on_requested_stop_even_when_client_runner_waits(self):

@@ -646,7 +646,7 @@ $public_pages:
   about_backup_title: 💾 Kontinuität
   about_backup: Integrierte Backups, dauerhaft gespeicherte Einstellungen und Selbstupdates helfen, deinen Arbeitsbereich zu erhalten.
   about_language_title: 🌍 Sprachen
-  about_language: Ukrainisch, Englisch, Russisch, Deutsch und Japanisch; nicht übersetzte Modultexte werden auf Englisch angezeigt.
+  about_language: "Die öffentlichen Bot-Seiten unterstützen Ukrainisch, Englisch, Russisch und Deutsch. Antworten richten sich nach der Sprache deiner Telegram-Oberfläche; für andere Sprachen wird Englisch verwendet."
   about_setup_title: Wo AuthorBot läuft
   about_setup: Auf einem Linux-Server, in Docker oder auf Android mit Termux. Der automatische Termux-Installer richtet Debian und Python ein, prüft Abhängigkeiten und speichert Installationsdetails in einer Protokolldatei.
   about_vision: 'Ein Werkzeugkasten, der mit dir wächst: vom praktischen Befehl bis zu deinem eigenen Telegram-Arbeitsablauf.'
@@ -655,13 +655,10 @@ $public_pages:
   author_intro: '<b>AuthorChe</b> ist die kreative und technische Marke des ukrainischen Entwicklers <b>Vadym Yemelianov</b>: Musiker, Sänger, Komponist, Dichter und Schöpfer digitaler Projekte.'
   author_vision: Musik, Worte und Code sind verschiedene Wege, eine Idee zum Leben zu erwecken. Die technischen Projekte von AuthorChe verbinden Telegram, Android, Automatisierung, Datenschutz und KI-Werkzeuge — mit Blick auf die Funktionen und das Nutzungserlebnis.
   author_world: ✦ Ein Autor. Viele Wege, etwas zu schaffen.
-  author_projects: AuthorBot, AuthorGram, Jarvis | AuthorAi, Goose | AuthorBrowser und Author AI setzen diese Interessen in digitale Werkzeuge um. Entdecke sie mit <code>/projects</code> oder folge der offiziellen Website und dem Telegram-Kanal.
+  author_projects: "AuthorBot und AuthorGram setzen diese Interessen in digitale Werkzeuge um. Öffne <code>/projects</code>, um die öffentlichen Projekte, Websites und Telegram-Bots kennenzulernen, oder folge der offiziellen Website und dem Telegram-Kanal für Neuigkeiten."
   projects_intro: Entdecke die digitalen Projekte von <b>AuthorChe</b>. Die offizielle Website und der Telegram-Kanal bündeln Neuigkeiten, Veröffentlichungen und Experimente.
   project_gram: <b>AuthorGram</b> — ein Telegram-Client für Android mit Schwerpunkt auf Datenschutz, Oberflächeneinstellungen und Multimedia.
   project_bot: <b>AuthorBot</b> — ein modularer Telegram-Userbot mit Automatisierung, Inline-Werkzeugen, Zugriffskontrolle, Backups und Rich Messages.
-  project_ai: <b>Jarvis | AuthorAi</b> — ein Android-KI-Agent mit lokalen GGUF-Modellen, Sprachmodi, Werkzeugen, Dateien und Offline-Wissen.
-  project_browser: <b>Goose | AuthorBrowser</b> — ein Android-Browser mit Medienwerkzeugen, Werbeblocker, Hintergrundwiedergabe und Integrationen.
-  project_platform: <b>Author AI</b> — eine serverbasierte KI-Plattform mit Integrationen für Agenten, Werkzeuge und Automatisierung.
   ready: ✅ Die Inline-Oberfläche von AuthorBot ist bereit.
   sent_author: ✅ Die AuthorChe-Seite ist in deinem privaten Chat mit dem Inline-Bot.
   running: GESTARTET
@@ -686,12 +683,6 @@ $public_pages:
   bot_cloud: "Kostenlose Cloud in Telegram"
   bot_rich: "Kostenlose Rich Messages für alle"
   bot_handwrite: "Text in Handschrift umwandeln"
-  support_title: "❤ Unterstützen"
-  support_site: "Unterstützungsseite"
-  support_stars: "Stars und weitere Möglichkeiten"
-  support_wallets: "Kryptowährungsadressen"
-  hobbies_title: "😋 Hobbys"
-  hobbies: "Musik, Poesie, Programmieren, Radfahren."
   author_story_title: "✍️ Von Worten zu Code"
   author_story: "Vadym Yemelianov, bekannt als AuthorChe, stammt aus Tscherkassy in der Ukraine. Er ist Gesangslehrer, Sänger, Komponist, Dichter und Entwickler. Seine Texte behandeln Liebe, Krieg, Freundschaft und philosophische Fragen; Musik und Programmierung geben seinen Ideen weitere Formen."
   author_reading: "Entdecke Gedichte verschiedener Jahre und Themen auf authorche.top/poems sowie den Link zum Roman «Автор і Кароока». Im Blog teilt er persönliche Beobachtungen und Gedanken. AuthorBot und AuthorGram bringen die technische Seite dieser kreativen Welt in die tägliche Kommunikation."
@@ -704,6 +695,12 @@ $public_pages:
   time_label: "Uhrzeit"
   platform_label: "Plattform"
 
+  by_author: "von AuthorChe"
+  editor_help: "✅ Die öffentliche Hilfe enthält nur allgemein verfügbare Befehle und wird automatisch aktualisiert."
+  editor_usage: "Sende Rich-HTML nach dem Befehl. Die Seite wird für die Sprache deiner Telegram-Oberfläche gespeichert. Zurücksetzen: <code>/set{page} reset</code>"
+  editor_reset: "✅ Die Seite <code>{page}</code> wurde für die Sprache deiner Telegram-Oberfläche zurückgesetzt."
+  editor_saved: "✅ Die Rich Message für <code>/{page}</code> wurde für die Sprache deiner Telegram-Oberfläche aktualisiert. Prüfen: <code>/{page}</code>"
+  editor_private: "Diese Seite enthält private Projekte. Entferne sie vor dem Speichern."
 
 Weather:
   city: "\U0001F324 <b>Wetter · Standardort</b>\n<code>{}</code>"

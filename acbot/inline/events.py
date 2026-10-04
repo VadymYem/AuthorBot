@@ -288,6 +288,8 @@ class Events(InlineUnit):
                         return
 
                     try:
+                        if call.inline_message_id:
+                            unit["inline_message_id"] = call.inline_message_id
                         result = await button["callback"](
                             (
                                 BotInlineCall
@@ -372,13 +374,10 @@ class Events(InlineUnit):
             return
 
         for unit_id, unit in self._units.items():
-            if (
-                unit_id == query
-                and "future" in unit
-                and isinstance(unit["future"], Event)
-            ):
+            if unit_id == query:
                 unit["inline_message_id"] = chosen_inline_query.inline_message_id
-                unit["future"].set()
+                if isinstance(unit.get("future"), Event):
+                    unit.pop("future").set()
                 return
 
         for unit_id, unit in self._units.copy().items():

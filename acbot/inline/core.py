@@ -24,7 +24,7 @@ from ..branding import BOT_PHOTO, bot_photo, personal_bot_name
 from ..database import Database
 from ..tl_cache import CustomTelegramClient
 from ..translations import Translator
-from ..public_pages import bot_commands
+from ..public_pages import PUBLIC_LANGUAGES, bot_commands
 from .bot_pm import BotPM
 from .events import Events
 from .form import Form
@@ -116,6 +116,20 @@ class InlineManager(
 
             await asyncio.sleep(5)
 
+    async def _set_public_commands(self):
+        await self.rich.request(
+            "setMyCommands",
+            commands=bot_commands(),
+        )
+        for language in PUBLIC_LANGUAGES:
+            await self.rich.request(
+                "setMyCommands", commands=bot_commands(language),
+                language_code="uk" if language == "ua" else language,
+            )
+        # Clear the previously registered Japanese catalog so those clients
+        # inherit the default English public commands after updating.
+        await self.rich.request("deleteMyCommands", language_code="ja")
+
     async def register_manager(
         self,
         after_break: bool = False,
@@ -162,15 +176,7 @@ class InlineManager(
         except Exception as exc:
             logger.warning("Unable to update personal bot name (%s)", type(exc).__name__)
         try:
-            await self.rich.request(
-                "setMyCommands",
-                commands=bot_commands(),
-            )
-            for language in ("ua", "ru", "de", "ja"):
-                await self.rich.request(
-                    "setMyCommands", commands=bot_commands(language),
-                    language_code="uk" if language == "ua" else language,
-                )
+            await self._set_public_commands()
             await self.rich.request(
                 "setMyDescription",
                 description=(
@@ -309,7 +315,7 @@ class InlineManager(
             raise Exception("No query results")
 
         return await q[0].click(
-            utils.get_chat_id(message) if isinstance(message, Message) else message,
+            message.chat_id if isinstance(message, Message) else message,
             reply_to=(
                 message.reply_to_msg_id if isinstance(message, Message) else None
             ),

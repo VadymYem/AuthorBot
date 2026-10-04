@@ -233,34 +233,8 @@ class Utils(InlineUnit):
         if deleted:
             return True
 
-        # Deletion can fail for old messages or after message state changes.
-        # Fall back to removing the keyboard, then unload the unit so dead
-        # callbacks are never left behind.
-        message = getattr(call, "message", None)
-        detached = False
-        if getattr(message, "chat", None) and getattr(message, "message_id", None):
-            with contextlib.suppress(Exception):
-                await asyncio.wait_for(self.bot.edit_message_reply_markup(
-                    chat_id=message.chat.id,
-                    message_id=message.message_id,
-                    reply_markup=None,
-                ), timeout=3)
-                detached = True
-        elif getattr(call, "inline_message_id", None):
-            with contextlib.suppress(Exception):
-                await asyncio.wait_for(self.bot.edit_message_reply_markup(
-                    inline_message_id=call.inline_message_id, reply_markup=None,
-                ), timeout=3)
-                detached = True
-
-        unit_id = getattr(call, "unit_id", None)
-        if detached and unit_id:
-            with contextlib.suppress(Exception):
-                await self._unload_unit(unit_id)
-
-        if detached:
-            logger.debug("Message cannot be deleted; its controls were closed")
-            return True
+        # Closing means deleting the message. Keep controls available when the
+        # network fails, rather than leaving a disabled message in the chat.
         logger.warning("Unable to close message; controls remain available for retry")
         return False
 
@@ -636,30 +610,48 @@ class Utils(InlineUnit):
                 await self._unload_unit(unit_id)
             return True
 
+        bot_message = bool(getattr(source, "chat", None) or
+                           (getattr(call, "chat_id", None) is not None and
+                            getattr(call, "message_id", None) is not None))
+        inline_message = (unit.get("type") in {"form", "list", "gallery"}
+                          or unit.get("inline_message_id")
+                          or getattr(call, "inline_message_id", None)) and not bot_message
         if chat_id is not None and message_id is not None:
             try:
-                await asyncio.wait_for(self.bot.delete_message(chat_id=chat_id, message_id=message_id), timeout=2)
+                if inline_message:
+                    # Account and Bot API IDs differ in private chats. Use only
+                    # the account that actually sent this inline message.
+                    await asyncio.wait_for(self._client.delete_messages(chat_id, [message_id]), timeout=3)
+                else:
+                    await asyncio.wait_for(self.bot.delete_message(chat_id=chat_id, message_id=message_id), timeout=2)
                 return await finished()
             except Exception as exc:
-                if "message to delete not found" in str(exc).lower():
+                if not inline_message and "message to delete not found" in str(exc).lower():
                     return await finished()
-            # Inline messages are sent by the account. MTProto can delete them
-            # even when Bot API has no permission or its deletion window expired.
-            try:
-                await asyncio.wait_for(self._client.delete_messages(chat_id, [message_id]), timeout=3)
-                return await finished()
-            except Exception:
-                pass
+                logger.debug("Message deletion failed; keeping controls for retry", exc_info=True)
+                return False
 
         try:
             message_id, peer, _, _ = resolve_inline_message_id(
                 unit.get("inline_message_id") or getattr(call, "inline_message_id", None)
             )
-
+            if message_id is None or peer is None:
+                return False
             await asyncio.wait_for(self._client.delete_messages(peer, [message_id]), timeout=3)
             return await finished()
         except Exception:
             return False
+
+    def _schedule_unit_task(self, unit_id: str, awaitable):
+        task = asyncio.ensure_future(awaitable)
+        unit = self._units.get(unit_id)
+        if unit is None:
+            task.cancel()
+            return task
+        tasks = unit.setdefault("tasks", set())
+        tasks.add(task)
+        task.add_done_callback(tasks.discard)
+        return task
 
     async def _unload_unit(self, unit_id: str) -> bool:
         """Params `self`, `unit_id` are for internal use only, do not try to pass them"""
@@ -670,6 +662,13 @@ class Utils(InlineUnit):
             for button in row:
                 if key := button.get("_callback_data"):
                     self._custom_map.pop(key, None)
+        tasks = [task for task in unit.get("tasks", ())
+                 if task is not asyncio.current_task() and not task.done()]
+        for task in tasks:
+            task.cancel()
+        if tasks:
+            with contextlib.suppress(Exception):
+                await asyncio.wait_for(asyncio.gather(*tasks, return_exceptions=True), timeout=1)
         if callable(unit.get("on_unload")):
             try:
                 result = unit["on_unload"]()

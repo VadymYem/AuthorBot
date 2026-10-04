@@ -209,7 +209,9 @@ class List(InlineUnit):
         try:
             m = await self._invoke_unit(unit_id, message)
         except ChatSendInlineForbiddenError:
+            await self._unload_unit(unit_id)
             await answer(self.translator.getkey("inline.inline403"))
+            return False
         except Exception:
             logger.exception("Can't send list")
 
@@ -226,10 +228,9 @@ class List(InlineUnit):
 
             return False
 
-        await self._units[unit_id]["future"].wait()
-        del self._units[unit_id]["future"]
-
-        self._units[unit_id]["chat"] = utils.get_chat_id(m)
+        if unit_id not in self._units:
+            return False
+        self._units[unit_id]["chat"] = m.chat_id
         self._units[unit_id]["message_id"] = m.id
 
         if isinstance(message, Message) and message.out:
@@ -238,7 +239,7 @@ class List(InlineUnit):
         if status_message and not message.out:
             await status_message.delete()
 
-        return InlineMessage(self, unit_id, self._units[unit_id]["inline_message_id"])
+        return InlineMessage(self, unit_id, self._units[unit_id].get("inline_message_id"))
 
     async def _list_page(
         self,

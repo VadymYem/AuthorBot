@@ -674,7 +674,7 @@ $public_pages:
   about_backup_title: 💾 Continuity
   about_backup: Built-in backups, persistent settings and self-updates help maintain your workspace.
   about_language_title: 🌍 Languages
-  about_language: Ukrainian, English, Russian, German and Japanese, with English fallback for untranslated module strings.
+  about_language: "Public bot pages support Ukrainian, English, Russian and German. Responses follow your Telegram interface language; other languages receive English."
   about_setup_title: Where AuthorBot runs
   about_setup: Use a Linux server, Docker or Android with Termux. The automated Termux installer prepares Debian and Python, checks dependencies and keeps installation details in a log.
   about_vision: 'A toolkit that grows with you: from a useful command to a Telegram workflow of your own.'
@@ -683,13 +683,10 @@ $public_pages:
   author_intro: '<b>AuthorChe</b> is the creative and technical brand of Ukrainian developer <b>Vadym Yemelianov</b>: musician, singer, composer, poet and creator of digital projects.'
   author_vision: Music, words and code are different ways to bring an idea to life. AuthorChe's technical projects focus on Telegram, Android, automation, privacy and AI tools — with attention to both what a product does and how it feels to use.
   author_world: ✦ One author. Many ways to create.
-  author_projects: AuthorBot, AuthorGram, Jarvis | AuthorAi, Goose | AuthorBrowser and Author AI bring these interests into digital tools. Open <code>/projects</code> to explore them, or follow the official website and Telegram channel for updates.
+  author_projects: "AuthorBot and AuthorGram turn these interests into digital tools. Open <code>/projects</code> to explore the public projects, websites and Telegram bots, or follow the official website and Telegram channel for updates."
   projects_intro: Explore the digital projects of <b>AuthorChe</b>. The official website and Telegram channel bring together news, releases and experiments.
   project_gram: <b>AuthorGram</b> — an Android Telegram client focused on privacy, interface settings and multimedia.
   project_bot: <b>AuthorBot</b> — a modular Telegram userbot with automation, inline tools, access controls, backups and Rich Messages.
-  project_ai: <b>Jarvis | AuthorAi</b> — an Android AI agent with local GGUF models, voice modes, tools, files and offline knowledge.
-  project_browser: <b>Goose | AuthorBrowser</b> — an Android browser with media tools, ad blocking, background playback and integrations.
-  project_platform: <b>Author AI</b> — a server AI platform and integrations for agents, tools and automation.
   ready: ✅ AuthorBot inline interface is ready.
   sent_author: ✅ The AuthorChe page is in your private chat with the inline bot.
   running: RUNNING
@@ -715,12 +712,6 @@ $public_pages:
   bot_cloud: "Free cloud in Telegram"
   bot_rich: "Free Rich Messages for everyone"
   bot_handwrite: "Text to handwriting"
-  support_title: "❤ Support"
-  support_site: "Support website"
-  support_stars: "Stars and other methods"
-  support_wallets: "Cryptocurrency addresses"
-  hobbies_title: "😋 Hobbies"
-  hobbies: "Music, poetry, programming, cycling."
   author_story_title: "✍️ From words to code"
   author_story: "Vadym Yemelianov, known as AuthorChe, is an author from Cherkasy, Ukraine: a music educator, vocalist, composer, poet and developer. His creative work explores love, war, friendship and philosophical questions; music and programming give these ideas other forms."
   author_reading: "Start with the poems at authorche.top/poems: explore different years and themes and the link to the novel «Автор і Кароока». His blog shares personal observations and reflections. AuthorBot and AuthorGram carry the technical side of this creative world into everyday communication."
@@ -733,6 +724,12 @@ $public_pages:
   time_label: "Time"
   platform_label: "Platform"
 
+  by_author: "by AuthorChe"
+  editor_help: "✅ Public help lists only commands available to everyone and updates automatically."
+  editor_usage: "Send rich HTML after the command. It will be saved for your Telegram interface language. Reset: <code>/set{page} reset</code>"
+  editor_reset: "✅ The <code>{page}</code> page has been reset for your Telegram interface language."
+  editor_saved: "✅ The Rich Message for <code>/{page}</code> has been updated for your Telegram interface language. Check: <code>/{page}</code>"
+  editor_private: "This page contains private projects. Remove them before saving."
 
 Weather:
   city: "\U0001F324 <b>Weather · default city</b>\n<code>{}</code>"
