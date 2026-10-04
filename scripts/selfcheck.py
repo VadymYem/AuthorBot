@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+# SPDX-FileCopyrightText: 2026 Vadym Yemelianov (AuthorChe / VadymYem), AuthorBot integration and maintenance
+# SPDX-License-Identifier: AGPL-3.0-only
+# Existing upstream copyright and license notices are retained; see NOTICE.md and LICENSE.
+
 """Preflight checks used by installers, Docker builds and self-updates."""
 
 from __future__ import annotations

@@ -1,9 +1,28 @@
 #!/usr/bin/env bash
+# SPDX-FileCopyrightText: 2026 Vadym Yemelianov (AuthorChe / VadymYem), AuthorBot integration and maintenance
+# SPDX-License-Identifier: AGPL-3.0-only
+# Existing upstream copyright and license notices are retained; see NOTICE.md and LICENSE.
+
 set -euo pipefail
 
 APP_NAME="AuthorBot"
 MODULE_NAME="acbot"
 REPO_URL="${AUTHORBOT_REPO_URL:-https://github.com/VadymYem/AuthorBot.git}"
+
+# Prefer the destination after transfer; the current location is a temporary
+# transport fallback. Explicit custom repositories are never replaced.
+resolve_repository() {
+  if [ -z "${AUTHORBOT_REPO_URL:-}" ] && ! GIT_TERMINAL_PROMPT=0 git ls-remote --exit-code "$REPO_URL" HEAD >/dev/null 2>&1; then
+    local previous_url="https://github.com/AuthorGramProject/AuthorBot.git"
+    if GIT_TERMINAL_PROMPT=0 git ls-remote --exit-code "$previous_url" HEAD >/dev/null 2>&1; then
+      REPO_URL="$previous_url"
+    else
+      printf 'Official AuthorBot repository is unavailable. Try again later.\n' >&2
+      return 1
+    fi
+  fi
+}
+
 VENV_DIR="${AUTHORBOT_VENV_DIR:-.venv}"
 LOG_FILE="${AUTHORBOT_INSTALL_LOG:-$PWD/authorbot-install.log}"
 
@@ -46,6 +65,7 @@ install_system_packages() {
 }
 
 prepare_repo() {
+  resolve_repository
   if [ -f "requirements.txt" ] && [ -d "$MODULE_NAME" ]; then
     return
   fi
@@ -57,7 +77,7 @@ prepare_repo() {
     local branch
     branch="$(git -C "$APP_NAME" symbolic-ref --quiet --short refs/remotes/origin/HEAD 2>/dev/null | sed 's#^origin/##' || true)"
     [ -n "$branch" ] || branch="main"
-    run git -C "$APP_NAME" reset --hard "origin/$branch"
+    run git -C "$APP_NAME" merge --ff-only "origin/$branch"
     cd "$APP_NAME"
     return
   fi

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Vadym Yemelianov (AuthorChe / VadymYem), AuthorBot integration and maintenance
+# SPDX-License-Identifier: AGPL-3.0-only
+# Existing upstream copyright and license notices are retained; see NOTICE.md and LICENSE.
+
 # ©️ Dan G. && AuthorChe
 # 🌐 https://authorche.top
 # You can redistribute it and/or modify it under the terms of the GNU AGPLv3.
@@ -29,7 +33,7 @@ PROJECTS_RICH = rich_page("projects", "ua")
 FALLBACK = {page: fallback_page(page, "ua") for page in PAGES}
 
 # Recognize exact previously saved factory pages; keep editors' custom HTML.
-LEGACY_DEFAULTS = {'start': ['795c39e88d1f3837292cd831dbb0b63888aa37437526368236c732287234296a', '301ff20507692d24e772e7c9d3964c95ea9ec7cce802ca4ae6f9a2ca0bd4dec9'], 'help': ['b1087188e17a8e08a9fa133d7b72cf565c8985662c4dda9c9268262de0fca120', 'aa0a8742372f45cb8a1e518d1593c8d892280569fec503b1963093e7ec38d8bb'], 'about': ['fce248080d03251a8ea6a9b353e01849bd658f6a6cad636f4397a9222d4cd7e4', '3c8d8853678acf7bf512a343d9b06b0a9977b5921b4b2199d1b673f2f494053f'], 'projects': ['ed29ac332306fba0037e1f9a7ca2d50dd880ba6f47c7a15af3dc29d6af3a539d', 'f28afe004ddc0c40a65ea7ab0a9e1fa54424b79696a1c4c81a425e743313c255']}
+LEGACY_DEFAULTS = {'start': ['795c39e88d1f3837292cd831dbb0b63888aa37437526368236c732287234296a', '301ff20507692d24e772e7c9d3964c95ea9ec7cce802ca4ae6f9a2ca0bd4dec9', '6a07b122f2f830aa4898534b3b004ff9481256c2ccfaa6e05bc6f88fa8614b3a', 'bc02712db77709e21f21f5ef8b85b88dbbc03ce88f4b0b719beee9d90f34fd14', 'f6e3de1b0d01c5c8605f015f77d615eef8f117f5c056fb59ccfc541bd79a6936', '388342e0cc44f97bdeadff407983be18cd9316fdf53adf5d85b3523e6570b4ef', '211119884e49597609ac958ef64d5037cb88358ab0c5088f915c03bad456dc58'], 'help': ['b1087188e17a8e08a9fa133d7b72cf565c8985662c4dda9c9268262de0fca120', 'aa0a8742372f45cb8a1e518d1593c8d892280569fec503b1963093e7ec38d8bb', 'a0383e8e69165688e8292bc81cd84be7b230c5ac1fbdd58f3aa10ec9f7003961', '1427ab14b69fb0bf9591ac82014419a7857cdedc05928cb6186d2360b78a01d8', 'f9da734695150aa35c1b0bc4cff73eeef84e971c6c6acc4bcdcb17047684b006', 'f27fcda0eb7c2b5fcf32f0b98979753573ad651fa8d2296ac14487bf5e0caf9b', '28fb57dc2714696bfae9c32b2861da6c02eb80dfc0f958646f338afb404c7090'], 'about': ['fce248080d03251a8ea6a9b353e01849bd658f6a6cad636f4397a9222d4cd7e4', '3c8d8853678acf7bf512a343d9b06b0a9977b5921b4b2199d1b673f2f494053f', 'b7f67e64ae64e7bdc655cbdd88e0eb08d03bc1641fd68de90fffa684802a9e78', 'b548ffd195a68c8940166ea588d4c99f5901e8d222bbaf2bb26e4ef3e400b6de', 'e38be06af2f3bb28dd3774fafe8c932893d0959a64fe4b292f698b79fd134772', 'f09a52616e80abd6a8eebe9279ea076194807a147ac713276065f0377a5caee6', 'ae76b0ac804f338ba39cc0a64af0b96b01587a84d54831a9a31e456f54a48f85'], 'projects': ['ed29ac332306fba0037e1f9a7ca2d50dd880ba6f47c7a15af3dc29d6af3a539d', 'f28afe004ddc0c40a65ea7ab0a9e1fa54424b79696a1c4c81a425e743313c255', '709054d5cc674a3848bc9f503f28604514f64c6483b0f7bbf70c594ac113c1db', '7b81ca670fb1efb52e4b2b36e715b07344e9f77e425725039821f8ff3d5bc84b', '60fb9cb07da224cb2bc22f7e1c58588287409493528e4d709706a105e594f316', '6f5913693e00a58851ef4e01b38e61d5df9ee79433045a00a0a17789a88d47d4', '1d97444a4418ac55547f83fd87dbb44709fcb07ff0da74baa3ac244f01ca6768'], 'author': ['2619daa25b1c308d3f09b33c94d4efd166850da3de34114d779b62df89ce52da', '405ec067509ee16db53d432597a08964fa8d601c65d36b823a56f8e6e0cde518', '46c91ad376a8027ffc59945877847f1e9331892166cfda9f1d39118410a3b2a6', 'afd9b604f37f433db937db9ebc21dfb9b7c0ffe0892c6fc1723a07006540a03a', 'cfa8039e3501536891087ac5cce15dff623ff957775693354e537c78fe28b866']}
 
 @loader.tds
 class InlineStuff(loader.Module):
@@ -135,6 +139,9 @@ class InlineStuff(loader.Module):
                      if translations.normalize_language(lang) in translations.SUPPORTED_LANGUAGES), "en")
 
     def _public_rich(self, page: str, language: str = "ua") -> str:
+        if page == "help":
+            # Public help is a fixed allowlist, never a saved owner command list.
+            return rich_page(page, language)
         saved = self.get(f"public_{page}_rich", None)
         if saved and hashlib.sha256(saved.encode()).hexdigest() not in LEGACY_DEFAULTS.get(page, ()):
             return saved.replace("Author C", "AuthorChe")
@@ -142,6 +149,21 @@ class InlineStuff(loader.Module):
 
     async def _send_public_page(self, message: AiogramMessage, page: str, requested: str = ""):
         language = self._language(message, requested)
+        if page == "help":
+            # Deliver the usable public catalog immediately, then upgrade that
+            # same message to rich formatting. A slow/unsupported Rich API must
+            # never make visitors wait without any response.
+            sent = await message.answer(
+                fallback_page("help", language), disable_web_page_preview=True,
+            )
+            try:
+                await self.inline.rich.request(
+                    "editMessageText", chat_id=message.chat.id, message_id=sent.message_id,
+                    rich_message={"html": rich_page("help", language)}, _timeout=(3, 7),
+                )
+            except Exception:
+                logger.debug("Rich public help unavailable; public catalog remains readable")
+            return
         try:
             html = self._public_rich(page, language)
             # Migrate saved default pages without replacing editors' own content.
@@ -161,6 +183,7 @@ class InlineStuff(loader.Module):
                 html=html,
                 media=media or None,
                 files=files or None,
+                timeout=(3, 7),
             )
             return
         except Exception as exc:
@@ -179,6 +202,11 @@ class InlineStuff(loader.Module):
 
     async def _set_public_page(self, message: AiogramMessage, page: str, value: str):
         if message.from_user.id not in PUBLIC_BOT_EDITORS:
+            return
+
+        if page == "help":
+            self.set("public_help_rich", None)
+            await message.answer("✅ Публічна довідка містить лише загальнодоступні команди й оновлюється автоматично.")
             return
 
         value = value.strip()

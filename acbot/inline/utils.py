@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Vadym Yemelianov (AuthorChe / VadymYem), AuthorBot integration and maintenance
+# SPDX-License-Identifier: AGPL-3.0-only
+# Existing upstream copyright and license notices are retained; see NOTICE.md and LICENSE.
+
 import asyncio
 import contextlib
 import functools
@@ -220,10 +224,10 @@ class Utils(InlineUnit):
     async def _close_unit_handler(self, call: InlineCall):
         # Answer first so Telegram clients stop showing the callback spinner.
         with contextlib.suppress(Exception):
-            await call.answer()
+            await asyncio.wait_for(call.answer(), timeout=2)
 
         try:
-            deleted = await call.delete()
+            deleted = await asyncio.wait_for(call.delete(), timeout=7)
         except Exception:
             deleted = False
         if deleted:
@@ -236,17 +240,17 @@ class Utils(InlineUnit):
         detached = False
         if getattr(message, "chat", None) and getattr(message, "message_id", None):
             with contextlib.suppress(Exception):
-                await self.bot.edit_message_reply_markup(
+                await asyncio.wait_for(self.bot.edit_message_reply_markup(
                     chat_id=message.chat.id,
                     message_id=message.message_id,
                     reply_markup=None,
-                )
+                ), timeout=3)
                 detached = True
         elif getattr(call, "inline_message_id", None):
             with contextlib.suppress(Exception):
-                await self.bot.edit_message_reply_markup(
+                await asyncio.wait_for(self.bot.edit_message_reply_markup(
                     inline_message_id=call.inline_message_id, reply_markup=None,
-                )
+                ), timeout=3)
                 detached = True
 
         unit_id = getattr(call, "unit_id", None)
@@ -347,6 +351,7 @@ class Utils(InlineUnit):
         inline_message_id: typing.Optional[str] = None,
         chat_id: typing.Optional[int] = None,
         message_id: typing.Optional[int] = None,
+        rich_html: typing.Optional[str] = None,
     ) -> bool:
         """
         Edits unit message
@@ -398,9 +403,10 @@ class Utils(InlineUnit):
             logger.error("You passed two or more exclusive parameters simultaneously")
             return False
 
+        old_keys = set()
         if unit_id is not None and unit_id in self._units:
             unit = self._units[unit_id]
-
+            old_keys = {btn.get("_callback_data") for row in unit.get("buttons", []) for btn in row}
             unit["buttons"] = reply_markup
 
             if isinstance(force_me, bool):
@@ -420,6 +426,9 @@ class Utils(InlineUnit):
                 or unit.get("inline_message_id", False)
                 or getattr(query, "inline_message_id", None)
             )
+        if not inline_message_id and unit.get("chat") is not None:
+            chat_id = chat_id or unit.get("chat")
+            message_id = message_id or unit.get("message_id")
 
         if not chat_id and not message_id and not inline_message_id:
             logger.warning(
@@ -430,6 +439,29 @@ class Utils(InlineUnit):
                 "- There is an in-userbot error, which you should report"
             )
             return False
+
+        if rich_html is not None and all(media_params) and not unit.get("rich_fallback"):
+            try:
+                await self.rich.request(
+                    "editMessageText",
+                    **({"inline_message_id": inline_message_id} if inline_message_id
+                       else {"chat_id": chat_id, "message_id": message_id}),
+                    rich_message={"html": rich_html},
+                    reply_markup=self.generate_markup(reply_markup),
+                    _timeout=(3, 7),
+                )
+                unit.update(rich_html=rich_html, text=text)
+                new_keys = {btn.get("_callback_data") for row in reply_markup for btn in row}
+                for key in old_keys - new_keys:
+                    self._custom_map.pop(key, None)
+                return True
+            except Exception:
+                unit["rich_fallback"] = True
+
+        # Remove obsolete routing records; live callbacks use unit buttons.
+        new_keys = {btn.get("_callback_data") for row in reply_markup for btn in row}
+        for key in old_keys - new_keys:
+            self._custom_map.pop(key, None)
 
         try:
             path = urlparse(photo).path
@@ -606,7 +638,7 @@ class Utils(InlineUnit):
 
         if chat_id is not None and message_id is not None:
             try:
-                await self.bot.delete_message(chat_id=chat_id, message_id=message_id)
+                await asyncio.wait_for(self.bot.delete_message(chat_id=chat_id, message_id=message_id), timeout=2)
                 return await finished()
             except Exception as exc:
                 if "message to delete not found" in str(exc).lower():
@@ -614,7 +646,7 @@ class Utils(InlineUnit):
             # Inline messages are sent by the account. MTProto can delete them
             # even when Bot API has no permission or its deletion window expired.
             try:
-                await self._client.delete_messages(chat_id, [message_id])
+                await asyncio.wait_for(self._client.delete_messages(chat_id, [message_id]), timeout=3)
                 return await finished()
             except Exception:
                 pass
@@ -624,7 +656,7 @@ class Utils(InlineUnit):
                 unit.get("inline_message_id") or getattr(call, "inline_message_id", None)
             )
 
-            await self._client.delete_messages(peer, [message_id])
+            await asyncio.wait_for(self._client.delete_messages(peer, [message_id]), timeout=3)
             return await finished()
         except Exception:
             return False
@@ -642,7 +674,7 @@ class Utils(InlineUnit):
             try:
                 result = unit["on_unload"]()
                 if inspect.isawaitable(result):
-                    await result
+                    await asyncio.wait_for(result, timeout=2)
             except Exception:
                 # A module's cleanup error must not keep already closed controls.
                 logger.debug("Inline unit cleanup failed", exc_info=True)

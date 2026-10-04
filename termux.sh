@@ -1,4 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/bash
+# SPDX-FileCopyrightText: 2026 Vadym Yemelianov (AuthorChe / VadymYem), AuthorBot integration and maintenance
+# SPDX-License-Identifier: AGPL-3.0-only
+# Existing upstream copyright and license notices are retained; see NOTICE.md and LICENSE.
+
 set -euo pipefail
 
 APP_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]:-/dev/stdin}")" && pwd -P)"
@@ -22,7 +26,7 @@ if [ ! -f "$APP_DIR/scripts/termux-runtime.sh" ] || [ ! -f "$APP_DIR/bootstrap-t
     exit 1
   fi
   installer="$(mktemp "$PREFIX/tmp/authorbot-bootstrap.XXXXXX")"
-  if ! curl -fsSL --retry 3 https://raw.githubusercontent.com/VadymYem/AuthorBot/main/bootstrap-termux.sh -o "$installer" 2>>"$LOG_FILE"; then
+  if ! curl -fsSL --retry 3 https://raw.githubusercontent.com/VadymYem/AuthorBot/main/bootstrap-termux.sh -o "$installer" 2>>"$LOG_FILE" && ! curl -fsSL --retry 3 https://raw.githubusercontent.com/AuthorGramProject/AuthorBot/main/bootstrap-termux.sh -o "$installer" 2>>"$LOG_FILE"; then
     rm -f "$installer"
     printf 'Не вдалося завантажити інсталятор. Журнал: %s\n' "$LOG_FILE" >&2
     exit 1

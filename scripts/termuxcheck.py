@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+# SPDX-FileCopyrightText: 2026 Vadym Yemelianov (AuthorChe / VadymYem), AuthorBot integration and maintenance
+# SPDX-License-Identifier: AGPL-3.0-only
+# Existing upstream copyright and license notices are retained; see NOTICE.md and LICENSE.
+
 """Exercise the Termux installer without touching packages, profiles or Telegram."""
 import json
 import os
@@ -59,6 +63,8 @@ if name == "pkg":
 if name == "git":
     if os.environ.get("MOCK_FAIL_GIT"):
         print("git failure")
+        sys.exit(9)
+    if args and args[0] == "ls-remote" and os.environ.get("MOCK_BEFORE_TRANSFER") and "VadymYem" in args[-2]:
         sys.exit(9)
     if args and args[0] == "clone":
         destination = Path(args[-1])
@@ -128,6 +134,32 @@ if name == "proot-distro":
         self.assertIn(["git", "-C", str(self.app), "fetch", "origin", "main"], self.recorded())
         self.assertIn(["git", "-C", str(self.app), "merge", "--ff-only", "origin/main"], self.recorded())
         self.assertFalse(any("reset" in call for call in self.recorded()))
+
+    def test_bootstrap_uses_current_repository_until_transfer(self):
+        destination = self.app.parent / "before transfer"
+        self.env.update(AUTHORBOT_APP_DIR=str(destination), MOCK_BOOTSTRAP_SOURCE=str(self.app), MOCK_BEFORE_TRANSFER="1")
+        result = self.bootstrap()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        clone = next(call for call in self.recorded() if call[:2] == ['git', 'clone'])
+        self.assertIn('https://github.com/AuthorGramProject/AuthorBot.git', clone)
+
+    def test_bootstrap_prefers_destination_after_transfer(self):
+        destination = self.app.parent / "after transfer"
+        self.env.update(AUTHORBOT_APP_DIR=str(destination), MOCK_BOOTSTRAP_SOURCE=str(self.app))
+        result = self.bootstrap()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        clone = next(call for call in self.recorded() if call[:2] == ['git', 'clone'])
+        self.assertIn('https://github.com/VadymYem/AuthorBot.git', clone)
+
+    def test_bootstrap_does_not_replace_custom_repository(self):
+        destination = self.app.parent / "custom"
+        self.env.update(AUTHORBOT_APP_DIR=str(destination), MOCK_BOOTSTRAP_SOURCE=str(self.app),
+                        MOCK_BEFORE_TRANSFER="1", AUTHORBOT_REPO_URL="https://example.org/custom.git")
+        result = self.bootstrap()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        clone = next(call for call in self.recorded() if call[:2] == ['git', 'clone'])
+        self.assertIn('https://example.org/custom.git', clone)
+        self.assertFalse(any('AuthorGramProject' in str(call) for call in self.recorded()))
 
     def test_bootstrap_stops_on_git_failure(self):
         (self.app / ".git").mkdir()

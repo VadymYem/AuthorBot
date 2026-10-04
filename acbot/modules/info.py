@@ -1,10 +1,14 @@
+# SPDX-FileCopyrightText: 2026 Vadym Yemelianov (AuthorChe / VadymYem), AuthorBot integration and maintenance
+# SPDX-License-Identifier: AGPL-3.0-only
+# Existing upstream copyright and license notices are retained; see NOTICE.md and LICENSE.
+
 __version__ = (2, 5, 0)
 
 #              © Copyright 2022
 #
 # https://t.me/AuthorChe
 #
-# 🔒 Licensed under the GNU GPLv3
+# 🔒 Licensed under the GNU AGPLv3
 # 🌐 https://www.gnu.org/licenses/agpl-3.0.html
 
 # meta developer: @AuthorChe
@@ -19,10 +23,10 @@ import git
 from telethon.tl.types import Message
 from telethon.utils import get_display_name
 
-from .. import loader, main, utils
+from .. import loader, main, translations, utils
+from ..public_pages import heading, text as page_text
 from ..branding import DEFAULT_BANNER, LEGACY_BANNERS
 import datetime
-import time
 from ..inline.types import InlineQuery
 
 logger = logging.getLogger(__name__)
@@ -38,6 +42,8 @@ class acbotInfoMod(loader.Module):
         "version": "Version",
         "build": "Build",
         "prefix": "Prefix",
+        "_cfg_time": "Time zone offset from UTC, in hours.",
+        "_cfg_close": "Label of the Close button.",
         "send_info": "Показати інформацію про бота.",
         "description": "ℹ This will not compromise any sensitive info.",
         "up-to-date": "😌 Up-to-date.",
@@ -55,6 +61,8 @@ class acbotInfoMod(loader.Module):
         "version": "Версія",
         "build": "Збірка",
         "prefix": "Префікс",
+        "_cfg_time": "Зсув часового поясу від UTC у годинах.",
+        "_cfg_close": "Текст кнопки закриття.",
         "send_info": "Показати інформацію про бота.",
         "description": "ℹ Це не розкриє особистої інформації :)",
         "_ihandle_doc_info": "Показати інформацію про бота.",
@@ -188,57 +196,59 @@ class acbotInfoMod(loader.Module):
         self._client = client
         self._me = await client.get_me()
 
-    def _render_info(self) -> str:
+    def _snapshot(self):
+        esc = utils.escape_html
         ver = utils.get_git_hash() or "Unknown"
-
         try:
-            repo = git.Repo()
-            diff = repo.git.log(["HEAD..origin/main", "--oneline"])
-            upd = (
-                self.strings("update_required") if diff else self.strings("up-to-date")
-            )
+            diff = git.Repo().git.log(["HEAD..origin/main", "--oneline"])
+            upd = (self.strings("update_required") if diff else self.strings("up-to-date")).replace('</b>', '').replace('<b>', '')
         except Exception:
             upd = ""
-
-        me = f'<b><a href="tg://user?id={self._me.id}">{utils.escape_html(get_display_name(self._me))}</a></b>'
-        version = f'<i>{".".join(list(map(str, list(main.__version__))))}</i>'
-        build = f'<a href="https://github.com/VadymYem/AuthorBot/commit/{ver}">#{ver[:8]}</a>'  # fmt: skip
-        prefix = f"«<code>{utils.escape_html(self.get_prefix())}</code>»"
-        platform = utils.get_named_platform()
-        uptime = utils.formatted_uptime()
         try:
-            timezone_hours = int(self.config["timezone"])
+            offset = datetime.timedelta(hours=int(self.config["timezone"]))
+            clock = datetime.datetime.now(datetime.timezone(offset)).strftime("%H:%M:%S")
         except (TypeError, ValueError):
-            timezone_hours = 0
-        offset = datetime.timedelta(hours=timezone_hours)
-        tz = datetime.timezone(offset)
-        time1 = datetime.datetime.now(tz)
-        time = time1.strftime("%H:%M:%S")
+            clock = datetime.datetime.now(datetime.timezone.utc).strftime("%H:%M:%S")
+        return {
+            "me": f'<a href="tg://user?id={self._me.id}">{esc(get_display_name(self._me))}</a>',
+            "version": esc(".".join(map(str, main.__version__))),
+            "build": f'<a href="https://github.com/VadymYem/AuthorBot/commit/{ver}">#{ver[:8]}</a>',
+            "prefix": f'<code>{esc(self.get_prefix())}</code>',
+            "platform": utils.get_named_platform(),
+            "uptime": esc(utils.formatted_uptime()), "time": clock, "upd": upd,
+        }
 
-        return (
-            "<b></b>\n"
-            + self.config["custom_message"].format(
-                me=me,
-                version=version,
-                build=build,
-                upd=upd,
-                prefix=prefix,
-                platform=platform,
-                uptime=uptime,
-                time=time,
-            )
-            if self.config["custom_message"] != "no"
-            else (
-                "<b>AuthorBot</b>\n"
-                f'<b>🤴 {self.strings("owner")}: </b>{me}\n\n'
-                f"<b>🕶 {self.strings('version')}: </b>{version} {build}\n"
-                f"<b>{upd}</b>\n"
-                f"<b>⏳ Uptime: {uptime}</b>\n\n"
-                f"<b>⌚ Time: {time}</b>\n"
-                f"<b>📼 {self.strings('prefix')}: </b>{prefix}\n"
-                f"{platform}\n"
-            )
-        )
+    def _render_info(self, values=None) -> str:
+        values = values or self._snapshot()
+        if self.config["custom_message"] != "no":
+            return self.config["custom_message"].format(**values)
+        return ("<b>AuthorBot</b>\n"
+                + "\n".join(f'<b>{self.strings(key)}:</b> {values[field]}'
+                            for key, field in (("owner", "me"), ("version", "version"),
+                                               ("build", "build"), ("prefix", "prefix")))
+                + f'\n{values["upd"]}\n⏳ {values["uptime"]} · ⌚ {values["time"]}\n{values["platform"]}')
+
+    def _render_rich_info(self, values=None):
+        values = values or self._snapshot()
+        language = self._db.get(translations.__name__, "lang", "en").split()[0]
+        content = [heading("AuthorBot · " + page_text("info_title", language), "by AuthorChe"), '<hr/>']
+        if self.config["custom_message"] != "no":
+            content.append('<section>' + self._render_info(values).replace('\n', '<br/>') + '</section>')
+        else:
+            fields = [(self.strings(key), values[field]) for key, field in
+                      (("owner", "me"), ("version", "version"), ("build", "build"), ("prefix", "prefix"))]
+            fields += [(page_text(label, language), values[field]) for label, field in
+                       (("uptime", "uptime"), ("time_label", "time"), ("platform_label", "platform"))]
+            content.append('<table bordered striped compact>' + ''.join(
+                f'<tr><td><b>{utils.escape_html(label)}</b></td><td>{value}</td></tr>'
+                for label, value in fields) + '</table>')
+            if values["upd"]:
+                # Legacy status strings had closing/opening bold tags intended
+                # for the classic template. Balance them before rich rendering.
+                status = values["upd"].replace('</b>', '').replace('<b>', '')
+                content.append('<blockquote>' + status + '</blockquote>')
+        content += ['<footer>© 2026 AuthorChe · AuthorBot · AGPLv3</footer>']
+        return '\n'.join(content)
 
     def _get_mark(self, btn_count):
         btn_count = str(btn_count)
@@ -252,73 +262,46 @@ class acbotInfoMod(loader.Module):
             else None
         )
 
+    def _buttons(self, close=False):
+        buttons = [button for i in range(1, 13) if (button := self._get_mark(i))]
+        rows = list(utils.chunks(buttons, 3))
+        if close:
+            rows += [[{"text": self.config["close_btn"], "action": "close"}]]
+        return rows
+
+    async def _rich_payload(self, values, inline=False):
+        html = self._render_rich_info(values)
+        banner = await self._banner(inline=inline)
+        media = []
+        if banner:
+            kind, source = next(iter(banner.items()))
+            kind = "animation" if kind == "gif" else kind
+            tag = "img" if kind == "photo" else "audio" if kind == "audio" else "video"
+            html = html.replace('<hr/>', f'<hr/><figure><{tag} src="tg://{kind}?id=info_banner"/></figure>', 1)
+            media = [{"id": "info_banner", "media": {"type": kind, "media": source}}]
+        return html, media, banner
+
     @loader.inline_everyone
     async def info_inline_handler(self, query: InlineQuery) -> dict:
-        """Подивитися інформацію про бота"""
-        m = {x: self._get_mark(x) for x in range(1, 13)}
-        btns = [
-            [
-                *([m[1]] if m[1] else []),
-                *([m[2]] if m[2] else []),
-                *([m[3]] if m[3] else []),
-            ],
-            [
-                *([m[4]] if m[4] else []),
-                *([m[5]] if m[5] else []),
-                *([m[6]] if m[6] else []),
-            ],
-            [
-                *([m[7]] if m[7] else []),
-                *([m[8]] if m[8] else []),
-                *([m[9]] if m[9] else []),
-            ],
-            [
-                *([m[10]] if m[10] else []),
-                *([m[11]] if m[11] else []),
-                *([m[12]] if m[12] else []),
-            ],
-        ]
-        banner = await self._banner(inline=True)
-        msg_type = "caption" if banner else "message"
+        """Подивитися інформацію про бота."""
+        values = self._snapshot()
+        html, media, banner = await self._rich_payload(values, inline=True)
         return {
-            "title": self.strings("send_info"),
-            "description": self.strings("description"),
-            msg_type: self._render_info(),
-            **banner,
-            "reply_markup": btns,
+            "title": self.strings("send_info"), "description": self.strings("description"),
+            ("caption" if banner else "message"): self._render_info(values), **banner,
+            "rich_html": html, "rich_media": media,
+            "reply_markup": self._buttons(),
         }
 
     @loader.unrestricted
     async def infocmd(self, message: Message):
-        """Send bot info"""
-        m = {x: self._get_mark(x) for x in range(1, 13)}
-        btns = [
-            [
-                *([m[1]] if m[1] else []),
-                *([m[2]] if m[2] else []),
-                *([m[3]] if m[3] else []),
-            ],
-            [
-                *([m[4]] if m[4] else []),
-                *([m[5]] if m[5] else []),
-                *([m[6]] if m[6] else []),
-            ],
-            [
-                *([m[7]] if m[7] else []),
-                *([m[8]] if m[8] else []),
-                *([m[9]] if m[9] else []),
-            ],
-            [
-                *([m[10]] if m[10] else []),
-                *([m[11]] if m[11] else []),
-                *([m[12]] if m[12] else []),
-            ],
-        ]
+        """Send bot info as an interactive Rich Message."""
+        values = self._snapshot()
+        html, media, banner = await self._rich_payload(values)
         await self.inline.form(
-            message=message,
-            text=self._render_info(),
-            reply_markup=btns,
-            **(await self._banner())
+            message=message, text=self._render_info(values), rich_html=html, rich_media=media,
+            reply_markup=self._buttons(close=True), ttl=15 * 60,
+            **banner,
         )
 
     async def _banner(self, inline: bool = False) -> dict:

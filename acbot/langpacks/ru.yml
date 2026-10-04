@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Vadym Yemelianov (AuthorChe / VadymYem), AuthorBot integration and maintenance
+# SPDX-License-Identifier: AGPL-3.0-only
+# Existing upstream copyright and license notices are retained; see NOTICE.md and LICENSE.
+
 # Core translations adapted from Heroku (AGPL-3.0).
 # © Dan Gazizullin and Codrago; AuthorBot texts and branding © AuthorChe.
 # Source revision: 87d855ff50a404484c84f8ca4237d5c27c137b45
@@ -666,6 +670,40 @@ $public_pages:
   current: Актуальная версия
   update: Доступно обновление
   language_saved: ✅ Язык сохранён.
+  public_help_intro: "Эти команды доступны каждому посетителю. Выбери страницу ниже: справка содержит только публичные возможности этого бота."
+  resources_title: "🔗 Ресурсы AuthorChe"
+  bots_title: "🖥 Telegram-боты"
+  resource_site: "Поэзия, музыка и цифровые проекты"
+  resource_poems: "Авторские стихи"
+  resource_links: "Полезные ссылки"
+  resource_resume: "Резюме"
+  resource_blog: "Блог автора"
+  resource_alerts: "Оповещения о воздушной тревоге в Украине"
+  bot_feedback: "Помощник для обратной связи"
+  bot_schedule: "Расписание Черкасского государственного технологического университета"
+  bot_polls: "Бесплатные списки и опросы"
+  bot_email: "Gmail в Telegram"
+  bot_cloud: "Бесплатное облако в Telegram"
+  bot_rich: "Бесплатные Rich Messages для всех"
+  bot_handwrite: "Преобразование текста в рукописный"
+  support_title: "❤ Поддержать"
+  support_site: "Сайт поддержки"
+  support_stars: "Stars и другие способы"
+  support_wallets: "Криптовалютные адреса"
+  hobbies_title: "😋 Увлечения"
+  hobbies: "Музыка, поэзия, программирование, велоспорт."
+  author_story_title: "✍️ От слова к коду"
+  author_story: "Вадим Емельянов — AuthorChe, автор из Черкасс, Украина. Преподаватель вокала, певец, композитор, поэт и разработчик. В его творчестве соседствуют любовь, война, дружба и философские вопросы; музыка и программирование дают этим идеям другие формы."
+  author_reading: "Начни со стихов на authorche.top/poems: там есть разные годы и темы, а также ссылка на роман «Автор і Кароока». В блоге — личные наблюдения и размышления. AuthorBot и AuthorGram продолжают техническую часть этого творческого мира в повседневном общении."
+  about_example_title: "💡 Пример на каждый день"
+  about_example: "Владелец может открыть интерактивную справку, настроить модуль кнопками или поделиться оформленной страницей. Посетителю не нужны доступ к аккаунту или права администратора для чтения публичных страниц. Возможности модулей зависят от конкретной установки."
+  about_origin: "Основой служит Friendly Telegram Userbot. Изменения AuthorChe развивают модульный интерфейс, Rich Messages и собственные инструменты; herokutl обеспечивает связь с Telegram через MTProto."
+  config_title: "⚙️ Настройки"
+  info_title: "ℹ️ Информация"
+  uptime: "Время работы"
+  time_label: "Время"
+  platform_label: "Платформа"
+
 
 Weather:
   city: "\U0001F324 <b>Погода · город по умолчанию</b>\n<code>{}</code>"
@@ -699,3 +737,9 @@ LongRead:
   _cmd_doc_lr: <текст> — скрыть текст под кнопкой для чтения.
   _ihandle_doc_lr: <текст> — поделиться скрытым сообщением.
   _cls_doc: Скрывает длинное сообщение под удобной кнопкой.
+
+termux_control:
+  _cls_doc: "Корректная остановка AuthorBot в Termux / Debian PRoot."
+  _cmd_doc_stop_acbot: "— сохранить данные и остановить AuthorBot в Termux без перезапуска."
+  unsupported: "⚙️ <b>Эта команда доступна только в Termux на Android.</b>"
+  stopping: "🌙 <b>Останавливаю AuthorBot.</b>\nДанные будут сохранены. Для повторного запуска выполни <code>authorbot</code> в Termux."

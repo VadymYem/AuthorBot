@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Vadym Yemelianov (AuthorChe / VadymYem), AuthorBot integration and maintenance
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Existing upstream copyright and license notices are retained; see NOTICE.md and LICENSE.
+
 """Processes incoming events and dispatches them to appropriate handlers"""
 
 #    Friendly Telegram (telegram userbot)

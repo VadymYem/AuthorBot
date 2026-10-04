@@ -1,10 +1,11 @@
+/*
+ * SPDX-FileCopyrightText: 2026 Vadym Yemelianov (AuthorChe / VadymYem), AuthorBot integration and maintenance
+ * SPDX-License-Identifier: AGPL-3.0-only
+ * Existing upstream copyright and license notices are retained; see NOTICE.md and LICENSE.
+ */
+
 @import "https://fonts.googleapis.com/css2?family=Josefin+Sans&family=Open+Sans:wght@300&display=swap";
 @import "https://fonts.googleapis.com/css2?family=Hubballi&display=swap";
-
-@font-face {
-    font-family: "Movement";
-    src: url(/static/Movement.ttf) format("truetype");
-}
 
 body,
 html {
@@ -757,7 +758,7 @@ label {
     background: #fff;
     padding: 10px 15px;
     border-radius: 30px;
-    font-family: "Movement";
+    font-family: Georgia, "Times New Roman", serif;
     color: #000;
     font-size: 30px;
     line-height: 30px;

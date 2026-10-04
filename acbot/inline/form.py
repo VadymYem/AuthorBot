@@ -1,3 +1,8 @@
+# SPDX-FileCopyrightText: 2026 Vadym Yemelianov (AuthorChe / VadymYem), AuthorBot integration and maintenance
+# SPDX-License-Identifier: AGPL-3.0-only
+# Existing upstream copyright and license notices are retained; see NOTICE.md and LICENSE.
+
+import asyncio
 import contextlib
 import copy
 import logging
@@ -75,6 +80,7 @@ class Form(InlineUnit):
         audio: typing.Optional[typing.Union[dict, str]] = None,
         silent: bool = False,
         rich_html: typing.Optional[str] = None,
+        rich_media: typing.Optional[list] = None,
     ) -> typing.Union[InlineMessage, bool]:
         """
         Send inline form to chat
@@ -316,6 +322,7 @@ class Form(InlineUnit):
             "type": "form",
             "text": text,
             **({"rich_html": rich_html} if rich_html is not None else {}),
+            **({"rich_media": rich_media} if rich_media else {}),
             "buttons": reply_markup,
             "caller": message,
             "chat": None,
@@ -370,11 +377,20 @@ class Form(InlineUnit):
 
             return False
 
-        await self._units[unit_id]["future"].wait()
-        del self._units[unit_id]["future"]
-
-        self._units[unit_id]["chat"] = utils.get_chat_id(m)
-        self._units[unit_id]["message_id"] = m.id
+        unit = self._units.get(unit_id)
+        if unit is None:
+            return False  # The menu was already closed while being sent.
+        # Record the actual destination before waiting for Telegram's chosen
+        # result update. Close remains usable even if that update is delayed.
+        unit["chat"] = utils.get_chat_id(m)
+        unit["message_id"] = m.id
+        try:
+            await asyncio.wait_for(unit["future"].wait(), timeout=10)
+        except asyncio.TimeoutError:
+            logger.debug("Chosen inline result delayed; using stored message IDs")
+        unit.pop("future", None)
+        if unit_id not in self._units:
+            return False
 
         if isinstance(message, Message) and message.out:
             await message.delete()
@@ -382,14 +398,15 @@ class Form(InlineUnit):
         if status_message and not message.out:
             await status_message.delete()
 
-        inline_message_id = self._units[unit_id]["inline_message_id"]
+        inline_message_id = unit.get("inline_message_id")
 
         msg = InlineMessage(self, unit_id, inline_message_id)
 
         if not isinstance(base_reply_markup, Placeholder):
             if rich_html is not None and not self._units[unit_id].get("rich_fallback"):
                 await self.bot.edit_message_reply_markup(
-                    inline_message_id=inline_message_id,
+                    **({"inline_message_id": inline_message_id} if inline_message_id
+                       else {"chat_id": unit["chat"], "message_id": unit["message_id"]}),
                     reply_markup=self.generate_markup(base_reply_markup),
                 )
                 self._units[unit_id]["buttons"] = base_reply_markup or []
@@ -455,9 +472,12 @@ class Form(InlineUnit):
                     "answerInlineQuery", inline_query_id=inline_query.id,
                     results=[{
                         "type": "article", "id": utils.rand(20), "title": "AuthorBot",
-                        "input_message_content": {"rich_message": {"html": form["rich_html"]}},
+                        "input_message_content": {"rich_message": {
+                            "html": form["rich_html"],
+                            **({"media": form["rich_media"]} if form.get("rich_media") else {}),
+                        }},
                         "reply_markup": self.generate_markup(form["uid"]),
-                    }], cache_time=0, is_personal=True,
+                    }], cache_time=0, is_personal=True, _timeout=(3, 7),
                 )
                 form.pop("rich_fallback", None)
                 return

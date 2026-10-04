@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2026 Vadym Yemelianov (AuthorChe / VadymYem), AuthorBot integration and maintenance
+SPDX-License-Identifier: AGPL-3.0-only
+Existing upstream copyright and license notices are retained; see NOTICE.md and LICENSE.
+-->
+
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
   <title id="title">AuthorBot by AuthorChe</title>
   <desc id="desc">Dark mountain landscape with a restrained amber horizon and a thin white AuthorChe monogram.</desc>

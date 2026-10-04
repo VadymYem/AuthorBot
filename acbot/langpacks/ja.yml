@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Vadym Yemelianov (AuthorChe / VadymYem), AuthorBot integration and maintenance
+# SPDX-License-Identifier: AGPL-3.0-only
+# Existing upstream copyright and license notices are retained; see NOTICE.md and LICENSE.
+
 # Core translations adapted from Heroku (AGPL-3.0).
 # © Dan Gazizullin and Codrago; AuthorBot texts and branding © AuthorChe.
 # Source revision: 87d855ff50a404484c84f8ca4237d5c27c137b45
@@ -666,6 +670,40 @@ $public_pages:
   current: 最新です
   update: 更新があります
   language_saved: ✅ 言語を保存しました。
+  public_help_intro: "ここにあるコマンドはすべての訪問者が利用できます。このヘルプには、このボットの公開機能だけが掲載されています。"
+  resources_title: "🔗 AuthorCheのリソース"
+  bots_title: "🖥 Telegramボット"
+  resource_site: "詩、音楽、デジタルプロジェクト"
+  resource_poems: "オリジナルの詩"
+  resource_links: "便利なリンク"
+  resource_resume: "履歴書"
+  resource_blog: "作者のブログ"
+  resource_alerts: "ウクライナの空襲警報"
+  bot_feedback: "フィードバック用アシスタント"
+  bot_schedule: "チェルカースィ国立工科大学の時間割"
+  bot_polls: "無料のリストと投票"
+  bot_email: "TelegramでGmail"
+  bot_cloud: "Telegramの無料クラウド"
+  bot_rich: "誰でも使える無料のRich Messages"
+  bot_handwrite: "テキストを手書き風に変換"
+  support_title: "❤ 支援する"
+  support_site: "支援ページ"
+  support_stars: "Starsなどの支援方法"
+  support_wallets: "暗号資産のアドレス"
+  hobbies_title: "😋 趣味"
+  hobbies: "音楽、詩、プログラミング、サイクリング。"
+  author_story_title: "✍️ 言葉からコードへ"
+  author_story: "AuthorCheとして活動するVadym Yemelianovは、ウクライナのチェルカースィ出身です。歌の教師、歌手、作曲家、詩人、開発者として活動しています。愛、戦争、友情、哲学的な問いを描き、音楽とプログラミングでもアイデアを形にしています。"
+  author_reading: "authorche.top/poemsには、さまざまな時期やテーマの詩と、小説「Автор і Кароока」へのリンクがあります。ブログでは個人的な観察や考えを紹介しています。AuthorBotとAuthorGramは、この創作世界の技術的な側面を日々のコミュニケーションにつなげます。"
+  about_example_title: "💡 日常での使い方"
+  about_example: "所有者は対話型ヘルプを開き、ボタンでモジュールを設定し、整形されたページを共有できます。公開ページを読む訪問者には、アカウントへのアクセス権や管理者権限は必要ありません。モジュールの機能は各インストールによって異なります。"
+  about_origin: "Friendly Telegram Userbotを基盤としています。AuthorCheはモジュール式インターフェース、Rich Messages、独自ツールを開発し、herokutlがMTProtoによるTelegram通信を担います。"
+  config_title: "⚙️ 設定"
+  info_title: "ℹ️ 情報"
+  uptime: "稼働時間"
+  time_label: "時刻"
+  platform_label: "プラットフォーム"
+
 
 Weather:
   city: "\U0001F324 <b>天気 · 既定の都市</b>\n<code>{}</code>"
@@ -699,3 +737,9 @@ LongRead:
   _cmd_doc_lr: <テキスト> — テキストを読むボタンの下に隠します。
   _ihandle_doc_lr: <テキスト> — 隠されたメッセージを共有します。
   _cls_doc: 長いメッセージを読みやすいボタンの下に隠します。
+
+termux_control:
+  _cls_doc: "Termux / Debian PRootでAuthorBotを正常に停止します。"
+  _cmd_doc_stop_acbot: "— データを保存し、Termuxで再起動せずにAuthorBotを停止します。"
+  unsupported: "⚙️ <b>このコマンドはAndroidのTermuxでのみ利用できます。</b>"
+  stopping: "🌙 <b>AuthorBotを停止します。</b>\nデータを保存します。再開するにはTermuxで<code>authorbot</code>を実行してください。"

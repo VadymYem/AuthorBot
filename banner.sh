@@ -1,4 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/bash
+# SPDX-FileCopyrightText: 2026 Vadym Yemelianov (AuthorChe / VadymYem), AuthorBot integration and maintenance
+# SPDX-License-Identifier: AGPL-3.0-only
+# Existing upstream copyright and license notices are retained; see NOTICE.md and LICENSE.
+
 set -u
 clear 2>/dev/null || true
 frames=('AuthorBot' 'AuthorBot •' 'AuthorBot • by AuthorChe')

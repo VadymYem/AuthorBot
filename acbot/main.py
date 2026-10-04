@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Vadym Yemelianov (AuthorChe / VadymYem), AuthorBot integration and maintenance
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Existing upstream copyright and license notices are retained; see NOTICE.md and LICENSE.
+
 """Main script, where all the fun starts"""
 
 #    Friendly Telegram (telegram userbot)
@@ -425,6 +429,8 @@ class AuthorBot:
             asyncio.set_event_loop(self.loop)
 
         self.clients = SuperList()
+        self._shutdown_task = None
+        self._stop_requested = asyncio.Event()
         self.ready = asyncio.Event()
         self._read_sessions()
         self._get_api_token()
@@ -979,21 +985,86 @@ class AuthorBot:
             )
         )
 
-        await asyncio.gather(*[self.amain_wrapper(client) for client in self.clients])
+        self._running_clients = True
+        clients_task = asyncio.gather(*[self.amain_wrapper(client) for client in self.clients])
+        stop_waiter = asyncio.create_task(self._stop_requested.wait())
+        try:
+            await asyncio.wait({clients_task, stop_waiter}, return_when=asyncio.FIRST_COMPLETED)
+            if self._stop_requested.is_set():
+                await self._shutdown_task
+                clients_task.cancel()
+                await asyncio.gather(clients_task, return_exceptions=True)
+            else:
+                await clients_task
+        finally:
+            stop_waiter.cancel()
+            await asyncio.gather(stop_waiter, return_exceptions=True)
+
+    def request_stop(self):
+        """Schedule shutdown outside Telegram's cancellable command handler."""
+        if self._shutdown_task is None:
+            self._shutdown_task = asyncio.create_task(self._graceful_shutdown())
+            self._stop_requested.set()
+        return self._shutdown_task
+
+    async def _graceful_shutdown(self):
+        """Persist data and release this process's resources without restarting."""
+        async def attempt(awaitable):
+            try:
+                await asyncio.wait_for(awaitable, timeout=5)
+            except (Exception, asyncio.CancelledError):
+                logging.debug("Resource cleanup interrupted during shutdown", exc_info=True)
+
+        if self.web:
+            await attempt(self.web.stop())
+        for client in self.clients:
+            db = getattr(client, "acbot_db", None)
+            if db is not None:
+                with contextlib.suppress(Exception):
+                    db.save()
+                await attempt(db.remote_force_save())
+            modules = getattr(client, "loader", None)
+            if modules is not None:
+                for module in modules.modules:
+                    for _, method in utils.iter_attrs(module):
+                        if isinstance(method, loader.InfiniteLoop):
+                            await attempt(method.stop())
+                    on_unload = getattr(module, "on_unload", None)
+                    if callable(on_unload):
+                        with contextlib.suppress(Exception):
+                            await attempt(on_unload())
+                inline = getattr(modules, "inline", None)
+                if inline is not None:
+                    await attempt(inline._stop())
+                    if getattr(inline, "bot", None) is not None:
+                        await attempt(inline.bot.close())
+        # Disconnect last: handlers are cancelled by TelegramClient.disconnect.
+        for client in self.clients:
+            await attempt(client.disconnect())
+        logging.info("AuthorBot stopped normally; run authorbot to start it again")
 
     def _shutdown_handler(self, signum, frame):
         """Shutdown handler"""
         logging.info("Bye")
-        for client in self.clients:
-            client.disconnect()
-
-        sys.exit(0)
+        if self.loop.is_running() and getattr(self, "_running_clients", False):
+            self.request_stop()
+        else:
+            sys.exit(0)
 
     def main(self):
         """Main entrypoint"""
         signal.signal(signal.SIGINT, self._shutdown_handler)
-        self.loop.run_until_complete(self._main())
-        self.loop.close()
+        signal.signal(signal.SIGTERM, self._shutdown_handler)
+        try:
+            self.loop.run_until_complete(self._main())
+        finally:
+            pending = [task for task in asyncio.all_tasks(self.loop) if not task.done()]
+            for task in pending:
+                task.cancel()
+            if pending:
+                self.loop.run_until_complete(asyncio.gather(*pending, return_exceptions=True))
+            self.loop.run_until_complete(self.loop.shutdown_asyncgens())
+            self.loop.close()
 
 
 herokutl.extensions.html.CUSTOM_EMOJIS = not get_config_key("disable_custom_emojis")

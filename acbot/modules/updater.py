@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Vadym Yemelianov (AuthorChe / VadymYem), AuthorBot integration and maintenance
+# SPDX-License-Identifier: AGPL-3.0-only
+# Existing upstream copyright and license notices are retained; see NOTICE.md and LICENSE.
+
 # ©️ Dan G. && AuthorChe
 # 🌐 
 # You can redistribute it and/or modify it under the terms of the GNU AGPLv3
@@ -167,7 +171,15 @@ class UpdaterMod(loader.Module):
         except ValueError:
             origin = repo.create_remote("origin", self.config["GIT_ORIGIN_URL"])
 
-        origin.fetch(prune=True)
+        try:
+            origin.fetch(prune=True)
+        except GitCommandError:
+            # The public destination may not exist until the repository transfer.
+            # Only the official source can use the temporary transport fallback.
+            if self.config["GIT_ORIGIN_URL"].rstrip("/").removesuffix(".git") != "https://github.com/VadymYem/AuthorBot":
+                raise
+            origin.set_url("https://github.com/AuthorGramProject/AuthorBot.git")
+            origin.fetch(prune=True)
 
         preferred_branch = version.branch if version.branch not in {"HEAD", "master"} else "main"
         target = next(

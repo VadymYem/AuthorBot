@@ -1,3 +1,9 @@
+# SPDX-FileCopyrightText: 2026 Vadym Yemelianov (AuthorChe / VadymYem), AuthorBot integration and maintenance
+# SPDX-License-Identifier: AGPL-3.0-only
+# Existing upstream copyright and license notices are retained; see NOTICE.md and LICENSE.
+
+import asyncio
+import contextlib
 import inspect
 import logging
 import re
@@ -28,6 +34,17 @@ class Events(InlineUnit):
         """Processes incoming messages"""
         if message.chat.type != "private" or message.text == "/start donate":
             return
+
+        parts = (message.text or "").split(maxsplit=1)
+        command = parts[0].split("@", 1)[0].lower() if parts else ""
+        if command in {"/start", "/help", "/about", "/author", "/автор", "/aboutauthor", "/projects",
+                       "/setstart", "/sethelp", "/setabout", "/setauthor", "/setprojects"}:
+            # Public pages belong exclusively to InlineStuff. External modules
+            # must not delay them or append owner-only commands to public help.
+            for mod in self._allmodules.modules:
+                if mod.__class__.__name__ == "InlineStuff":
+                    await mod.aiogram_watcher(message)
+                    return
 
         for mod in self._allmodules.modules:
             if (
@@ -95,6 +112,23 @@ class Events(InlineUnit):
                     )
 
             try:
+                if result and all("rich_html" in res for res in result):
+                    try:
+                        await self.rich.request(
+                            "answerInlineQuery", inline_query_id=inline_query.id, cache_time=0,
+                            results=[{
+                                "type": "article", "id": utils.rand(20), "title": self.sanitise_text(res["title"]),
+                                "description": self.sanitise_text(res.get("description")),
+                                "input_message_content": ({"rich_message": {"html": res["rich_html"],
+                                                           **({"media": res["rich_media"]} if res.get("rich_media") else {})}}
+                                                          if "rich_html" in res else
+                                                          {"message_text": res["message"], "parse_mode": "HTML"}),
+                                "reply_markup": self.generate_markup(res.get("reply_markup")),
+                            } for res in result], _timeout=(3, 7),
+                        )
+                        return
+                    except Exception:
+                        logger.debug("Rich inline result unavailable; using classic result")
                 await inline_query.answer(
                     [
                         (
@@ -214,24 +248,6 @@ class Events(InlineUnit):
             self._web_auth_tokens += [re.search(r"authorize_web_(.{8})", call.data)[1]]
             return
 
-        for func in self._allmodules.callback_handlers.values():
-            if await self.check_inline_security(func=func, user=call.from_user.id):
-                try:
-                    await func(
-                        (
-                            BotInlineCall
-                            if getattr(getattr(call, "message", None), "chat", None)
-                            else InlineCall
-                        )(call, self, None)
-                    )
-                except Exception:
-                    logger.exception("Error on running callback watcher!")
-                    await call.answer(
-                        "Error occured while processing request. More info in logs",
-                        show_alert=True,
-                    )
-                    continue
-
         for unit_id, unit in self._units.copy().items():
             for button in utils.array_sum(unit.get("buttons", [])):
                 if not isinstance(button, dict):
@@ -333,6 +349,18 @@ class Events(InlineUnit):
                 **self._custom_map[call.data].get("kwargs", {}),
             )
             return
+
+        # Only unclaimed callbacks reach module watchers. A slow unrelated
+        # watcher must never block a registered menu button such as Close.
+        with contextlib.suppress(Exception):
+            await asyncio.wait_for(call.answer(), timeout=2)
+        for func in self._allmodules.callback_handlers.values():
+            if await self.check_inline_security(func=func, user=call.from_user.id):
+                try:
+                    await func((BotInlineCall if getattr(getattr(call, "message", None), "chat", None)
+                                else InlineCall)(call, self, None))
+                except Exception:
+                    logger.exception("Error on running callback watcher!")
 
     async def _chosen_inline_handler(
         self,

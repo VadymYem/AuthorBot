@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+# SPDX-FileCopyrightText: 2026 Vadym Yemelianov (AuthorChe / VadymYem), AuthorBot integration and maintenance
+# SPDX-License-Identifier: AGPL-3.0-only
+# Existing upstream copyright and license notices are retained; see NOTICE.md and LICENSE.
+
 """Offline regression checks for startup, module loading, artwork and persistence."""
 
 from __future__ import annotations
@@ -262,7 +266,9 @@ class RuntimeTests(unittest.IsolatedAsyncioTestCase):
         from acbot.modules.info import acbotInfoMod
         mod = acbotInfoMod()
         mod.inline = SimpleNamespace(form=AsyncMock(), brand_photo=AsyncMock(return_value="AgAC" + "a" * 40))
+        mod._snapshot = Mock(return_value={})
         mod._render_info = Mock(return_value="<b>AuthorBot</b>")
+        mod._render_rich_info = Mock(return_value="<aside><b>Info</b></aside><hr/>")
         mod.strings = lambda key: key
         await mod.infocmd(Mock())
         self.assertIn("photo", mod.inline.form.call_args.kwargs)
@@ -638,6 +644,258 @@ class RuntimeTests(unittest.IsolatedAsyncioTestCase):
             bad_auth = "Basic " + base64.b64encode("автор:помилка".encode()).decode()
             response = await client.get("/", headers={"Authorization": bad_auth})
             self.assertEqual(response.status, 401)
+
+    async def test_public_help_is_a_fixed_allowlist_in_every_language(self):
+        from acbot.public_pages import rich_page, fallback_page, PAGES, RESOURCES, TELEGRAM_BOTS, WALLETS
+        from acbot.modules.inline_stuff import InlineStuff
+        mod = InlineStuff()
+        mod.get = lambda *args: '<p>.eval .dlmod .config</p>'
+        for lang in ('ua', 'en', 'de', 'ru', 'ja'):
+            for html in (rich_page('help', lang, prefix='!'), fallback_page('help', lang, prefix='!'), mod._public_rich('help', lang)):
+                self.assertNotIn('.eval', html)
+                self.assertNotIn('!help', html)
+                self.assertNotIn('.dlmod', html)
+                for page in PAGES:
+                    self.assertIn('/' + page, html)
+            for html in (rich_page('projects', lang), fallback_page('projects', lang)):
+                for name, url, key in RESOURCES:
+                    self.assertIn(url, html)
+                for name, key in TELEGRAM_BOTS:
+                    self.assertIn(name, html)
+                for network, address in WALLETS:
+                    self.assertIn(address, html)
+
+    async def test_public_help_is_delivered_before_rich_api_finishes(self):
+        from acbot.modules.inline_stuff import InlineStuff
+        mod = InlineStuff()
+        mod._language = lambda *args: 'ua'
+        message = SimpleNamespace(chat=SimpleNamespace(id=123),
+                                  answer=AsyncMock(return_value=SimpleNamespace(message_id=42)))
+        async def edit(method, **kwargs):
+            message.answer.assert_awaited_once()
+            self.assertEqual(kwargs['message_id'], 42)
+            raise RuntimeError('unsupported rich message')
+        mod.inline = SimpleNamespace(rich=SimpleNamespace(request=AsyncMock(side_effect=edit)))
+        await mod._send_public_page(message, 'help')
+        delivered = message.answer.call_args.args[0]
+        self.assertIn('/help', delivered)
+        self.assertNotIn('.dlmod', delivered)
+
+    async def test_public_dispatch_bypasses_slow_external_watchers(self):
+        from acbot.modules.inline_stuff import InlineStuff
+        manager = self._inline_manager()
+        public = InlineStuff()
+        public.aiogram_watcher = AsyncMock()
+        external = SimpleNamespace(aiogram_watcher=AsyncMock(side_effect=RuntimeError('must not run')))
+        manager._allmodules = SimpleNamespace(modules=[external, public])
+        message = SimpleNamespace(chat=SimpleNamespace(type='private'), text='/help@my_bot')
+        await manager._message_handler(message)
+        public.aiogram_watcher.assert_awaited_once_with(message)
+        external.aiogram_watcher.assert_not_awaited()
+
+    async def test_close_dispatch_runs_before_module_watchers_and_checks_owner(self):
+        from acbot.inline.types import InlineCall
+        from aiogram.types import CallbackQuery, User as BotUser
+        manager = self._inline_manager()
+        manager._me = 123
+        manager._client.dispatcher = SimpleNamespace(security=SimpleNamespace(_owner=[123]))
+        watcher = AsyncMock(side_effect=RuntimeError('must not block Close'))
+        manager._allmodules = SimpleNamespace(callback_handlers={'slow': watcher})
+        manager.translator = SimpleNamespace(getkey=lambda key: key)
+        manager._units['unit'].update(force_me=True, buttons=[[{
+            '_callback_data': 'close-key', 'callback': manager._close_unit_handler, 'action': 'close'}]])
+        denied = CallbackQuery(id='denied', from_user={'id': 456, 'is_bot': False, 'first_name': 'Visitor'},
+                               inline_message_id='encoded', chat_instance='chat', data='close-key')
+        denied.from_user = BotUser(id=456, is_bot=False, first_name='Visitor')
+        with patch.object(CallbackQuery, 'answer', new_callable=AsyncMock) as answer:
+            await manager._callback_query_handler(denied)
+            answer.assert_awaited_once_with('inline.button403')
+        self.assertIn('unit', manager._units)
+        allowed = CallbackQuery(id='allowed', from_user={'id': 123, 'is_bot': False, 'first_name': 'Owner'},
+                                inline_message_id='encoded', chat_instance='chat', data='close-key')
+        allowed.from_user = BotUser(id=123, is_bot=False, first_name='Owner')
+        with patch.object(InlineCall, 'answer', new_callable=AsyncMock):
+            await asyncio.wait_for(manager._callback_query_handler(allowed), 1)
+        watcher.assert_not_awaited()
+        self.assertFalse(manager._units)
+        manager.bot.delete_message.assert_awaited_once()
+
+    async def test_close_times_out_hung_delete_and_still_detaches(self):
+        manager = self._inline_manager()
+        async def blocked():
+            await asyncio.Event().wait()
+        call = SimpleNamespace(unit_id='unit', inline_message_id='encoded', answer=AsyncMock(), delete=blocked)
+        wait_for = asyncio.wait_for
+        async def short_wait(awaitable, timeout):
+            return await wait_for(awaitable, min(timeout, .02))
+        with patch('acbot.inline.utils.asyncio.wait_for', side_effect=short_wait):
+            self.assertTrue(await manager._close_unit_handler(call))
+        manager.bot.edit_message_reply_markup.assert_awaited_once()
+        self.assertFalse(manager._units)
+
+    async def test_rich_config_hides_secrets_and_keeps_controls_after_save(self):
+        from acbot.modules.config import AuthorBotConfigMod
+        from acbot import loader
+        mod = AuthorBotConfigMod()
+        self._module_strings(mod, 'ua')
+        module = SimpleNamespace(config=loader.ModuleConfig(
+            loader.ConfigValue('api_key', 'private-token', 'API credential', validator=loader.validators.Hidden()),
+            loader.ConfigValue('enabled', False, 'Enabled', validator=loader.validators.Boolean())))
+        mod.lookup = lambda name: module
+        call = SimpleNamespace(edit=AsyncMock(), answer=AsyncMock(), inline_message_id='encoded')
+        await mod.inline__configure(call, 'Example')
+        kwargs = call.edit.call_args.kwargs
+        self.assertIn('<aside>', kwargs['rich_html'])
+        self.assertNotIn('private-token', kwargs['rich_html'])
+        self.assertTrue(any(button.get('action') == 'close' for row in kwargs['reply_markup'] for button in row))
+        await mod.inline__configure_option(call, 'Example', 'api_key')
+        self.assertNotIn('private-token', call.edit.call_args.kwargs['rich_html'])
+        await mod.inline__set_bool(call, 'Example', 'enabled', True)
+        self.assertTrue(module.config['enabled'])
+        self.assertIn('rich_html', call.edit.call_args.kwargs)
+
+    async def test_config_entry_opens_owner_only_rich_form(self):
+        from acbot.modules.config import AuthorBotConfigMod
+        mod = AuthorBotConfigMod()
+        self._module_strings(mod)
+        mod.lookup = lambda query: None
+        mod.allmodules = SimpleNamespace(libraries=[])
+        form = SimpleNamespace(edit=AsyncMock())
+        mod.inline = SimpleNamespace(form=AsyncMock(return_value=form))
+        with patch('acbot.modules.config.utils.get_args_raw', return_value=''):
+            await mod.configcmd(Mock())
+        kwargs = mod.inline.form.call_args.kwargs
+        self.assertTrue(kwargs['force_me'])
+        self.assertIn('rich_html', kwargs)
+        self.assertIn('rich_html', form.edit.call_args.kwargs)
+
+    async def test_rich_edit_falls_back_and_removes_obsolete_callbacks(self):
+        manager = self._inline_manager()
+        manager.rich = SimpleNamespace(request=AsyncMock())
+        manager.bot.edit_message_text = AsyncMock()
+        markup = [[{'text': 'Close', 'action': 'close'}]]
+        html = '<aside><b>Settings</b></aside>'
+        self.assertTrue(await manager._edit_unit('<b>Settings</b>', rich_html=html, reply_markup=markup,
+                                                unit_id='unit', inline_message_id='encoded'))
+        self.assertIn('rich_message', manager.rich.request.call_args.kwargs)
+        self.assertNotIn('close-key', manager._custom_map)
+        manager.rich.request.side_effect = RuntimeError('Rich unavailable')
+        self.assertTrue(await manager._edit_unit('<b>Settings</b>', rich_html=html, reply_markup=markup,
+                                                unit_id='unit', inline_message_id='encoded'))
+        manager.bot.edit_message_text.assert_awaited_once()
+        self.assertTrue(manager._units['unit']['rich_fallback'])
+
+    async def test_info_escapes_owner_and_keeps_custom_templates(self):
+        from acbot.modules.info import acbotInfoMod
+        from herokutl.tl.types import User
+        mod = acbotInfoMod()
+        self._module_strings(mod, 'ua')
+        mod._me = User(id=123, first_name='<Owner>')
+        mod.get_prefix = lambda: '!'
+        values = mod._snapshot()
+        html = mod._render_rich_info(values)
+        self.assertIn('<table', html)
+        self.assertIn('&lt;Owner&gt;', html)
+        self.assertNotIn('<Owner>', html)
+        mod.config['custom_message'] = '<b>{me}</b> — {version} · {prefix}'
+        html = mod._render_rich_info(values)
+        self.assertIn('tg://user?id=123', html)
+        self.assertIn('<code>!</code>', html)
+
+    async def test_chosen_inline_delay_keeps_stored_ids_and_does_not_hang(self):
+        from herokutl.tl.types import Message, PeerUser
+        manager = self._inline_manager()
+        manager._units.clear()
+        manager._find_caller_sec_map = Mock(return_value=None)
+        manager._invoke_unit = AsyncMock(return_value=Message(id=42, peer_id=PeerUser(123)))
+        manager.translator = SimpleNamespace(getkey=lambda key: key)
+        wait_for = asyncio.wait_for
+        async def short_wait(awaitable, timeout):
+            return await wait_for(awaitable, min(timeout, .02))
+        with patch('acbot.inline.form.asyncio.wait_for', side_effect=short_wait):
+            result = await manager.form('<b>Info</b>', 123, ttl=30,
+                                        reply_markup=[[{'text': 'Close', 'action': 'close'}]])
+        self.assertTrue(result)
+        unit = manager._units[result.unit_id]
+        self.assertEqual((unit['chat'], unit['message_id']), (123, 42))
+        self.assertTrue(await result.delete())
+
+    async def test_termux_detection_and_stop_command_rejects_server(self):
+        from acbot.modules.termux_control import TermuxControlMod, is_termux_runtime
+        from acbot.security import OWNER
+        self.assertTrue(is_termux_runtime({'AUTHORBOT_TERMUX': '1'}))
+        self.assertTrue(is_termux_runtime({'PREFIX': '/data/data/com.termux/files/usr'}))
+        self.assertTrue(is_termux_runtime({'TERMUX__PREFIX': '/data/data/com.termux/files/usr'}))
+        self.assertFalse(is_termux_runtime({'OSTYPE': 'linux-gnu', 'ANDROID_ROOT': '/system'}))
+        self.assertFalse(is_termux_runtime({}))
+        mod = TermuxControlMod()
+        self._module_strings(mod, 'ua')
+        self.assertEqual(mod.stop_acbot.security, OWNER)
+        with patch('acbot.modules.termux_control.is_termux_runtime', return_value=False), \
+             patch('acbot.modules.termux_control.main.acbot.request_stop') as stop, \
+             patch('acbot.modules.termux_control.utils.answer', new_callable=AsyncMock) as answer:
+            await mod.stop_acbot(Mock())
+            stop.assert_not_called()
+            self.assertIn('лише', answer.call_args.args[1])
+        with patch('acbot.modules.termux_control.is_termux_runtime', return_value=True), \
+             patch('acbot.modules.termux_control.main.acbot.request_stop') as stop, \
+             patch('acbot.modules.termux_control.utils.answer', new_callable=AsyncMock) as answer:
+            await mod.stop_acbot(Mock())
+            answer.assert_awaited_once()
+            stop.assert_called_once_with()
+
+    async def test_graceful_stop_saves_all_accounts_and_closes_resources(self):
+        from acbot.main import AuthorBot
+        server = AuthorBot.__new__(AuthorBot)
+        server.web = SimpleNamespace(stop=AsyncMock())
+        server._shutdown_task = None
+        server._stop_requested = asyncio.Event()
+        server.clients = [SimpleNamespace(acbot_db=SimpleNamespace(save=Mock(), remote_force_save=AsyncMock()),
+                        loader=SimpleNamespace(modules=[SimpleNamespace(on_unload=AsyncMock())],
+                        inline=SimpleNamespace(_stop=AsyncMock(), bot=SimpleNamespace(close=AsyncMock()))),
+                        disconnect=AsyncMock()) for _ in range(2)]
+        first = server.request_stop()
+        self.assertIs(first, server.request_stop())
+        await asyncio.wait_for(first, 1)
+        self.assertTrue(server._stop_requested.is_set())
+        server.web.stop.assert_awaited_once()
+        for client in server.clients:
+            client.acbot_db.save.assert_called_once()
+            client.acbot_db.remote_force_save.assert_awaited_once()
+            client.loader.modules[0].on_unload.assert_awaited_once()
+            client.loader.inline._stop.assert_awaited_once()
+            client.loader.inline.bot.close.assert_awaited_once()
+            client.disconnect.assert_awaited_once()
+
+    async def test_main_exits_on_requested_stop_even_when_client_runner_waits(self):
+        from acbot.main import AuthorBot
+        server = AuthorBot.__new__(AuthorBot)
+        server.loop = asyncio.get_running_loop()
+        server.web = None
+        server.clients = [SimpleNamespace(disconnect=AsyncMock())]
+        server.sessions = []
+        server._shutdown_task = None
+        server._stop_requested = asyncio.Event()
+        server._init_web = Mock()
+        server._get_token = AsyncMock()
+        server._init_clients = AsyncMock(return_value=True)
+        server.arguments = SimpleNamespace(port=8085)
+        started = asyncio.Event()
+        async def run(client):
+            started.set()
+            await asyncio.Event().wait()
+        server.amain_wrapper = run
+        original_handler = server.loop.get_exception_handler()
+        try:
+            with patch('acbot.main.save_config_key'), patch('acbot._internal._restart_process') as restart:
+                running = asyncio.create_task(server._main())
+                await asyncio.wait_for(started.wait(), 1)
+                server.request_stop()
+                await asyncio.wait_for(running, 1)
+                restart.assert_not_called()
+            server.clients[0].disconnect.assert_awaited_once()
+        finally:
+            server.loop.set_exception_handler(original_handler)
 
 
 if __name__ == "__main__":

@@ -1,10 +1,14 @@
+# SPDX-FileCopyrightText: 2026 Vadym Yemelianov (AuthorChe / VadymYem), AuthorBot integration and maintenance
+# SPDX-License-Identifier: AGPL-3.0-only
+# Existing upstream copyright and license notices are retained; see NOTICE.md and LICENSE.
+
 [tool.black]
 extend-exclude = "loaded_modules"
 preview = true
 
 [tool.poetry]
 name = "acbot"
-version = "1.10.11"
+version = "1.10.12"
 description = "Modular Telegram userbot by AuthorChe"
 authors = ["AuthorChe <https://authorche.top>"]
 license = "AGPL-3.0-only"

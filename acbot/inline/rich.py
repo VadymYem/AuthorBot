@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2026 Vadym Yemelianov (AuthorChe / VadymYem), AuthorBot integration and maintenance
+# SPDX-License-Identifier: AGPL-3.0-only
+# Existing upstream copyright and license notices are retained; see NOTICE.md and LICENSE.
+
 """Telegram Bot API rich-message support.
 
 Kept separate from aiogram 2.x so AuthorBot can use new Bot API methods
@@ -43,7 +47,7 @@ class RichBotAPI:
                 pass
         return value
 
-    def _request_sync(self, method: str, payload: dict, files: dict = None) -> typing.Any:
+    def _request_sync(self, method: str, payload: dict, files: dict = None, timeout=30) -> typing.Any:
         # Never log the URL: it contains the bot token.
         url = f"https://api.telegram.org/bot{self._token}/{method}"
         try:
@@ -56,9 +60,9 @@ class RichBotAPI:
                     data = {key: json.dumps(value, ensure_ascii=False) for key, value in payload.items()}
                     # Plain strings must not gain JSON quotation marks in form fields.
                     data.update({key: value for key, value in payload.items() if isinstance(value, str)})
-                    response = requests.post(url, data=data, files=uploads, timeout=30)
+                    response = requests.post(url, data=data, files=uploads, timeout=timeout)
                 else:
-                    response = requests.post(url, json=payload, timeout=30)
+                    response = requests.post(url, json=payload, timeout=timeout)
             data = response.json()
         except (requests.RequestException, ValueError, OSError):
             raise RichMessageError("Telegram Bot API request failed") from None
@@ -71,7 +75,7 @@ class RichBotAPI:
 
         return data.get("result")
 
-    async def request(self, method: str, *, _files: dict = None, **payload) -> typing.Any:
+    async def request(self, method: str, *, _files: dict = None, _timeout=30, **payload) -> typing.Any:
         if not re.fullmatch(r"[A-Za-z][A-Za-z0-9]*", method):
             raise ValueError("Invalid Bot API method name")
         payload = {
@@ -79,7 +83,7 @@ class RichBotAPI:
             for key, value in payload.items()
             if value is not None
         }
-        return await utils.run_sync(self._request_sync, method, payload, _files)
+        return await utils.run_sync(self._request_sync, method, payload, _files, _timeout)
 
     async def send(
         self,
@@ -93,6 +97,7 @@ class RichBotAPI:
         disable_notification: bool = False,
         protect_content: bool = False,
         files: typing.Optional[dict] = None,
+        timeout=30,
     ) -> typing.Any:
         rich_message = {
             key: value
@@ -110,6 +115,7 @@ class RichBotAPI:
         return await self.request(
             "sendRichMessage",
             _files=files,
+            _timeout=timeout,
             chat_id=chat_id,
             rich_message=rich_message,
             reply_markup=reply_markup,

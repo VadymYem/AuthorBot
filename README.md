@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2026 Vadym Yemelianov (AuthorChe / VadymYem), AuthorBot integration and maintenance
+SPDX-License-Identifier: AGPL-3.0-only
+Existing upstream copyright and license notices are retained; see NOTICE.md and LICENSE.
+-->
+
 <div align="center">
 
 <img src="assets/authorbot_banner.svg" width="100%" alt="AuthorBot — by AuthorChe">
@@ -65,7 +71,7 @@ https://github.com/hikariatama/host/raw/master
   fi
   installer="$(mktemp "$PREFIX/tmp/authorbot-bootstrap.XXXXXX")"
   trap 'rm -f "$installer"' EXIT
-  if ! curl -fsSL --retry 3 https://raw.githubusercontent.com/VadymYem/AuthorBot/main/bootstrap-termux.sh -o "$installer" 2>>"$log"; then
+  if ! curl -fsSL --retry 3 https://raw.githubusercontent.com/VadymYem/AuthorBot/main/bootstrap-termux.sh -o "$installer" 2>>"$log" && ! curl -fsSL --retry 3 https://raw.githubusercontent.com/AuthorGramProject/AuthorBot/main/bootstrap-termux.sh -o "$installer" 2>>"$log"; then
     printf 'Не вдалося завантажити інсталятор. Журнал: %s\n' "$log"
     exit 1
   fi
@@ -78,7 +84,7 @@ https://github.com/hikariatama/host/raw/master
 
 На екрані — логотип, **AuthorBot by AuthorChe**, офіційні ресурси й відсотковий прогрес восьми етапів. Відсоток показує завершені етапи, а не прогноз часу: швидкість мережі та встановлення пакетів відрізняється. Технічний вивід зберігається в журналі; у разі невдачі показується коротке повідомлення з його шляхом. Дані Telegram вводяться у тому самому відкритому терміналі після 100%.
 
-Офіційний репозиторій проєкту — **https://github.com/VadymYem/AuthorBot**. Копії для редагування не є джерелом офіційних посилань чи оновлень.
+Офіційний репозиторій проєкту — **https://github.com/VadymYem/AuthorBot**. До перенесення інсталятори автоматично використовують поточну адресу AuthorGramProject/AuthorBot, якщо нова адреса ще недоступна. Після перенесення пріоритет має VadymYem/AuthorBot. Явний AUTHORBOT_REPO_URL не підміняється.
 
 Окремо завантажений `termux.sh` також самостійно завантажує повний інсталятор. Попередній спосіб запуску з офіційної сторінки підтримується; клавіатура залишається доступною для входу в Telegram.
 
@@ -142,12 +148,12 @@ author_<random>_off_AC_bot
 Публічно доступні команди:
 
 - `/start` — головна Rich Message сторінка;
-- `/help` — довідка;
+- `/help` — лише загальнодоступні сторінки цього бота, без команд userbot через крапку;
 - `/about` — розгорнута розповідь про можливості AuthorBot;
 - `/author` (також `/автор`, `/aboutauthor`) — про AuthorChe;
 - `/projects` — проєкти та офіційні ресурси.
 
-Редактори з дозволеними Telegram ID можуть оновлювати ці сторінки командами `/setstart`, `/sethelp`, `/setabout`, `/setauthor`, `/setprojects`. Контент зберігається локально в DB конкретного встановлення. `reset` повертає локалізовану стандартну сторінку. Команди `.author` і `.автор` відкривають сторінку автора у приватному чаті з inline-ботом.
+Редактори з дозволеними Telegram ID можуть оновлювати ці сторінки командами `/setstart`, `/setabout`, `/setauthor`, `/setprojects`. Публічна `/help` формується з фіксованого списку доступних усім команд; `/sethelp` повертає цей стандартний список. Контент інших сторінок зберігається локально в DB конкретного встановлення. `reset` повертає локалізовану стандартну сторінку. Команди `.author` і `.автор` відкривають сторінку автора у приватному чаті з inline-ботом.
 
 ---
 
@@ -159,7 +165,7 @@ author_<random>_off_AC_bot
 
 Привітання після встановлення — Rich Message з локальним логотипом, центрованими заголовками, першими командами, ресурсами AuthorChe та кнопками мов. Коли Rich Messages недоступні, бот надсилає читабельну класичну версію. Після запуску термінал очищується командою `clear` і показує ASCII логотип AuthorBot, статус, версію та build.
 
-`.help` відкриває інтерактивну Rich Message довідку через ваш inline-бот: модулі поділено на сторінки, кнопки відкривають описи, команди та aliases. `.help назва` або `.help команда` відкриває потрібний інструмент одразу; `.help -f` показує приховані модулі, зберігаючи перевірки доступу до команд. Кнопка Close видаляє повідомлення через Bot API або акаунт; якщо видалення недоступне, вона прибирає клавіатуру. Контролери довідки діють 15 хвилин; URL-кнопки залишаються доступними.
+`.help` відкриває інтерактивну Rich Message довідку через ваш inline-бот: модулі поділено на сторінки, кнопки відкривають описи, команди та aliases. `.help назва` або `.help команда` відкриває потрібний інструмент одразу; `.help -f` показує приховані модулі, зберігаючи перевірки доступу до команд. Кнопка Close видаляє повідомлення через Bot API або акаунт; якщо видалення недоступне, вона прибирає клавіатуру. Close обробляється перед сторонніми callback-watcher; мережеві операції й очікування chosen-inline update мають обмежений час. Контролери довідки діють 15 хвилин; URL-кнопки залишаються доступними.
 
 InlineRandom підтримує монету, випадкові числа та вибір із непорожніх варіантів. Старий зовнішній сервіс портретів закрився: для inline-команди `person` можна задати власне пряме посилання на JPEG/PNG у `person_photo_url` через `.config InlineRandom`. Маркер `{seed}` у посиланні замінюється випадковим кодом. Без налаштованого джерела або при помилці сервісу бот показує пояснення; некоректне фото не надсилається. Мініатюри inline-інструментів використовують офіційне зображення AuthorBot.
 
@@ -258,7 +264,7 @@ CI перевіряє Python 3.10 і 3.11 з основними та додат�
 
 ## Автор
 
-**AuthorChe**
+**Вадим Ємельянов — AuthorChe**: викладач співу, вокаліст, композитор, поет і розробник із Черкас, Україна. Його творчість поєднує музику, слово й цифрові інструменти. Вірші та роман «Автор і Кароока» доступні на сторінці поезії; у блозі — особисті спостереження й роздуми.
 
 - Website: https://authorche.top
 - Telegram: https://t.me/wsinfo
@@ -267,6 +273,33 @@ CI перевіряє Python 3.10 і 3.11 з основними та додат�
 
 ---
 
-## License
+## Подяки
 
-GNU Affero General Public License v3.0. Див. [LICENSE](LICENSE).
+- [Friendly Telegram Userbot](https://github.com/friendly-telegram/friendly-telegram) — за хорошу основу модульного Telegram userbot.
+- [Heroku Userbot](https://github.com/coddrago/Heroku) і Codrago — за [herokutl](https://pypi.org/project/herokutl/), MTProto-бібліотеку на основі Telethon.
+- Jeroen Hammann — за Sakura JS/CSS, що використовується у вебінтерфейсі.
+
+## License та внески
+
+© 2022–2026 Vadym Yemelianov (AuthorChe / VadymYem). Успадковані авторські права збережені.
+GNU Affero General Public License v3.0: [LICENSE](LICENSE), походження й винятки: [NOTICE.md](NOTICE.md).
+Попереднє погодження з автором потрібне для внесків до офіційного репозиторію;
+це не обмежує модифікацію власної копії, дозволену AGPL. Див. [CONTRIBUTING.md](CONTRIBUTING.md).
+
+`.config` / `.cfg` і `.info` відкривають Rich Message екрани: категорії, параметри,
+збереження значень, помилки валідації та інформація про бота. При відмові Rich API
+доступне звичайне оформлення з тими ж кнопками. Приховані параметри маскуються,
+включно зі стандартними значеннями. Банери та власні шаблони Info збережені.
+
+
+## Зупинка на ніч у Termux
+
+Команда **`.stop_acbot`** доступна лише власнику. Вона перевіряє середовище
+Termux на Android, включно з Debian/PRoot, зберігає бази даних, зупиняє фонові
+цикли та inline polling, закриває вебсервер і Telegram-з’єднання й завершує
+поточний процес без перезапуску. Сесії, модулі та налаштування зберігаються.
+
+Для повторного запуску введіть **`authorbot`** у Termux. На сервері чи звичайному
+Linux ця команда пояснить, що доступна лише в Termux, і залишить процес працювати.
+Зупиняються всі акаунти поточного процесу AuthorBot. Автозапуск при відкритті нового
+термінала залишається налаштованим; команда зупиняє саме поточний запуск.

@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+# SPDX-FileCopyrightText: 2026 Vadym Yemelianov (AuthorChe / VadymYem), AuthorBot integration and maintenance
+# SPDX-License-Identifier: AGPL-3.0-only
+# Existing upstream copyright and license notices are retained; see NOTICE.md and LICENSE.
+
 """Regression checks for foreground restart, first authentication and EOF."""
 from __future__ import annotations
 
@@ -155,6 +159,37 @@ class StartupTests(unittest.TestCase):
         self.assertIn("authorbot", process.stdout)
         self.assertNotIn("Traceback", process.stderr)
         self.assertNotIn("EOFError", process.stderr)
+
+    def test_requested_stop_exits_zero_without_restart_or_pending_task_warnings(self):
+        worker = self.root / 'stop_worker.py'
+        worker.write_text('''import asyncio
+from types import SimpleNamespace
+from acbot.main import AuthorBot
+app = AuthorBot.__new__(AuthorBot)
+app.loop = asyncio.new_event_loop()
+asyncio.set_event_loop(app.loop)
+app.web = None
+app._shutdown_task = None
+app._stop_requested = asyncio.Event()
+async def disconnect():
+    print("DISCONNECTED", flush=True)
+app.clients = [SimpleNamespace(disconnect=disconnect)]
+async def run():
+    asyncio.create_task(asyncio.Event().wait())
+    app.request_stop()
+    await app._shutdown_task
+app._main = run
+app.main()
+print("STOPPED_CLEANLY", flush=True)
+''')
+        process = subprocess.run([sys.executable, str(worker)], cwd=ROOT,
+                                 env={**self.env, 'PYTHONPATH': str(ROOT) + os.pathsep + self.env.get('PYTHONPATH', '')},
+                                 capture_output=True, text=True, timeout=15)
+        self.assertEqual(process.returncode, 0, process.stdout + process.stderr)
+        self.assertIn('DISCONNECTED', process.stdout)
+        self.assertIn('STOPPED_CLEANLY', process.stdout)
+        for problem in ('Traceback', 'Task was destroyed', 'was never awaited', 'Restarting'):
+            self.assertNotIn(problem, process.stdout + process.stderr)
 
 
 if __name__ == "__main__":

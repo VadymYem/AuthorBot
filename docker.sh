@@ -1,7 +1,26 @@
 #!/usr/bin/env bash
+# SPDX-FileCopyrightText: 2026 Vadym Yemelianov (AuthorChe / VadymYem), AuthorBot integration and maintenance
+# SPDX-License-Identifier: AGPL-3.0-only
+# Existing upstream copyright and license notices are retained; see NOTICE.md and LICENSE.
+
 set -euo pipefail
 
 REPO_URL="${AUTHORBOT_REPO_URL:-https://github.com/VadymYem/AuthorBot.git}"
+
+# Prefer the destination after transfer; the current location is a temporary
+# transport fallback. Explicit custom repositories are never replaced.
+resolve_repository() {
+  if [ -z "${AUTHORBOT_REPO_URL:-}" ] && ! GIT_TERMINAL_PROMPT=0 git ls-remote --exit-code "$REPO_URL" HEAD >/dev/null 2>&1; then
+    local previous_url="https://github.com/AuthorGramProject/AuthorBot.git"
+    if GIT_TERMINAL_PROMPT=0 git ls-remote --exit-code "$previous_url" HEAD >/dev/null 2>&1; then
+      REPO_URL="$previous_url"
+    else
+      printf 'Official AuthorBot repository is unavailable. Try again later.\n' >&2
+      return 1
+    fi
+  fi
+}
+
 APP_DIR="${AUTHORBOT_DIR:-$HOME/AuthorBot}"
 EXTERNAL_PORT="${EXTERNAL_PORT:-8085}"
 BIND_ADDRESS="${BIND_ADDRESS:-127.0.0.1}"
@@ -17,11 +36,13 @@ command -v git >/dev/null 2>&1 || fail "git is required."
 command -v docker >/dev/null 2>&1 || fail "Docker Engine is required. Install Docker from https://docs.docker.com/engine/install/"
 docker compose version >/dev/null 2>&1 || fail "Docker Compose v2 plugin is required."
 
+resolve_repository
+
 if [ -d "$APP_DIR/.git" ]; then
   info "Updating AuthorBot checkout..."
   git -C "$APP_DIR" remote set-url origin "$REPO_URL"
   git -C "$APP_DIR" fetch --prune origin
-  git -C "$APP_DIR" reset --hard origin/main
+  git -C "$APP_DIR" merge --ff-only origin/main
 elif [ -e "$APP_DIR" ]; then
   fail "$APP_DIR exists but is not a Git repository."
 else

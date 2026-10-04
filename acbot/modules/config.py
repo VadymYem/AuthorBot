@@ -1,12 +1,18 @@
+# SPDX-FileCopyrightText: 2026 Vadym Yemelianov (AuthorChe / VadymYem), AuthorBot integration and maintenance
+# SPDX-License-Identifier: AGPL-3.0-only
+# Existing upstream copyright and license notices are retained; see NOTICE.md and LICENSE.
+
 # ©️ Dan G. && AuthorChe
-# 🌐 
+# 🌐
 # You can redistribute it and/or modify it under the terms of the GNU AGPLv3
 # 🔑 https://www.gnu.org/licenses/agpl-3.0.html
 # -*- coding: utf-8 -*-
 
+import asyncio
 import ast
 import contextlib
 import functools
+import re
 import typing
 from math import ceil
 
@@ -14,6 +20,7 @@ from herokutl.tl.types import Message
 
 from .. import loader, translations, utils
 from ..inline.types import InlineCall
+from ..public_pages import heading, text as page_text
 
 # Everywhere in this module, we use the following naming convention:
 # `obj_type` of non-core module = False
@@ -30,6 +37,21 @@ class AuthorBotConfigMod(loader.Module):
     """Interactive configurator for AuthorBot Userbot"""
 
     strings = {"name": "AuthorBotConfig"}
+
+    def _rich_screen(self, text: str) -> str:
+        language = self._db.get(translations.__name__, "lang", "en").split()[0]
+        body = re.sub(r'<emoji document_id=["\']?(\d+)["\']?>', r'<tg-emoji emoji-id="\1">', text).replace('</emoji>', '</tg-emoji>')
+        paragraphs = ''.join(f'<p>{part.replace(chr(10), "<br/>")}</p>' for part in body.split('\n\n'))
+        return (heading("AuthorBot · " + page_text("config_title", language), "by AuthorChe")
+                + '<hr/><section>' + paragraphs + '</section><footer>© 2026 AuthorChe · AuthorBot</footer>')
+
+    async def _edit(self, call, text, rich_html=None, **kwargs):
+        # The same renderer covers categories, options, validators, errors and
+        # save/reset screens. Secret values have already been masked upstream.
+        if hasattr(call, "answer"):
+            with contextlib.suppress(Exception):
+                await asyncio.wait_for(call.answer(), timeout=2)
+        return await call.edit(text, rich_html=rich_html or self._rich_screen(text), **kwargs)
 
     @staticmethod
     def prep_value(value: typing.Any) -> typing.Any:
@@ -76,7 +98,7 @@ class AuthorBotConfigMod(loader.Module):
         try:
             self.lookup(mod).config[option] = query
         except loader.validators.ValidationError as e:
-            await call.edit(
+            await self._edit(call,
                 self.strings("validation_error").format(e.args[0]),
                 reply_markup={
                     "text": self.strings("try_again"),
@@ -87,7 +109,7 @@ class AuthorBotConfigMod(loader.Module):
             )
             return
 
-        await call.edit(
+        await self._edit(call,
             self.strings(
                 "option_saved" if isinstance(obj_type, bool) else "option_saved_lib"
             ).format(
@@ -119,7 +141,7 @@ class AuthorBotConfigMod(loader.Module):
         mod_instance = self.lookup(mod)
         mod_instance.config[option] = mod_instance.config.getdef(option)
 
-        await call.edit(
+        await self._edit(call,
             self.strings(
                 "option_reset" if isinstance(obj_type, bool) else "option_reset_lib"
             ).format(
@@ -151,7 +173,7 @@ class AuthorBotConfigMod(loader.Module):
         try:
             self.lookup(mod).config[option] = value
         except loader.validators.ValidationError as e:
-            await call.edit(
+            await self._edit(call,
                 self.strings("validation_error").format(e.args[0]),
                 reply_markup={
                     "text": self.strings("try_again"),
@@ -176,7 +198,7 @@ class AuthorBotConfigMod(loader.Module):
             )
         )
 
-        await call.edit(
+        await self._edit(call,
             self.strings(
                 "configuring_option"
                 if isinstance(obj_type, bool)
@@ -280,7 +302,7 @@ class AuthorBotConfigMod(loader.Module):
 
             self.lookup(mod).config[option] = self.lookup(mod).config[option] + query
         except loader.validators.ValidationError as e:
-            await call.edit(
+            await self._edit(call,
                 self.strings("validation_error").format(e.args[0]),
                 reply_markup={
                     "text": self.strings("try_again"),
@@ -291,7 +313,7 @@ class AuthorBotConfigMod(loader.Module):
             )
             return
 
-        await call.edit(
+        await self._edit(call,
             self.strings(
                 "option_saved" if isinstance(obj_type, bool) else "option_saved_lib"
             ).format(
@@ -346,7 +368,7 @@ class AuthorBotConfigMod(loader.Module):
                     " target list"
                 )
         except loader.validators.ValidationError as e:
-            await call.edit(
+            await self._edit(call,
                 self.strings("validation_error").format(e.args[0]),
                 reply_markup={
                     "text": self.strings("try_again"),
@@ -357,7 +379,7 @@ class AuthorBotConfigMod(loader.Module):
             )
             return
 
-        await call.edit(
+        await self._edit(call,
             self.strings(
                 "option_saved" if isinstance(obj_type, bool) else "option_saved_lib"
             ).format(
@@ -455,7 +477,7 @@ class AuthorBotConfigMod(loader.Module):
         try:
             self.lookup(mod).config[option] = value
         except loader.validators.ValidationError as e:
-            await call.edit(
+            await self._edit(call,
                 self.strings("validation_error").format(e.args[0]),
                 reply_markup={
                     "text": self.strings("try_again"),
@@ -466,7 +488,7 @@ class AuthorBotConfigMod(loader.Module):
             )
             return
 
-        await call.edit(
+        await self._edit(call,
             self.strings(
                 "option_saved" if isinstance(obj_type, bool) else "option_saved_lib"
             ).format(
@@ -505,7 +527,7 @@ class AuthorBotConfigMod(loader.Module):
 
             self.lookup(mod).config.reload()
         except loader.validators.ValidationError as e:
-            await call.edit(
+            await self._edit(call,
                 self.strings("validation_error").format(e.args[0]),
                 reply_markup={
                     "text": self.strings("try_again"),
@@ -670,7 +692,11 @@ class AuthorBotConfigMod(loader.Module):
             utils.escape_html(config_opt),
             utils.escape_html(mod),
             utils.escape_html(module.config.getdoc(config_opt)),
-            self.prep_value(module.config.getdef(config_opt)),
+            (self.hide_value(module.config.getdef(config_opt))
+             if module.config._config[config_opt].validator
+             and module.config._config[config_opt].validator.internal_id == "Hidden"
+             and not force_hidden
+             else self.prep_value(module.config.getdef(config_opt))),
             (
                 self.prep_value(module.config[config_opt])
                 if not module.config._config[config_opt].validator
@@ -736,7 +762,7 @@ class AuthorBotConfigMod(loader.Module):
                 )
             ]
             if validator.internal_id == "Boolean":
-                await call.edit(
+                await self._edit(call,
                     self.strings(
                         "configuring_option"
                         if isinstance(obj_type, bool)
@@ -748,7 +774,7 @@ class AuthorBotConfigMod(loader.Module):
                 return
 
             if validator.internal_id == "Series":
-                await call.edit(
+                await self._edit(call,
                     self.strings(
                         "configuring_option"
                         if isinstance(obj_type, bool)
@@ -760,7 +786,7 @@ class AuthorBotConfigMod(loader.Module):
                 return
 
             if validator.internal_id == "Choice":
-                await call.edit(
+                await self._edit(call,
                     self.strings(
                         "configuring_option"
                         if isinstance(obj_type, bool)
@@ -772,7 +798,7 @@ class AuthorBotConfigMod(loader.Module):
                 return
 
             if validator.internal_id == "MultiChoice":
-                await call.edit(
+                await self._edit(call,
                     self.strings(
                         "configuring_option"
                         if isinstance(obj_type, bool)
@@ -785,7 +811,7 @@ class AuthorBotConfigMod(loader.Module):
                 )
                 return
 
-        await call.edit(
+        await self._edit(call,
             self.strings(
                 "configuring_option"
                 if isinstance(obj_type, bool)
@@ -838,7 +864,7 @@ class AuthorBotConfigMod(loader.Module):
             for param in self.lookup(mod).config
         ]
 
-        await call.edit(
+        await self._edit(call,
             self.strings(
                 "configuring_mod" if isinstance(obj_type, bool) else "configuring_lib"
             ).format(
@@ -864,10 +890,15 @@ class AuthorBotConfigMod(loader.Module):
                     {"text": self.strings("close_btn"), "action": "close"},
                 ]
             ],
+            rich_html=(self._rich_screen(f'<b>{utils.escape_html(mod)}</b>').replace('<footer>',
+                       '<table bordered striped compact>'
+                       + ''.join(f'<tr><td><code>{utils.escape_html(key)}</code></td><td><b>{self._get_value(mod, key)}</b></td></tr>'
+                                 for key in self.lookup(mod).config)
+                       + '</table><footer>')),
         )
 
     async def inline__choose_category(self, call: typing.Union[Message, InlineCall]):
-        await utils.answer(
+        await self._edit(
             call,
             self.strings("choose_core"),
             reply_markup=[
@@ -957,7 +988,7 @@ class AuthorBotConfigMod(loader.Module):
             ]
         ]
 
-        await call.edit(
+        await self._edit(call,
             self.strings(
                 "configure" if isinstance(obj_type, bool) else "configure_lib"
             ),
@@ -967,8 +998,15 @@ class AuthorBotConfigMod(loader.Module):
     @loader.command(alias="cfg")
     async def configcmd(self, message: Message):
         args = utils.get_args_raw(message)
+        form = await self.inline.form(
+            self.strings("choose_core"), message, silent=True,
+            rich_html=self._rich_screen(self.strings("choose_core")),
+            reply_markup=[[{"text": self.strings("close_btn"), "action": "close"}]],
+            force_me=True, ttl=15 * 60,
+        )
+        if not form:
+            return
         if self.lookup(args) and hasattr(self.lookup(args), "config"):
-            form = await self.inline.form("🌘", message, silent=True)
             mod = self.lookup(args)
             if isinstance(mod, loader.Library):
                 type_ = "library"
@@ -978,7 +1016,7 @@ class AuthorBotConfigMod(loader.Module):
             await self.inline__configure(form, args, obj_type=type_)
             return
 
-        await self.inline__choose_category(message)
+        await self.inline__choose_category(form)
 
     @loader.command(alias="fcfg")
     async def fconfig(self, message: Message):

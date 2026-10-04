@@ -1,4 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/bash
+# SPDX-FileCopyrightText: 2026 Vadym Yemelianov (AuthorChe / VadymYem), AuthorBot integration and maintenance
+# SPDX-License-Identifier: AGPL-3.0-only
+# Existing upstream copyright and license notices are retained; see NOTICE.md and LICENSE.
+
 # Standalone installer and shared terminal UI. Sourcing only loads the UI.
 set -euo pipefail
 
@@ -150,12 +154,29 @@ if ! command -v pkg >/dev/null || [ -z "${PREFIX:-}" ]; then
 fi
 APP_DIR="${AUTHORBOT_APP_DIR:-$HOME/AuthorBot}"
 REPO_URL="${AUTHORBOT_REPO_URL:-https://github.com/VadymYem/AuthorBot.git}"
+
+# Prefer the destination after transfer; the current location is a temporary
+# transport fallback. Explicit custom repositories are never replaced.
+resolve_repository() {
+  if [ -z "${AUTHORBOT_REPO_URL:-}" ] && ! GIT_TERMINAL_PROMPT=0 git ls-remote --exit-code "$REPO_URL" HEAD >/dev/null 2>&1; then
+    local previous_url="https://github.com/AuthorGramProject/AuthorBot.git"
+    if GIT_TERMINAL_PROMPT=0 git ls-remote --exit-code "$previous_url" HEAD >/dev/null 2>&1; then
+      REPO_URL="$previous_url"
+    else
+      printf 'Official AuthorBot repository is unavailable. Try again later.\n' >&2
+      return 1
+    fi
+  fi
+}
+
 ui_init
 ui_stage 1 '1/8 · Підготовка Termux'
 ui_run pkg update -y
 ui_run pkg install -y git proot-distro
 ui_stage 2 '2/8 · Завантаження AuthorBot'
 if [ -d "$APP_DIR/.git" ]; then
+  resolve_repository
+  ui_run git -C "$APP_DIR" remote set-url origin "$REPO_URL"
   ui_run git -C "$APP_DIR" fetch origin main
   ui_run git -C "$APP_DIR" merge --ff-only origin/main
 elif [ -e "$APP_DIR" ]; then
@@ -163,6 +184,7 @@ elif [ -e "$APP_DIR" ]; then
   ui_fail
   exit 3
 else
+  resolve_repository
   ui_run git clone --depth 1 --branch main "$REPO_URL" "$APP_DIR"
 fi
 export AUTHORBOT_BOOTSTRAPPED=1

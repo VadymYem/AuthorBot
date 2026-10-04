@@ -1,3 +1,8 @@
+/*
+ * SPDX-FileCopyrightText: 2019 Jeroen Hammann
+ * SPDX-License-Identifier: MIT
+ */
+
 // https://raw.githubusercontent.com/jhammann/sakura/master/src/sakura.js
 const Sakura = function(t, e) {
     if (void 0 === t) throw new Error("No selector present. Define an element.");
