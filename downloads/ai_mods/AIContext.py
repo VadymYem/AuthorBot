@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 # Existing upstream copyright and license notices are retained; see NOTICE.md and LICENSE.
 
-#meta developer: AuthorChe (@wsinfo)
+#meta developer: AuthorChe (@wsinfo) | @Div4unka_z_kare(автор модулю)
 # t.me/wsinfo
 
 import aiohttp
