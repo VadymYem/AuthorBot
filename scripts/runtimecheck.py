@@ -824,6 +824,129 @@ class RuntimeTests(unittest.IsolatedAsyncioTestCase):
         self.assertFalse(manager._units)
         manager._client.delete_messages.assert_awaited_once()
 
+    async def test_native_inline_reply_deletes_cfg_help_and_their_menus(self):
+        from datetime import datetime, timezone
+        from aiogram.types import CallbackQuery, User as BotUser
+        from herokutl.sessions import MemorySession
+        from herokutl.tl import types, functions
+        from acbot.tl_cache import CustomTelegramClient
+        from acbot.inline.types import InlineCall
+        from acbot.modules.config import AuthorBotConfigMod
+        from acbot.modules.help import Help as HelpMod
+
+        for command in ('cfg', 'help'):
+            for response_kind in ('short', 'full', 'mapping', 'race'):
+                with self.subTest(command=command, response_kind=response_kind):
+                    client = CustomTelegramClient(MemorySession(), 12345, 'a' * 32)
+                    client.tg_id = 123
+                    client.get_input_entity = AsyncMock(return_value=types.InputPeerUser(123, 1))
+                    client.dispatcher = SimpleNamespace(security=SimpleNamespace(_owner=[123]))
+                    manager = self._inline_manager()
+                    manager._units.clear()
+                    manager._custom_map.clear()
+                    manager._error_events = {}
+                    manager._client = client
+                    manager._me = 123
+                    manager.bot_username = 'author_test_bot'
+                    manager._find_caller_sec_map = Mock(return_value=None)
+                    manager.translator = SimpleNamespace(getkey=lambda key: key)
+                    manager.rich = SimpleNamespace(request=AsyncMock())
+                    manager._allmodules = SimpleNamespace(callback_handlers={})
+                    deleted = []
+                    sent_requests = []
+                    now = datetime.now(timezone.utc)
+                    early_close_task = None
+
+                    def close_query():
+                        unit = next(iter(manager._units.values()))
+                        key = next(button['_callback_data'] for row in unit['buttons'] for button in row if button.get('action') == 'close')
+                        call = CallbackQuery(id='close', inline_message_id='encoded', chat_instance='chat', data=key)
+                        call.from_user = BotUser(id=123, is_bot=False, first_name='Owner')
+                        return call
+
+                    async def press_close(call):
+                        with patch.object(InlineCall, 'answer', new_callable=AsyncMock):
+                            await manager._callback_query_handler(call)
+
+                    async def rpc(sender, request, **kwargs):
+                        nonlocal early_close_task
+                        if isinstance(request, (list, tuple)):
+                            return [await rpc(sender, item, **kwargs) for item in request]
+                        if isinstance(request, functions.messages.GetInlineBotResultsRequest):
+                            await manager._form_inline_handler(SimpleNamespace(id='query', query=request.query))
+                            return types.messages.BotResults(query_id=7, results=[types.BotInlineResult(
+                                id='result', type='article', send_message=types.BotInlineMessageText(message='Menu', entities=[]))],
+                                cache_time=0, users=[])
+                        if isinstance(request, functions.messages.SendInlineBotResultRequest):
+                            sent_requests.append(request)
+                            if response_kind == 'race':
+                                early_close_task = asyncio.create_task(press_close(close_query()))
+                                await asyncio.sleep(0)  # Callback arrives before the send RPC reply.
+                            if response_kind in ('short', 'race'):
+                                return types.UpdateShortSentMessage(id=42, pts=1, pts_count=1, date=now, out=True)
+                            if response_kind == 'mapping':
+                                return types.Updates(updates=[types.UpdateMessageID(id=42, random_id=request.random_id)],
+                                    users=[], chats=[], date=now, seq=1)
+                            menu = types.Message(id=42, peer_id=types.PeerUser(123), message='Menu', out=True, date=now)
+                            return types.Updates(updates=[types.UpdateMessageID(id=42, random_id=request.random_id),
+                                types.UpdateNewMessage(message=menu, pts=1, pts_count=1)], users=[], chats=[], date=now, seq=1)
+                        if isinstance(request, functions.messages.DeleteMessagesRequest):
+                            if response_kind == 'race' and request.id == [101]:
+                                # Close completes before the command cleanup RPC.
+                                await early_close_task
+                            deleted.extend(request.id)
+                            return types.messages.AffectedMessages(pts=2, pts_count=len(request.id))
+                        raise AssertionError(type(request).__name__)
+
+                    client._call = AsyncMock(side_effect=rpc)
+                    origin = types.Message(id=101, peer_id=types.PeerUser(123), out=True,
+                                           message='.' + command, date=now)
+                    origin._finish_init(client, {}, types.InputPeerUser(123, 1))
+                    if command == 'cfg':
+                        mod = AuthorBotConfigMod()
+                        self._module_strings(mod)
+                        mod.inline = manager
+                        mod.lookup = lambda query: None
+                        mod.allmodules = SimpleNamespace(libraries=[])
+                        await mod.configcmd(origin)
+                    else:
+                        mod = HelpMod()
+                        mod.inline = manager
+                        mod._render = AsyncMock(return_value=('<p>Help</p>', 'Help', [[{'text': 'Close', 'action': 'close'}]]))
+                        await mod.help(origin)
+                    self.assertEqual(len(sent_requests), 1, 'Never resend an inline result after a short acknowledgment')
+                    if response_kind == 'race':
+                        self.assertEqual(deleted, [42, 101])
+                    else:
+                        self.assertEqual(deleted, [101], 'The accepted command must disappear after sending its menu')
+                        unit_id, unit = next(iter(manager._units.items()))
+                        self.assertEqual(unit['message_id'], 42)
+                        await press_close(close_query())
+                        self.assertEqual(deleted, [101, 42])
+                    self.assertFalse(manager._units)
+                    self.assertFalse(manager._custom_map)
+
+    async def test_short_inline_reply_keeps_private_channel_and_saved_chat_ids(self):
+        from datetime import datetime, timezone
+        from herokutl.sessions import MemorySession
+        from herokutl.tl import types, functions
+        from acbot.tl_cache import CustomTelegramClient
+        client = CustomTelegramClient(MemorySession(), 12345, 'a' * 32)
+        client.tg_id = 6802848305
+        now = datetime.now(timezone.utc)
+        for peer, chat_id in ((types.InputPeerUser(6316376597, 1), 6316376597),
+                              (types.InputPeerChat(456), -456),
+                              (types.InputPeerChannel(456, 1), -1000000000456),
+                              (types.InputPeerSelf(), 6802848305)):
+            request = functions.messages.SendInlineBotResultRequest(peer=peer, query_id=7, id='result', random_id=555)
+            reply = types.UpdateShortSentMessage(id=42, pts=1, pts_count=1, date=now, out=True)
+            message = client._get_response_message(request, reply, peer)
+            self.assertEqual(message.chat_id, chat_id)
+            self.assertEqual(message.id, 42)
+            self.assertIs(message._client, client)
+            unrelated = types.Updates(updates=[types.UpdateMessageID(id=99, random_id=999)], users=[], chats=[], date=now, seq=1)
+            self.assertIsNone(client._get_response_message(request, unrelated, peer))
+
     async def test_close_times_out_hung_delete_and_preserves_retry(self):
         manager = self._inline_manager()
         async def blocked():

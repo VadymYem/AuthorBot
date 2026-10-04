@@ -278,6 +278,9 @@ class InlineManager(
         return True
 
     async def _invoke_unit(self, unit_id: str, message: Message) -> Message:
+        unit = self._units.get(unit_id)
+        if unit is not None:
+            unit["sent_event"] = asyncio.Event()
         event = asyncio.Event()
         self._error_events[unit_id] = event
 
@@ -305,6 +308,7 @@ class InlineManager(
 
         for task in pending:
             task.cancel()
+        await asyncio.gather(*pending, return_exceptions=True)
 
         self._error_events.pop(unit_id, None)
 
@@ -314,9 +318,22 @@ class InlineManager(
         if not q:
             raise Exception("No query results")
 
-        return await q[0].click(
+        sent = await q[0].click(
             message.chat_id if isinstance(message, Message) else message,
             reply_to=(
                 message.reply_to_msg_id if isinstance(message, Message) else None
             ),
         )
+        if sent is None or getattr(sent, "chat_id", None) is None or not getattr(sent, "id", None):
+            raise RuntimeError("Telegram sent an inline result without a recoverable message ID")
+        if unit is not None:
+            unit.update(chat=sent.chat_id, message_id=sent.id)
+            unit["sent_event"].set()
+        # Delete the accepted command even if Close races with the send reply.
+        # Use this account directly: Message.delete is a no-op without _client.
+        if isinstance(message, Message) and message.out:
+            try:
+                await self._client.delete_messages(message.chat_id, [message.id])
+            except Exception as exc:
+                logger.warning("Unable to delete accepted inline command (%s)", type(exc).__name__)
+        return sent

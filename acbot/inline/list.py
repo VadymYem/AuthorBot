@@ -233,11 +233,9 @@ class List(InlineUnit):
         self._units[unit_id]["chat"] = m.chat_id
         self._units[unit_id]["message_id"] = m.id
 
-        if isinstance(message, Message) and message.out:
-            await message.delete()
-
         if status_message and not message.out:
-            await status_message.delete()
+            with contextlib.suppress(Exception):
+                await status_message.delete()
 
         return InlineMessage(self, unit_id, self._units[unit_id].get("inline_message_id"))
 

@@ -314,11 +314,9 @@ class Gallery(InlineUnit):
         self._units[unit_id]["chat"] = m.chat_id
         self._units[unit_id]["message_id"] = m.id
 
-        if isinstance(message, Message) and message.out:
-            await message.delete()
-
         if status_message and not message.out:
-            await status_message.delete()
+            with contextlib.suppress(Exception):
+                await status_message.delete()
 
         if not isinstance(next_handler, ListGalleryHelper):
             self._schedule_unit_task(unit_id, self._load_gallery_photos(unit_id))

@@ -604,6 +604,15 @@ class Utils(InlineUnit):
             chat_id, message_id = source.chat.id, source.message_id
         elif not (chat_id is not None and message_id is not None):
             chat_id, message_id = unit.get("chat"), unit.get("message_id")
+            # A callback can arrive before the account receives the RPC reply.
+            # Wait for the authoritative IDs; don't decode or guess a target.
+            if (chat_id is None or message_id is None) and unit.get("sent_event") is not None:
+                try:
+                    await asyncio.wait_for(unit["sent_event"].wait(), timeout=2)
+                except asyncio.TimeoutError:
+                    logger.warning("Inline send confirmation delayed; Close remains available for retry")
+                    return False
+                chat_id, message_id = unit.get("chat"), unit.get("message_id")
 
         async def finished():
             if unit_id:
@@ -628,7 +637,7 @@ class Utils(InlineUnit):
             except Exception as exc:
                 if not inline_message and "message to delete not found" in str(exc).lower():
                     return await finished()
-                logger.debug("Message deletion failed; keeping controls for retry", exc_info=True)
+                logger.warning("Message deletion failed (%s); keeping controls for retry", type(exc).__name__)
                 return False
 
         try:

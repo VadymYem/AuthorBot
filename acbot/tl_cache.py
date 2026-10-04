@@ -14,7 +14,7 @@ import typing
 
 from herokutl import TelegramClient
 from herokutl import __name__ as __base_name__
-from herokutl import helpers
+from herokutl import helpers, utils as tl_utils
 from herokutl._updates import ChannelState, Entity, EntityType, SessionState
 from herokutl.errors import RPCError
 from herokutl.errors.rpcerrorlist import TopicDeletedError
@@ -28,10 +28,14 @@ from herokutl.tl.tlobject import TLRequest
 from herokutl.tl.types import (
     ChannelFull,
     Message,
+    InputPeerSelf,
+    PeerUser,
     Pong,
     Updates,
     UpdatesCombined,
     UpdateShort,
+    UpdateShortSentMessage,
+    UpdateMessageID,
     UserFull,
 )
 from herokutl.utils import is_list_like
@@ -63,6 +67,36 @@ def hashable(value: typing.Any) -> bool:
 
 
 class CustomTelegramClient(TelegramClient):
+    def _get_response_message(self, request, result, input_chat):
+        # herokutl's InlineResult.click uses this parser, but unlike send_message
+        # it does not handle Telegram's short sent-message acknowledgment.
+        # The inline menu has already been sent at that point. Recover its
+        # confirmed ID instead of returning None and losing command cleanup.
+        if not isinstance(request, functions.messages.SendInlineBotResultRequest):
+            return super()._get_response_message(request, result, input_chat)
+        if isinstance(result, UpdateShortSentMessage):
+            message_id = result.id
+        else:
+            message = super()._get_response_message(request, result, input_chat)
+            if message is not None:
+                return message
+            updates = getattr(result, "updates", ())
+            if isinstance(result, UpdateShort):
+                updates = (result.update,)
+            message_id = next((update.id for update in updates
+                               if isinstance(update, UpdateMessageID)
+                               and update.random_id == request.random_id), None)
+        if message_id is None:
+            return None  # No confirmed ID: never guess from recent chat history.
+        peer = PeerUser(self.tg_id) if isinstance(input_chat, InputPeerSelf) else tl_utils.get_peer(input_chat)
+        message = Message(
+            id=message_id, peer_id=peer, date=getattr(result, "date", None),
+            message="", out=True, media=getattr(result, "media", None),
+            entities=getattr(result, "entities", None),
+        )
+        message._finish_init(self, {}, input_chat)
+        return message
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
