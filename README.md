@@ -84,7 +84,7 @@ https://github.com/hikariatama/host/raw/master
 
 На екрані — логотип, **AuthorBot by AuthorChe**, офіційні ресурси й відсотковий прогрес восьми етапів. Відсоток показує завершені етапи, а не прогноз часу: швидкість мережі та встановлення пакетів відрізняється. Технічний вивід зберігається в журналі; у разі невдачі показується коротке повідомлення з його шляхом. Дані Telegram вводяться у тому самому відкритому терміналі після 100%.
 
-Офіційний репозиторій проєкту — **https://github.com/VadymYem/AuthorBot**. До перенесення інсталятори автоматично використовують поточну адресу AuthorGramProject/AuthorBot, якщо нова адреса ще недоступна. Після перенесення пріоритет має VadymYem/AuthorBot. Явний AUTHORBOT_REPO_URL не підміняється.
+Офіційний репозиторій проєкту — **https://github.com/VadymYem/AuthorBot**. Пріоритет має VadymYem/AuthorBot. Явний AUTHORBOT_REPO_URL не підміняється.
 
 Окремо завантажений `termux.sh` також самостійно завантажує повний інсталятор. Попередній спосіб запуску з офіційної сторінки підтримується; клавіатура залишається доступною для входу в Telegram.
 
@@ -223,7 +223,7 @@ External modules завантажуються окремо та не повин�
 
 ## Безпека
 
-AuthorBot не повинен:
+AuthorBot не робить цього:
 
 - логувати BotFather token, API hash, session auth key або паролі;
 - автоматично додавати сторонні Telegram ID до owner-групи;
@@ -276,9 +276,10 @@ CI перевіряє Python 3.10 і 3.11 з основними та додат�
 ## Подяки
 
 - [Friendly Telegram Userbot](https://github.com/friendly-telegram/friendly-telegram) — за хорошу основу модульного Telegram userbot.
-- [Heroku Userbot](https://github.com/coddrago/Heroku) і Codrago — за [herokutl](https://pypi.org/project/herokutl/), MTProto-бібліотеку на основі Telethon.
+- [Hikka Userbot](https://github.com/hikariatama/Hikka) — за покращення FTG та базу для роботи з інлайн-кнопками
+- [Coddrago](https://github.com/coddrago) — за [herokutl](https://pypi.org/project/herokutl/), MTProto-бібліотеку на основі Telethon.
 - Jeroen Hammann — за Sakura JS/CSS, що використовується у вебінтерфейсі.
-
+- [Telegram](https://telegram.org) — за створення і розробку платформи Telegram
 ## License та внески
 
 © 2022–2026 Vadym Yemelianov (AuthorChe / VadymYem). Успадковані авторські права збережені.
@@ -294,7 +295,9 @@ GNU Affero General Public License v3.0: [LICENSE](LICENSE), походження
 
 ## Зупинка на ніч у Termux
 
-Команда **`.stop_acbot`** доступна лише власнику. Вона перевіряє середовище
+Команда **`.stop_acbot`**. 
+
+Вона перевіряє середовище
 Termux на Android, включно з Debian/PRoot, зберігає бази даних, зупиняє фонові
 цикли та inline polling, закриває вебсервер і Telegram-з’єднання й завершує
 поточний процес без перезапуску. Сесії, модулі та налаштування зберігаються.
